@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: kushoniyon
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: ["5432:5432"]
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  app:
+    build: .
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/kushoniyon
+      APP_URL: http://localhost:3000
+      SESSION_SECRET: development-only-change-me-32-characters
+    ports: ["3000:3000"]
+    volumes: ["storage_data:/app/.data/storage"]
+volumes:
+  postgres_data:
+  storage_data:

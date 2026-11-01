@@ -1,0 +1,11 @@
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { logout } from "@/modules/auth/service";
+import { SESSION_COOKIE } from "@/modules/auth/session";
+import { clearSessionCookie } from "@/modules/auth/http";
+import { requestIp } from "@/server/request";
+import { errorResponse } from "@/server/api-error";
+export async function POST(request: Request) {
+  try { const jar = await cookies(); await logout(jar.get(SESSION_COOKIE)?.value, requestIp(request)); return clearSessionCookie(NextResponse.json({ ok: true })); }
+  catch (error) { return errorResponse(error); }
+}

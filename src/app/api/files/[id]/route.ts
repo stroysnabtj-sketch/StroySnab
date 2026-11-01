@@ -1,0 +1,3 @@
+import { readPublicFile } from "@/modules/catalog/image-service";
+import { errorResponse } from "@/server/api-error";
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) { try { const file = await readPublicFile((await params).id); if (!file) return new Response("Not found", { status: 404 }); return new Response(new Uint8Array(file.data), { headers: { "Content-Type": file.mime, "Content-Length": String(file.size), "Cache-Control": "public, max-age=31536000, immutable", "X-Content-Type-Options": "nosniff" } }); } catch (error) { return errorResponse(error); } }

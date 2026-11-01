@@ -1,0 +1,3 @@
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+export default function DeliveryPage() { return <><SiteHeader /><main className="shell"><header className="page-head"><span className="eyebrow">По Таджикистану</span><h1>Доставка и оплата</h1><p>Стоимость доставки рассчитывает менеджер после оформления заказа. Машину подбирает диспетчер с учётом веса, объёма и длины груза.</p></header><section className="content-section prose"><h2>Оплата</h2><p>Доступны оплата по счёту и наличными при получении. Цена фиксируется после подтверждения заказа.</p><h2>Доставка</h2><p>Окно прибытия согласуется с покупателем. Статус доставки отображается в кабинете.</p></section></main><SiteFooter /></>; }
