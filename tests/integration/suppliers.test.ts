@@ -37,10 +37,10 @@ describe("supplier isolation and pricing", () => {
   });
   it("creates a single-use supplier invitation", async () => {
     const admin = await actor("admin@stroyhub.tj"); const membership = await getSupplierForUser((await actor("seller@stroyhub.tj")).id); const invitation = await createInvitation(admin, membership.supplier.id, "test"); const suffix = Date.now().toString().slice(-7);
-    await acceptInvitation({ code: invitation.code, phone: `936${suffix}`, email: `invited${suffix}@example.com`, password: "Invited123!" }, "test");
+    await acceptInvitation({ code: invitation.code, phone: `93${suffix}`, email: `invited${suffix}@example.com`, password: "Invited123!" }, "test");
     const db = await getDb(); const [member] = await db.select().from(supplierUsers).innerJoin(users, eq(supplierUsers.userId, users.id)).where(and(eq(users.email, `invited${suffix}@example.com`), eq(supplierUsers.supplierId, membership.supplier.id)));
     expect(member.supplier_users.role).toBe("STAFF");
-    await expect(acceptInvitation({ code: invitation.code, phone: `936${suffix}`, email: `invited${suffix}@example.com`, password: "Invited123!" }, "test")).rejects.toMatchObject({ status: 404 });
+    await expect(acceptInvitation({ code: invitation.code, phone: `93${suffix}`, email: `invited${suffix}@example.com`, password: "Invited123!" }, "test")).rejects.toMatchObject({ status: 404 });
     await db.delete(users).where(eq(users.email, `invited${suffix}@example.com`)); await db.delete(supplierInvitations).where(eq(supplierInvitations.id, invitation.id));
   }, 20000);
 });

@@ -35,7 +35,7 @@ test("admin invitation creates staff membership scoped to the invited supplier",
   const suffix = Date.now().toString().slice(-7);
   const email = `e2e-invited-${suffix}@example.com`;
   await page.goto(url);
-  await page.getByLabel("Телефон").fill(`936${suffix}`);
+  await page.getByLabel("Телефон").fill(`93${suffix}`);
   await page.getByLabel("E-mail", { exact: true }).fill(email);
   await page.getByLabel("Пароль").fill("Invited123!");
   await page.getByRole("button", { name: "Принять приглашение" }).click();
@@ -83,3 +83,29 @@ test("seller HTTP API ignores client supplier identity and rejects foreign offer
     await seller.dispose();
   }
 });
+
+test("POST/PATCH offer returns 201/200 and serialized money string without BigInt serialization error", async ({ playwright }) => {
+  const admin = await playwright.request.newContext({ baseURL });
+  try {
+    const login = await admin.post("/api/auth/login", {
+      data: { identifier: "admin@stroyhub.tj", password: "Admin123!" }
+    });
+    expect(login.ok()).toBe(true);
+
+    const suppliersRes = await admin.get("/api/admin/suppliers");
+    const supplierId = (await suppliersRes.json()).items[0].id;
+    const offersRes = await admin.get(`/api/admin/offers?supplierId=${supplierId}`);
+    const firstOffer = (await offersRes.json()).items[0];
+
+    const patchRes = await admin.patch(`/api/admin/offers/${firstOffer.id}`, {
+      data: { supplierId, supplierPriceDirams: "15500", stockQty: "25" }
+    });
+    expect(patchRes.status()).toBe(200);
+    const patched = await patchRes.json();
+    expect(typeof patched.supplierPriceDirams).toBe("string");
+    expect(patched.supplierPriceDirams).toBe("15500");
+  } finally {
+    await admin.dispose();
+  }
+});
+

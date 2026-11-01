@@ -1,12 +1,12 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { Button, DataTable, Field, Input, Modal, Select, Toast } from "@/components/ui";
-import { toDirams } from "@/modules/system/money";
+import { fromDirams, toDirams } from "@/modules/system/money";
 type Supplier = { id: string; name: string };
 type Product = { id: string; sku: string; name: string };
 type Offer = { id: string; productId: string; sku: string; productName: string; unit: string; supplierId: string; supplierName: string; supplierPriceDirams: string; stockQty: string; reservedQty: string; minOrderQty: string; leadTimeDays: number; isActive: string };
 function OfferRow({ offer, onSaved }: { offer: Offer; onSaved: () => Promise<void> }) {
-  const [price, setPrice] = useState((Number(offer.supplierPriceDirams) / 100).toFixed(2)); const [stock, setStock] = useState(offer.stockQty); const [lead, setLead] = useState(String(offer.leadTimeDays));
+  const [price, setPrice] = useState(fromDirams(offer.supplierPriceDirams)); const [stock, setStock] = useState(offer.stockQty); const [lead, setLead] = useState(String(offer.leadTimeDays));
   async function save() { const response = await fetch(`/api/admin/offers/${offer.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ supplierId: offer.supplierId, supplierPriceDirams: toDirams(price).toString(), stockQty: stock, leadTimeDays: Number(lead) }) }); if (response.ok) await onSaved(); }
   return <tr><td><strong>{offer.productName}</strong><br /><span className="mono muted">{offer.sku}</span></td><td>{offer.supplierName}</td><td><Input value={price} onChange={(e) => setPrice(e.target.value)} aria-label={`Закупочная цена ${offer.sku}`} /></td><td><Input value={stock} onChange={(e) => setStock(e.target.value)} aria-label={`Остаток ${offer.sku}`} /><small>Резерв: {offer.reservedQty}</small></td><td><Input value={lead} onChange={(e) => setLead(e.target.value)} aria-label={`Срок ${offer.sku}`} /></td><td><Button variant="ghost" onClick={save}>Сохранить</Button></td></tr>;
 }
