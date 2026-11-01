@@ -5,10 +5,20 @@ import { hasPermission } from "@/modules/rbac/permissions";
 describe("registration terms", () => {
   const base = { fullName: "Test User", phone: "921234567", email: "", password: "password123" };
   it("requires literal true", () => {
-    expect(registerSchema.safeParse({ ...base, termsAccepted: true }).success).toBe(true);
-    expect(registerSchema.safeParse({ ...base, termsAccepted: false }).success).toBe(false);
-    expect(registerSchema.safeParse(base).success).toBe(false);
-    expect(registerSchema.safeParse({ ...base, termsAccepted: "true" }).success).toBe(false);
+    const valid = registerSchema.safeParse({ ...base, termsAccepted: true });
+    expect(valid.success).toBe(true);
+
+    const falsy = registerSchema.safeParse({ ...base, termsAccepted: false });
+    expect(falsy.success).toBe(false);
+    expect(falsy.error?.issues[0]?.message).toBe("terms_required");
+
+    const omitted = registerSchema.safeParse(base);
+    expect(omitted.success).toBe(false);
+    expect(omitted.error?.issues[0]?.message).toBe("terms_required");
+
+    const stringVal = registerSchema.safeParse({ ...base, termsAccepted: "true" });
+    expect(stringVal.success).toBe(false);
+    expect(stringVal.error?.issues[0]?.message).toBe("terms_required");
   });
 });
 
