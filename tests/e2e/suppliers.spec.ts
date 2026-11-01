@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const baseURL = "http://127.0.0.1:3000";
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000";
 
 test("admin calculates procurement, markup and customer price", async ({ page }) => {
   const response = await page.request.post("/api/auth/login", {

@@ -33,7 +33,9 @@ async function initialize(): Promise<AppDatabase> {
     return database;
   }
 
-  const dataDir = path.join(process.cwd(), ".data", "kushoniyon");
+  const dataDir = process.env.PGLITE_DATA_DIR
+    ? path.resolve(process.env.PGLITE_DATA_DIR)
+    : path.join(process.cwd(), ".data", "kushoniyon");
   await mkdir(dataDir, { recursive: true });
   const client = new PGlite({
     dataDir,
@@ -59,8 +61,17 @@ export function getDb(): Promise<AppDatabase> {
 }
 
 export async function closeDb(): Promise<void> {
-  await globalDb.__kushoniyonPglite?.close();
-  await globalDb.__kushoniyonPool?.end();
+  const pglite = globalDb.__kushoniyonPglite;
+  const pool = globalDb.__kushoniyonPool;
+  globalDb.__kushoniyonPglite = undefined;
+  globalDb.__kushoniyonPool = undefined;
   globalDb.__kushoniyonDb = undefined;
   globalDb.__kushoniyonInit = undefined;
+
+  if (pglite && !pglite.closed) {
+    await pglite.close().catch(() => {});
+  }
+  if (pool) {
+    await pool.end().catch(() => {});
+  }
 }

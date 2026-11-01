@@ -1,1 +1,8 @@
-{ "extends": ["next/core-web-vitals", "next/typescript"], "rules": { "@typescript-eslint/no-explicit-any": "error" } }
+{
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/triple-slash-reference": "off"
+  },
+  "ignorePatterns": ["next-env.d.ts", ".next/"]
+}
