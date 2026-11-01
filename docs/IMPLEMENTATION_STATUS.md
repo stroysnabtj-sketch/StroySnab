@@ -24,9 +24,9 @@
 | **0** | Воспроизводимый запуск и исходный протокол | Завершена | `cba1cd6` | 01.11.2026 |
 | **1** | Исправить контракт API, числа и доверие к запросу | Завершена | `fdd5cab` | 01.11.2026 |
 | **2** | Закрыть конкурентные ошибки auth и ролей | Завершена | `d7e3116` | 01.11.2026 |
-| **3** | Завершить соглашение и политику | Завершена | `task-3-terms` | 01.11.2026 |
-| **4** | Довести публичный приём заявок до требований ТЗ | В работе | — | 01.11.2026 |
-| **5** | Реализовать обработку заявок менеджером и кабинет покупателя | Запланировано | — | — |
+| **3** | Завершить соглашение и политику | Завершена | `cc6b08f` | 01.11.2026 |
+| **4** | Довести публичный приём заявок до требований ТЗ | Завершена | `task-4-product-requests` | 01.11.2026 |
+| **5** | Реализовать обработку заявок менеджером и кабинет покупателя | В работе | — | 01.11.2026 |
 | **6** | Завершить интерфейс поставщика и существующий этап 3 | Запланировано | — | — |
 | **7** | Реализовать рефералы без автоматического начисления | Запланировано | — | — |
 | **8** | Реальные уведомления и безопасный статус гостевой заявки | Запланировано | — | — |
@@ -108,4 +108,38 @@
 - **Фактические результаты команд:**
   - `npm run test -- tests/unit/auth.test.ts`: 3 теста пройдены.
   - `npx playwright test tests/e2e/auth.spec.ts`: 4 теста пройдены.
+
+### Задача 4. Довести публичный приём заявок до требований ТЗ
+- **Файлы:**
+  - `drizzle/0006_product_requests_constraints.sql` & `drizzle/meta/_journal.json`:
+    - CHECK `quantity IS NULL OR quantity > 0`
+    - CHECK `estimated_price_dirams IS NULL OR estimated_price_dirams >= 0`
+    - CHECK `estimated_delivery_days IS NULL OR (estimated_delivery_days >= 0 AND estimated_delivery_days <= 365)`
+    - CHECK `version > 0`
+    - CHECK `status IN ('NEW', 'IN_REVIEW', 'AVAILABLE', 'UNAVAILABLE', 'CANCELLED')`
+    - Создана таблица `product_request_idempotency` с внешним ключом `request_id` -> `product_requests.id`.
+  - `src/db/schema/requests.ts`: обновлена схема с DB CHECK ограничениями и таблицей `productRequestIdempotency`.
+  - `src/modules/product-requests/schemas.ts`:
+    - `getDushanbeDateStrings(now)`: динамический расчёт `today` и `maxDate` с учётом часового пояса `Asia/Dushanbe` и високосных лет (29 февраля).
+    - `makeProductRequestSchema(now)`: адаптер `quantity` (число/строка), строгая валидация масштаба `numeric(14,3)`, обязательность единицы при указании количества, honeypot `website`.
+  - `src/modules/product-requests/idempotency.ts`:
+    - `withIdempotencyLock`: поключевая сериализация конкурентных вызовов для устранения гонок за один fingerprint.
+    - `findRecentRequestByFingerprint`: проверка окна 30 секунд.
+    - `recordIdempotencyKey`: сохранение ключа идемпотентности.
+  - `src/modules/product-requests/service.ts`:
+    - Порядок обработки: honeypot (201 без сохранения) -> нормализация -> проверка идемпотентности и блокировка -> списание rate limit -> создание заявки в транзакции.
+    - Fingerprint учитывает контекст владельца (`user:id` или `ip:ip`), исключая коллизии между гостями за общим IP.
+  - `src/components/product-request-form.tsx`:
+    - Вариант единицы «другое» с вводом до 20 символов.
+    - Полноценная обработка ошибок сети в `try/finally` с восстановлением кнопки.
+    - Фокус на первом ошибочном поле, `aria-describedby` и `role="alert"`.
+    - Дата с `min` (сегодня) и `max` (+2 года).
+    - Навигация после успеха: «Создать ещё заявку», «В каталог» и «Мои заявки» (для авторизованных).
+  - `tests/unit/product-requests.test.ts` (создан, 34 теста).
+  - `tests/integration/product-requests.test.ts` (расширен, 9 тестов, включая 20 конкурентных запросов и проверку DB CHECK).
+- **Фактические результаты команд:**
+  - `npm run check`: код 0 (11 тестовых файлов, 92 теста пройдено, 0 lint warnings, 0 typecheck errors).
+  - `npm run build:noenv`: код 0 (42 страницы собраны).
+  - `npx playwright test tests/e2e/catalog.spec.ts`: код 0.
+
 

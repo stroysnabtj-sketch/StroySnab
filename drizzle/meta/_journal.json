@@ -43,6 +43,13 @@
       "when": 1793541995907,
       "tag": "0005_stormy_naoko",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793542500000,
+      "tag": "0006_product_requests_constraints",
+      "breakpoints": true
     }
   ]
 }
