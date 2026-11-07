@@ -83,7 +83,7 @@ export async function registerCustomer(input: unknown, ip: string) {
   }
 }
 
-export async function login(input: unknown, ip: string, userAgent: string) {
+export async function login(input: unknown, ip: string, userAgent: string, superAdminOnly = false) {
   const data = loginSchema.parse(input);
   const db = await getDb();
   const identifier = data.identifier.trim();
@@ -98,7 +98,7 @@ export async function login(input: unknown, ip: string, userAgent: string) {
     )
     .limit(1);
 
-  if (!user || user.status !== "ACTIVE") {
+  if (!user || user.status !== "ACTIVE" || (superAdminOnly && user.role !== "SUPER_ADMIN")) {
     throw new ApiError(401, "invalid_credentials", "Неверный логин или пароль");
   }
   if (user.lockedUntil && user.lockedUntil > new Date()) {
@@ -128,6 +128,7 @@ export async function login(input: unknown, ip: string, userAgent: string) {
     if (
       !current ||
       current.status !== "ACTIVE" ||
+      (superAdminOnly && current.role !== "SUPER_ADMIN") ||
       current.deletedAt ||
       current.passwordHash !== user.passwordHash
     )

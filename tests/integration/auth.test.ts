@@ -15,7 +15,11 @@ describe("auth persistence", () => {
     expect(stored.termsVersion).toBe("2026-10-30");
     expect(stored.termsAcceptedAt).toBeTruthy();
     expect(stored.passwordHash).not.toContain("Integration123!");
-    const session = await login({ identifier: "integration@example.com", password: "Integration123!" }, "test", "vitest");
+    const credentials = { identifier: "integration@example.com", password: "Integration123!" };
+    await expect(login(credentials, "test", "vitest", true)).rejects.toMatchObject({ code: "invalid_credentials" });
+    const session = await login(credentials, "test", "vitest");
     expect(session.token.length).toBeGreaterThan(30);
+    await db.update(users).set({ role: "SUPER_ADMIN" }).where(eq(users.id, created.id));
+    await expect(login(credentials, "test", "vitest", true)).resolves.toMatchObject({ role: "SUPER_ADMIN" });
   }, 20000);
 });

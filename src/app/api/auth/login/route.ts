@@ -11,10 +11,9 @@ import { adoptGuestCart } from "@/modules/cart/adopt-guest-cart";
 
 export async function POST(request: Request) {
   try {
-    if (
-      process.env.NODE_ENV === "production" &&
-      process.env.AUTH_LEGACY_PASSWORD_LOGIN !== "true"
-    ) {
+    const legacyPasswordEnabled =
+      process.env.NODE_ENV !== "production" || process.env.AUTH_LEGACY_PASSWORD_LOGIN === "true";
+    if (!legacyPasswordEnabled && process.env.AUTH_ADMIN_PASSWORD_LOGIN !== "true") {
       return NextResponse.json(
         {
           error: {
@@ -32,6 +31,7 @@ export async function POST(request: Request) {
       await parseJsonBody(request, 4096),
       ip,
       request.headers.get("user-agent") ?? "",
+      !legacyPasswordEnabled,
     );
     const adopted = await adoptGuestCart(result.userId, (await cookies()).get("kh_cart")?.value);
     const response = withSessionCookie(NextResponse.json({ role: result.role }), result.token);
