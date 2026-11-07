@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm";
 import { docCounters } from "@/db/schema";
 import type { DbTransaction } from "@/db";
 
-export const DOC_KINDS = ["ORD", "SUB", "PRQ", "DRQ", "INV"] as const;
+export const DOC_KINDS = ["ORD", "SUB", "PRQ", "DRQ", "INV", "RFQ", "QUO"] as const;
 export type DocKind = (typeof DOC_KINDS)[number];
 
 export async function nextDocNumber(tx: DbTransaction, kind: DocKind): Promise<string> {

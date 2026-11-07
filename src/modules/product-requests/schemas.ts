@@ -93,3 +93,76 @@ export function makeProductRequestSchema(now: Date = new Date()) {
 }
 
 export const productRequestSchema = makeProductRequestSchema();
+
+export const respondProductRequestSchema = z.object({
+  status: z.enum(["IN_REVIEW", "AVAILABLE", "UNAVAILABLE"], {
+    message: "status_invalid",
+  }),
+  responseNote: z.string()
+    .max(2000, "note_max")
+    .optional()
+    .nullable()
+    .transform((v) => (v?.trim() ? v.trim() : null)),
+  estimatedPriceDirams: z.union([z.string(), z.number(), z.bigint(), z.null(), z.undefined()])
+    .optional()
+    .nullable()
+    .transform((val) => {
+      if (val === null || val === undefined) return null;
+      if (typeof val === "bigint") return val.toString();
+      if (typeof val === "number") {
+        if (!Number.isFinite(val) || val < 0) return "__invalid__";
+        return Math.round(val).toString();
+      }
+      const trimmed = val.trim();
+      return trimmed === "" ? null : trimmed;
+    })
+    .pipe(
+      z.string()
+        .regex(/^\d+$/, "price_invalid")
+        .nullable()
+    ),
+  estimatedDeliveryDays: z.union([z.number(), z.string(), z.null(), z.undefined()])
+    .optional()
+    .nullable()
+    .transform((val) => {
+      if (val === null || val === undefined || val === "") return null;
+      const num = Number(val);
+      if (!Number.isInteger(num)) return -1;
+      return num;
+    })
+    .pipe(
+      z.number()
+        .min(0, "delivery_days_min")
+        .max(365, "delivery_days_max")
+        .nullable()
+    ),
+  resolvedProductId: z.union([z.literal(""), z.string().uuid("uuid_invalid"), z.null()])
+    .optional()
+    .nullable()
+    .transform((v) => (v && v.trim() !== "" ? v : null)),
+  assignedTo: z.union([z.literal(""), z.string().uuid("uuid_invalid"), z.null()])
+    .optional()
+    .nullable()
+    .transform((v) => (v && v.trim() !== "" ? v : null)),
+  version: z.number().int().positive("version_required"),
+}).superRefine((val, ctx) => {
+  if ((val.status === "AVAILABLE" || val.status === "UNAVAILABLE") && !val.responseNote) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["responseNote"],
+      message: "note_required",
+    });
+  }
+  if (val.status !== "AVAILABLE" && val.resolvedProductId) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["resolvedProductId"],
+      message: "resolved_product_not_available",
+    });
+  }
+});
+
+export const customerCancelSchema = z.object({
+  version: z.number().int().positive("version_required"),
+  reason: z.string().max(500, "reason_max").optional().nullable(),
+});

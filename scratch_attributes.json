@@ -1,0 +1,8738 @@
+[
+ {
+  "key": "att_c3b414887e4",
+  "name": "Bluetooth",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9e1fc673b6e",
+  "name": "GSM или Wi-Fi",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a398871e2b3",
+  "name": "HDD слоты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_0ce92088720",
+  "name": "HDR",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ca15ee64c8c",
+  "name": "PoE",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_a1ba59c7285",
+  "name": "PoE-порты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_57796cff064",
+  "name": "RFID стандарт",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6d0dc85e2bb",
+  "name": "SFP-порты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b480e24caaa",
+  "name": "Smart TV",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2c1f2bfdd5b",
+  "name": "USB-порты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_780ff71c8f1",
+  "name": "Wi-Fi",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_3ea35406d02",
+  "name": "Ёмкость АКБ поддерживаемая",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6cb542f2cf2",
+  "name": "Ёмкость аккумулятора",
+  "controlType": "range",
+  "unit": "А·ч",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_1c21763f1b9",
+  "name": "Абразивность P",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_61a6c307e31",
+  "name": "Аварийное открывание",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cad6c6c5bb3",
+  "name": "Автозапуск АВР",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_266d965181d",
+  "name": "Автоматический",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d8e778f413f",
+  "name": "Автоматическое отключение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d1b4384261e",
+  "name": "Автономный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d8b48fbdea7",
+  "name": "Автоотключение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_6cad5835d1b",
+  "name": "Автоподатчик",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_aed02b5d2be",
+  "name": "Автостоп",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5c4d215fe48",
+  "name": "Адресная или неадресная",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a1617b8ffcc",
+  "name": "Аккумуляторный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_875ebec51f7",
+  "name": "Активная мощность W",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_eaa8a365246",
+  "name": "Акустические свойства",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f8ff7b668e9",
+  "name": "Аналитика",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_22d9ce07fa9",
+  "name": "Антивибрационная рукоятка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3274b35751c",
+  "name": "Антизапотевание",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ad90139e7d8",
+  "name": "Антипаника",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_875ab609c55",
+  "name": "Армированный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dfceee52674",
+  "name": "Аромат",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_7870bc0bdc2",
+  "name": "Атмосферостойкость",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5cd8a442e9d",
+  "name": "Аудиовходы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_60449cee07a",
+  "name": "Байпас",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fa7fe8ab1b8",
+  "name": "Безмасляный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bc649d78d76",
+  "name": "Безободковый",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9c7bd2d009f",
+  "name": "Беспроводной",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_08fafdb5995",
+  "name": "Быстрозажимная",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_49d287da84c",
+  "name": "Быстросъёмный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4d38b9442cd",
+  "name": "Бэксет",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b3294bc4fbc",
+  "name": "Бюджет PoE",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9fe08e5957d",
+  "name": "Вертикальный или горизонтальный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_38348dbdf4c",
+  "name": "Вес",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ed020b4bcbe",
+  "name": "Вес двери максимум",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_57ad8ee3caf",
+  "name": "Вес упаковки",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a4c5061891f",
+  "name": "Вид ЖБИ",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_39e615bac15",
+  "name": "Вид аксессуара",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_dc16e244d6d",
+  "name": "Вид ваты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_68fc4bd8ac5",
+  "name": "Вид дюбеля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a56b32df9b3",
+  "name": "Вид заполнителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5d882fc4241",
+  "name": "Вид защиты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_501da9988a2",
+  "name": "Вид изделия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "8"
+ },
+ {
+  "key": "att_43b9a8359ab",
+  "name": "Вид инструмента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "9"
+ },
+ {
+  "key": "att_dd786034864",
+  "name": "Вид камня",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_820b87f865e",
+  "name": "Вид кисти",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_557c7651b5e",
+  "name": "Вид ключа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_68b43e6c60f",
+  "name": "Вид комплектующего",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_87ffacc67f0",
+  "name": "Вид крепежа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4af5107a000",
+  "name": "Вид материала",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_854a53ae037",
+  "name": "Вид набора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e46066f2fa2",
+  "name": "Вид напольного покрытия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0827714067b",
+  "name": "Вид оборудования",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_fe7e990e455",
+  "name": "Вид одежды",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e942321a1a4",
+  "name": "Вид оповещения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_756ed6f6777",
+  "name": "Вид паркета",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_61ceefb391d",
+  "name": "Вид пистолета",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2a13d37c528",
+  "name": "Вид подложки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_af8f550be29",
+  "name": "Вид покрытия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_71d1c3f57de",
+  "name": "Вид продукта",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7f0c9b7512d",
+  "name": "Вид профиля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_83b4a44dcd3",
+  "name": "Вид светильника",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9d1df57d05e",
+  "name": "Вид снаряжения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_66b85f00201",
+  "name": "Вид соединителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_26e5f31da5f",
+  "name": "Вид средства",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e54b35b0653",
+  "name": "Вид техники",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_493838c0345",
+  "name": "Вид топлива",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_61b19a8d013",
+  "name": "Вид устройства",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_df1d2f77cc5",
+  "name": "Вид фитинга",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_61c6315dad0",
+  "name": "Вид элемента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_835566e216c",
+  "name": "Видеоаналитика",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0f0419de503",
+  "name": "Видеовходы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ec2d93ea1ee",
+  "name": "Видеокарта",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_80f9f20217d",
+  "name": "Видеосвязь",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_79e953c2de5",
+  "name": "Влагозащита",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_767ff1ea4d2",
+  "name": "Влагостойкий",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5596dc8a060",
+  "name": "Влагостойкость",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "10"
+ },
+ {
+  "key": "att_3b6f05f1c4c",
+  "name": "Влажность",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_186cf931cce",
+  "name": "Влажность древесины",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_20614230834",
+  "name": "Внутренний диаметр",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_29e95b956f9",
+  "name": "Водопоглощение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3134091f0ff",
+  "name": "Водостойкость",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_525a847d043",
+  "name": "Возможность окрашивания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2731550349f",
+  "name": "Время автономной работы",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_6f6bcf19e5b",
+  "name": "Время высыхания",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_6807f9bb206",
+  "name": "Время нагрева",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d4be499752b",
+  "name": "Время открывания",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ce6d8dc5fa3",
+  "name": "Время пешего прохода",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5c48f500a86",
+  "name": "Время приготовления",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a7d09239edc",
+  "name": "Время срабатывания",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_073859d1b80",
+  "name": "Время схватывания",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9ec2cae8ca6",
+  "name": "Встраиваемая",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e38d49423ee",
+  "name": "Встроенный автомат",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4ed6d9fdd02",
+  "name": "Вторичное напряжение",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a95d36fac6d",
+  "name": "Вторичное расширение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_00e7ee7c531",
+  "name": "Входное напряжение",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b08ca93fb1f",
+  "name": "Выдвижная лейка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e8776a2e4b1",
+  "name": "Выключатель",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b24a95db95a",
+  "name": "Высота",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_e7ec9d43fa7",
+  "name": "Высота двери",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_bf0a3c31fee",
+  "name": "Высота изделия",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d0cfb2d5ea9",
+  "name": "Высота излива",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9d1662aef1a",
+  "name": "Высота короба",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_010d61a36dd",
+  "name": "Высота ниши",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_652b5824e3e",
+  "name": "Высота окна",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_b46a54a3b26",
+  "name": "Высота подъёма",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a1227f28ccc",
+  "name": "Высота полотна",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_dbfb243636a",
+  "name": "Высота профиля",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_c4c018b632d",
+  "name": "Высота проёма",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_76ba8c8854d",
+  "name": "Высота скашивания",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_77b24ccf4c1",
+  "name": "Выход пены",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b08c0c711e2",
+  "name": "Выходное напряжение",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_be71ecd086d",
+  "name": "Выходной сигнал",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ebbbe868f95",
+  "name": "Выходной ток",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c4e9dca69d0",
+  "name": "Вязкость ISO VG",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_315e7d632b7",
+  "name": "Вязкость краски максимум",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5718008dc7c",
+  "name": "Габариты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4add67edcc6",
+  "name": "Газ-контроль",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_10cd5b949f8",
+  "name": "Газовые амортизаторы",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_49ed9f01e09",
+  "name": "Гибкость жилы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3d75a2cd7d6",
+  "name": "Гидромассаж",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9dc6025be24",
+  "name": "Гипоаллергенный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_51ec63dad8f",
+  "name": "Глубина",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e7d383d643d",
+  "name": "Глубина бурения максимум",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_aef8d37160d",
+  "name": "Глубина всасывания",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1a8bdbd8fc2",
+  "name": "Глубина зажима",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_747a7a544db",
+  "name": "Глубина корпуса",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1a21bf4daaa",
+  "name": "Глубина ниши",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2b94fb493f8",
+  "name": "Глубина проникновения",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_986f9f480aa",
+  "name": "Глубина реза",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_42d3d1bb760",
+  "name": "Глубина реза максимум",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bdc7216e1fb",
+  "name": "Глухая или со стеклом",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_ea345a1386e",
+  "name": "Готовая или сухая",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_a68f557dec2",
+  "name": "Готовый или сухой",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_140fc23e9bf",
+  "name": "Гриль",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_417ef2b21dc",
+  "name": "Грузоподъёмность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_e803403ed68",
+  "name": "Давление максимум",
+  "controlType": "range",
+  "unit": "бар",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0c9fe63eac7",
+  "name": "Дальность ИК",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_90494cd2cee",
+  "name": "Дальность измерения",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_4111c8140d4",
+  "name": "Дальность освещения",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fccee32abe8",
+  "name": "Дальность полива",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_68ae6953804",
+  "name": "Датчик движения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_1c3b3fd72ce",
+  "name": "Двустороннее сканирование",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_61886059319",
+  "name": "Двусторонняя печать",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9cc4c749ed6",
+  "name": "Двусторонняя шкала",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_beaf8326818",
+  "name": "Декор",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_58c7a70a3bb",
+  "name": "Декоративный эффект",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2b9f78f60b8",
+  "name": "Диагональ экрана",
+  "controlType": "range",
+  "unit": "дюйм",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_2ece199974c",
+  "name": "Диаметр",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_ae38a54c0ea",
+  "name": "Диаметр бурения максимум",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_476d817a145",
+  "name": "Диаметр валика",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3600794dad5",
+  "name": "Диаметр венчика",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f101a867169",
+  "name": "Диаметр воздуховода",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e3bf63d8dd1",
+  "name": "Диаметр входа",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5d410e7b151",
+  "name": "Диаметр выхода",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c89b5943b90",
+  "name": "Диаметр диска",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_6bbc0795668",
+  "name": "Диаметр дюбеля",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9115b619c42",
+  "name": "Диаметр кабеля",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d1c3c508446",
+  "name": "Диаметр колеса",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_1e6ddf912ad",
+  "name": "Диаметр крана",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b1e9acfbdc0",
+  "name": "Диаметр крепежа",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_d383fead573",
+  "name": "Диаметр круга",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_91a85d1c8d5",
+  "name": "Диаметр монтажного отверстия",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b1b9947b044",
+  "name": "Диаметр патрона",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e6ac168d2ff",
+  "name": "Диаметр поддона",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3a88690610a",
+  "name": "Диаметр подключения",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_35ae6ff6837",
+  "name": "Диаметр проволоки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_30564ef9d40",
+  "name": "Диаметр реза максимум",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_d703fc6e75a",
+  "name": "Диаметр резьбы",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_b0105b367ee",
+  "name": "Диаметр сопла",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fc4fbe0f516",
+  "name": "Диаметр троса",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ba98571d626",
+  "name": "Диаметр трубы",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_062c013ba06",
+  "name": "Диаметр чаши",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7048700ae55",
+  "name": "Диаметр шланга",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_34728748919",
+  "name": "Диапазон измерения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_183177a82f4",
+  "name": "Диапазон напряжения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b6d2312a537",
+  "name": "Диапазон настройки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b8cefb6e075",
+  "name": "Диапазон регулировки давления",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bbb1d9c08c0",
+  "name": "Диапазон температур",
+  "controlType": "range",
+  "unit": "°C",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_97a0f1ddf72",
+  "name": "Диапазон частот",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5885c7c86f9",
+  "name": "Дизайн",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_0701ba288ae",
+  "name": "Диммируемая",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_9b848042107",
+  "name": "Диэлектрическая",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cbea6b8c50f",
+  "name": "Диэлектрический допуск",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b8b5ea12bdd",
+  "name": "Длина",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "20"
+ },
+ {
+  "key": "att_2a5bddefae5",
+  "name": "Длина бухты",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_e82404a12e5",
+  "name": "Длина венчика",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_36098f84653",
+  "name": "Длина ворса",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1295104c465",
+  "name": "Длина дюбеля",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b9181d1ac76",
+  "name": "Длина изделия",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_361476f2adc",
+  "name": "Длина излива",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5d3c087b92e",
+  "name": "Длина кабеля",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_3e10662d472",
+  "name": "Длина крепежа",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_bbc429de3dc",
+  "name": "Длина лезвия",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7a28569fd1c",
+  "name": "Длина ленты",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2ada2d3c6cf",
+  "name": "Длина листа",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_4b98f3c7045",
+  "name": "Длина плеча",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bf4856b9263",
+  "name": "Длина плиты",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_e4631f323cf",
+  "name": "Длина полотна",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c3550076a6a",
+  "name": "Длина рулона",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "9"
+ },
+ {
+  "key": "att_18ed9adcdb6",
+  "name": "Длина ручки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_76f6f270eba",
+  "name": "Длина скобы",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_53a8a0ba70e",
+  "name": "Длина стержня",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_33d5b0047e9",
+  "name": "Длина стрелы",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_27bd7ffdb89",
+  "name": "Длина ступени",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_410e2d5aa54",
+  "name": "Длина стяжки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_791eb65049c",
+  "name": "Длина сушильной поверхности",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dbf3ecd3271",
+  "name": "Длина троса",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_11de3dc33a1",
+  "name": "Длина черенка",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_5a914cf09be",
+  "name": "Длина шины",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d1ff043fda9",
+  "name": "Длина шланга",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_44342fd2034",
+  "name": "Длина штанги",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f57ac2f14a3",
+  "name": "Для авто или дома",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c7c7ef26dcb",
+  "name": "Для бассейна",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c2420c0d361",
+  "name": "Для бассейнов",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6214dd5517b",
+  "name": "Для белого или цветного белья",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2c72b017181",
+  "name": "Для вальцовки или вакуума",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_95f67028aa5",
+  "name": "Для вида техники",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_97f44a41933",
+  "name": "Для видеонаблюдения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b6e2601abd1",
+  "name": "Для влажных помещений",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_20d8f92c90f",
+  "name": "Для внутренних или наружных работ",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_1f077c01f66",
+  "name": "Для входной или межкомнатной двери",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2dad4b06e8e",
+  "name": "Для горячей воды",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0f39714e507",
+  "name": "Для двери или окна",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_522822145ac",
+  "name": "Для инструмента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5d481375fe5",
+  "name": "Для каких материалов",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_ef877f9f09e",
+  "name": "Для каких помещений",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d2bf180d862",
+  "name": "Для какого изделия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b56b7214640",
+  "name": "Для какого инструмента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f80fc1a2d74",
+  "name": "Для какого материала труб",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_81c62642c0c",
+  "name": "Для материала основания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_b6431615f06",
+  "name": "Для металла или дерева",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_50a2cd7fab0",
+  "name": "Для отопления или воды",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bc0d6d43d99",
+  "name": "Для питьевой воды",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d8ef0d6addb",
+  "name": "Для поверхности",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_268652a5644",
+  "name": "Для пола или стен",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9599ef9c418",
+  "name": "Для помещения или улицы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8233c82cfca",
+  "name": "Для раковины или унитаза",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_eae46b2ba20",
+  "name": "Для ручной или машинной уборки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bf3591d9236",
+  "name": "Для сухих или влажных помещений",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7f3eb588645",
+  "name": "Для типа краски",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_8f131a82103",
+  "name": "Для типа смеси",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_99d3a5f60e6",
+  "name": "Для труб или кабеля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f47ecc79311",
+  "name": "Для тёплого пола",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_be5c52afb63",
+  "name": "Для улицы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_2d1a13e24d2",
+  "name": "Для улицы или помещения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c53357d4d45",
+  "name": "Для уличной прокладки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_06efced2e9b",
+  "name": "Для унитаза или раковины",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a25481d731f",
+  "name": "Для фасада",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bf13cef902a",
+  "name": "Для хладагента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_420e53e80d7",
+  "name": "Для хладагентов",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_59d432e61a0",
+  "name": "Для холодной или горячей воды",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d399498f738",
+  "name": "Для чистой или грязной воды",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0fd3cfdab5e",
+  "name": "Донный клапан",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_88afeac5d13",
+  "name": "Допустимая нагрузка",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7ea3a2a0d0a",
+  "name": "Забор воды из ёмкости",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2d0cf67e9af",
+  "name": "Загрузка белья",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_49e41c78990",
+  "name": "Заземление",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_a887df05a4a",
+  "name": "Закрытая спираль",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0495931acda",
+  "name": "Защита от УФ",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ec2ab1751e3",
+  "name": "Защита от перегрева",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_479a0d407ae",
+  "name": "Защита от перенапряжения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d431751c321",
+  "name": "Звуковой уровень",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_02009b54692",
+  "name": "Зернистость",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8f16219872a",
+  "name": "Зубчатый",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fcea1c808ff",
+  "name": "Измерение объёма",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ede9117c7d8",
+  "name": "Измеряемая величина",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1e60a7a5e04",
+  "name": "Износостойкость",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6de8b991346",
+  "name": "Изолированные рукоятки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b97510eb5bd",
+  "name": "Импульсный ток",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cebcf93dbc5",
+  "name": "Инверторный",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_2f25f4c4a44",
+  "name": "Инверторный двигатель",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_714c820c755",
+  "name": "Индикатор заряда",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0cdb13909b9",
+  "name": "Индикация",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f3b44f21715",
+  "name": "Интеграция СКУД",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dfb7b85acac",
+  "name": "Интенсивность использования",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_82d85afb088",
+  "name": "Интерфейс SATA/NVMe",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7a76f763ed7",
+  "name": "Интерфейс USB/Wi-Fi",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5119ad2d4d1",
+  "name": "Интерфейс подключения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ee323f9bcee",
+  "name": "Ионизация",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1f4d3b686ab",
+  "name": "Источник питания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3c9fe17ac7e",
+  "name": "КПД",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fb6772c5af0",
+  "name": "Кабель-канал",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1538bc28f6e",
+  "name": "Камера сгорания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_50b5972337c",
+  "name": "Категория RJ45",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_53c57b28307",
+  "name": "Категория безопасности CAT",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4fd98ef73ff",
+  "name": "Категория кабеля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c701d81ad53",
+  "name": "Категория применения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f64956a374e",
+  "name": "Класс УЗИП",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4f4fd3dca36",
+  "name": "Класс безопасности",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_92760f9308d",
+  "name": "Класс бетона",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e8607adef0f",
+  "name": "Класс горючести",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_128dab02df4",
+  "name": "Класс защиты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_ff2a8ec227f",
+  "name": "Класс износостойкости",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "21 | 22 | 23 | 31 | 32 | 33 | 34 | 42 | 43",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_c3e652ef256",
+  "name": "Класс клея EN 12004",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9544bedea9a",
+  "name": "Класс кольцевой жёсткости SN",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_02969e30bf2",
+  "name": "Класс механической защиты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_397457de0c2",
+  "name": "Класс мокрого истирания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8fdb546a47d",
+  "name": "Класс напряжения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1584a270df5",
+  "name": "Класс пожара",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3525844630b",
+  "name": "Класс противоскольжения R",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "R9 | R10 | R11 | R12 | R13",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_947b0ed878a",
+  "name": "Класс прочности",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_dfc271964c6",
+  "name": "Класс прочности бетона",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fb7dba8a681",
+  "name": "Класс усилия EN",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_746f7261336",
+  "name": "Класс энергоэффективности",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_1f8136106eb",
+  "name": "Клеевой слой",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5f412f85a3a",
+  "name": "Кодек H.265",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_55163d9e310",
+  "name": "Колеруемая",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_73e858406d2",
+  "name": "Количество HDMI",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cb9b84baace",
+  "name": "Количество в упаковке",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_b13b2d161f7",
+  "name": "Количество дисков",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8a2b28aae0e",
+  "name": "Количество зубьев",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_87af497d1d7",
+  "name": "Количество каналов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e26a1677a83",
+  "name": "Количество контуров",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_17e88a67850",
+  "name": "Количество перекрашиваний",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ddadefdb57b",
+  "name": "Количество полюсов",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "1P | 1P+N | 2P | 3P | 3P+N | 4P",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_1d1e1f1c51a",
+  "name": "Количество портов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_29f51eb4a38",
+  "name": "Количество предметов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3e90e965398",
+  "name": "Количество режимов струи",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_58901b9e103",
+  "name": "Количество скоростей",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_90eee514401",
+  "name": "Количество слоёв",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_97801f813a2",
+  "name": "Количество створок",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_0e48416854e",
+  "name": "Количество стирок",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a16ae7760ea",
+  "name": "Количество фаз",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_8ab6bc52cb6",
+  "name": "Количество частей",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_03b7e81d907",
+  "name": "Количество шлейфов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_27d85f51dc3",
+  "name": "Комплект направляющих",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7466badda34",
+  "name": "Комплект с коробкой",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_376fde1b0ae",
+  "name": "Комплект стрелы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b214f0214c0",
+  "name": "Комплектация",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_5aa62ab370c",
+  "name": "Комплектация бачком",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c43b7f73852",
+  "name": "Конвекция",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_163a4077b14",
+  "name": "Конструкция троса",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8e2372edfaf",
+  "name": "Контактная группа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_eda162e4612",
+  "name": "Контактный или бесконтактный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b4cf56e5121",
+  "name": "Концентрат",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7a123c08094",
+  "name": "Концентрация",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_790cc206868",
+  "name": "Кран в комплекте",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e360a1564d5",
+  "name": "Крепление VESA",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5eaa076494d",
+  "name": "Крутящий момент",
+  "controlType": "range",
+  "unit": "Н·м",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1cf8db1d1af",
+  "name": "Крышка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_498d1cc06d5",
+  "name": "МФУ",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2d4452102d8",
+  "name": "Магнитное основание",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f3d4cbc55bb",
+  "name": "Магнитный зацеп",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_26358b01e87",
+  "name": "Магнитный наконечник",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f4c1c95a720",
+  "name": "Максимальная мощность",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_893e07d96df",
+  "name": "Максимальная нагрузка",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "8"
+ },
+ {
+  "key": "att_f9dfef0d514",
+  "name": "Максимальное рабочее напряжение Uc",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1d5176f02e1",
+  "name": "Максимальный диаметр реза",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8419c0ad806",
+  "name": "Максимальный крутящий момент",
+  "controlType": "range",
+  "unit": "Н·м",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bd39e787a8d",
+  "name": "Максимальный объём смеси",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ebeb2594ac0",
+  "name": "Манометр в комплекте",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b5db3d61190",
+  "name": "Марка кабеля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_0a52663922a",
+  "name": "Марка материала",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_eb9e364742a",
+  "name": "Марка пергамина",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4d8bad56dc5",
+  "name": "Марка прочности",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_690595754c2",
+  "name": "Марка стали",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_39ed2a0c231",
+  "name": "Марка хладагента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "R134a | R32 | R410A | R404A | R290 | R600a",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_925b8bc4961",
+  "name": "Марка цемента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fedc8a47089",
+  "name": "Масса баллона",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8f3f3217829",
+  "name": "Масса бойка",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ab0e7959e6c",
+  "name": "Масса газа",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5728744833f",
+  "name": "Масса заряда",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f5332dd4220",
+  "name": "Масса изделия",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1c5e0c2c042",
+  "name": "Масса инструмента",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_1f119730190",
+  "name": "Масса на м²",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_665075904f8",
+  "name": "Масса оборудования",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f661dec7df8",
+  "name": "Масса упаковки",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "12"
+ },
+ {
+  "key": "att_19114f713f6",
+  "name": "Материал",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "60"
+ },
+ {
+  "key": "att_46bbf4e4be1",
+  "name": "Материал абразива",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bee324f2fbc",
+  "name": "Материал бака",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3cfd2bc0ff9",
+  "name": "Материал блока",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7f7b88d2d06",
+  "name": "Материал ворса",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c8d3a049c9b",
+  "name": "Материал губок",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9c0f1e0324d",
+  "name": "Материал дюбеля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b699faba043",
+  "name": "Материал изоляции",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_2006eff323f",
+  "name": "Материал кейса",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d4479af74a8",
+  "name": "Материал кирпича",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_13bc356e787",
+  "name": "Материал корпуса",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "13"
+ },
+ {
+  "key": "att_e49d41e1bed",
+  "name": "Материал крепежа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_334c76bfe3c",
+  "name": "Материал кузова",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_2d93d7c47ce",
+  "name": "Материал лезвия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_6d6849163f0",
+  "name": "Материал ленты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_152394ed398",
+  "name": "Материал линз",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4c3d00257cd",
+  "name": "Материал мозаики",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2c62cfc1a78",
+  "name": "Материал наполнителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6b1c06e49af",
+  "name": "Материал насадки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_5f756cbb753",
+  "name": "Материал обработки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_1c7ce72c856",
+  "name": "Материал оплётки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_daeef11826e",
+  "name": "Материал основания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_ec7fd1943df",
+  "name": "Материал основы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_4655b2a0c08",
+  "name": "Материал платформы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_d5a320e0874",
+  "name": "Материал плафона",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_144df22ae7d",
+  "name": "Материал плинтуса",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_0d4fe57416c",
+  "name": "Материал подошвы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_107ea67f51b",
+  "name": "Материал полотна",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_0ea20ed4faa",
+  "name": "Материал профиля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_87bac9710bb",
+  "name": "Материал рабочей части",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cf766461e36",
+  "name": "Материал рамы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_c1712673a4d",
+  "name": "Материал резания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_620dcb7d34a",
+  "name": "Материал рукоятки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_0385fc12fff",
+  "name": "Материал сетки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d7e60379af6",
+  "name": "Материал трубы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_80e596ae64f",
+  "name": "Материал уголка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dd439fb878e",
+  "name": "Материал утеплителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d7994875f9f",
+  "name": "Материал шубки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8116b75166a",
+  "name": "Материал щетины",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_884feddf79d",
+  "name": "Межосевое расстояние",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_d3f76e8675f",
+  "name": "Мерная шкала",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_37a0d8877be",
+  "name": "Место установки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5fc0fdca378",
+  "name": "Метод сварки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6a70fc21761",
+  "name": "Механический или пневматический",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_eaa7b1e7638",
+  "name": "Механический или электрический",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bb7a8bacbef",
+  "name": "Микролифт сиденья",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9c46a3fc49a",
+  "name": "Микрофон",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_8d2550b6b2b",
+  "name": "Монтаж",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_b18b8e1a3fe",
+  "name": "Монтаж в стойку",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5a9ea6406bc",
+  "name": "Монтаж на DIN-рейку",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_281a9f939fe",
+  "name": "Монтажная глубина профиля",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_98aeb673b14",
+  "name": "Морозостойкость",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_22d7defef8e",
+  "name": "Морозостойкость F",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_d845b896c74",
+  "name": "Мощность",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "39"
+ },
+ {
+  "key": "att_4870a68c3d6",
+  "name": "Мощность СВЧ",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cde2a348b2e",
+  "name": "Мощность всасывания",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1d814a56c3e",
+  "name": "Мощность звука",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_18f3b61e689",
+  "name": "Мощность на м²",
+  "controlType": "range",
+  "unit": "Вт/м²",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e4d8c9fc48e",
+  "name": "Мощность нагрева",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7ec07e93b8f",
+  "name": "Мощность нагрузки",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3711612d716",
+  "name": "Мощность полная",
+  "controlType": "range",
+  "unit": "ВА",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9f667e3ab53",
+  "name": "Мощность солнечной панели",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e3b40b09d92",
+  "name": "Моющиеся",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_3b8151b4be4",
+  "name": "Моющий",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_97ed2d52a50",
+  "name": "Мягкая или твёрдая",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_a0531e98fd8",
+  "name": "На сетке",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d16abf99ea5",
+  "name": "Набор или одиночная",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_39e8df86d56",
+  "name": "Набор или одиночный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_52cb8d62a73",
+  "name": "Нагнетательный насос",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_24cf9ff5caf",
+  "name": "Нагрузка на дверцу",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_10194b68cd3",
+  "name": "Нагрузка на люк",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_332fdc6a49e",
+  "name": "Назначение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "21"
+ },
+ {
+  "key": "att_7234aa916b9",
+  "name": "Назначение грунта",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_79554d559a6",
+  "name": "Назначение крепежа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_92c3fbe883a",
+  "name": "Назначение ленты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_c97e449f189",
+  "name": "Назначение панели",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2e7dd1efefb",
+  "name": "Назначение плитки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_7c65cb1c504",
+  "name": "Назначение реле",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3a37cc5d2a1",
+  "name": "Назначение слоя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_aa3e0daa555",
+  "name": "Назначение средства",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_5ca7e8b42c5",
+  "name": "Наличие HDMI",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_617a39583ca",
+  "name": "Наличие печати этикеток",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_da9a3d8d208",
+  "name": "Напор максимум",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_bac3b1f0045",
+  "name": "Направление потока",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fb28eba9f44",
+  "name": "Напряжение",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_0a9af1a5787",
+  "name": "Напряжение аккумулятора",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_28014574d24",
+  "name": "Напряжение заряда",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_45d8e64ad59",
+  "name": "Напряжение катушки",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_000562c6114",
+  "name": "Напряжение питания",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_ddb2a1da9d2",
+  "name": "Напряжение управления",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_34e29a06839",
+  "name": "Наружный диаметр",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_790d3c2ba14",
+  "name": "Насадки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d493c4cb9e8",
+  "name": "Настенный или напольный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a18bf876dc4",
+  "name": "Насыпная плотность",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a084a992f16",
+  "name": "Начальная сила схватывания",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a8858e83765",
+  "name": "Негорючий кабель",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_65ed1af5c26",
+  "name": "Несущая нагрузка",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8f1c0761842",
+  "name": "Номинальная мощность",
+  "controlType": "range",
+  "unit": "Вт",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_48b8faa7f60",
+  "name": "Номинальное давление PN",
+  "controlType": "range",
+  "unit": "бар",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_c55459be727",
+  "name": "Номинальное напряжение",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_fb349f8ffe9",
+  "name": "Номинальный ток",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "10"
+ },
+ {
+  "key": "att_33364d17e55",
+  "name": "Ночная подсветка",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_48b8fff61d5",
+  "name": "Область применения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f6c8238d22a",
+  "name": "Обработка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_23dbec88364",
+  "name": "Общая толщина",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5e5c2eb4936",
+  "name": "Объём",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_ad73fe51552",
+  "name": "Объём бака",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_680d7cb2a31",
+  "name": "Объём баллона",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_13af173c6e9",
+  "name": "Объём бачка",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c219320c6be",
+  "name": "Объём духовки",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_ea4b85b9a22",
+  "name": "Объём камеры",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_245d66a2de0",
+  "name": "Объём картриджа",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8ab1dd70f18",
+  "name": "Объём контейнера",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b34beae0efe",
+  "name": "Объём корыта",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_026d6b175c2",
+  "name": "Объём мешка",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a39b2727464",
+  "name": "Объём накопителя",
+  "controlType": "range",
+  "unit": "ГБ",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_9c37eee47b0",
+  "name": "Объём оперативной памяти",
+  "controlType": "range",
+  "unit": "ГБ",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_fecf18034d1",
+  "name": "Объём перемешивания",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8bd8e27bc80",
+  "name": "Объём резервуара",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_fac63c6521a",
+  "name": "Объём ресивера",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_060e79ad6f5",
+  "name": "Объём травосборника",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_362c784f2ba",
+  "name": "Объём упаковки",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "16"
+ },
+ {
+  "key": "att_ea9a60b8060",
+  "name": "Объём чаши",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_ac5ff0a8615",
+  "name": "Огнестойкость",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_e362955a931",
+  "name": "Огнетушащая способность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_452c923c58f",
+  "name": "Операционная система",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_cbe15c73a60",
+  "name": "Оптическое разрешение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_944f51f8019",
+  "name": "Ориентация",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_688eff6c8c0",
+  "name": "Орнамент",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_adf905f3674",
+  "name": "Основа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_568346c5d06",
+  "name": "Основа клея",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_58fa0018b90",
+  "name": "Основа краски",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_6eff9d4c348",
+  "name": "Основа лака",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e5b558901ee",
+  "name": "Основа ленты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5e8acdc57a8",
+  "name": "Основа растворителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d4eb7dea381",
+  "name": "Основа смеси",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_481d8f73e74",
+  "name": "Основание",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_61451fe0db5",
+  "name": "Остекление",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_4f05a043ee4",
+  "name": "Отверстие под смеситель",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5bedb94ca6a",
+  "name": "Отжим",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_d9b6f697b82",
+  "name": "Отключающая способность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_3e5d4939fe0",
+  "name": "Отложенный старт",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c048498556a",
+  "name": "ПВ при токе",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5976efafe05",
+  "name": "Паровой удар",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_fc658af3bda",
+  "name": "Паропроницаемость",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a463e441409",
+  "name": "Первичное напряжение",
+  "controlType": "range",
+  "unit": "В",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_612fb50f757",
+  "name": "Передаточное число",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0626b5f5ac7",
+  "name": "Перезаряжаемый",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_831b3390baf",
+  "name": "Перелив",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_74e34352edf",
+  "name": "Перфорация",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9414b751a28",
+  "name": "Перфорированный",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a1c1cf7e8c6",
+  "name": "Пистолетная или бытовая",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cea0d9726b2",
+  "name": "Питание",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "12"
+ },
+ {
+  "key": "att_cbe207095c9",
+  "name": "Платформа аккумулятора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_57a66c5fcea",
+  "name": "Плотность",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_7fce3f7ad9c",
+  "name": "Плотность D",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_48950f2ac6b",
+  "name": "Площадь комплекта",
+  "controlType": "range",
+  "unit": "м²",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_99119a31908",
+  "name": "Площадь обогрева",
+  "controlType": "range",
+  "unit": "м²",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_28b6d6c9bb5",
+  "name": "Площадь отопления",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e660b3a7c54",
+  "name": "Площадь полива",
+  "controlType": "range",
+  "unit": "м²",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_09226c74f46",
+  "name": "Площадь помещения",
+  "controlType": "range",
+  "unit": "м²",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_5ca835b3e0d",
+  "name": "Площадь рулона",
+  "controlType": "range",
+  "unit": "м²",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9b1ff5c1766",
+  "name": "Площадь упаковки",
+  "controlType": "range",
+  "unit": "м²",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c7436b5d1b8",
+  "name": "Поверка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_823e8482d03",
+  "name": "Поверхность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_65fd05d0268",
+  "name": "Поворотный излив",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_893139390ea",
+  "name": "Погрешность измерения",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_a4ad26d52b2",
+  "name": "Под картридж или тубу",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_be2404ed280",
+  "name": "Под покраску",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_b355e387e70",
+  "name": "Под размер плитки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4714cddccb5",
+  "name": "Подгонка рисунка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e7b484b44e1",
+  "name": "Поддержание тепла",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6fb5b88d26e",
+  "name": "Поддерживаемое разрешение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_0aea380e9e0",
+  "name": "Поддержка мобильного приложения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_79e350f7432",
+  "name": "Подключение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_51eef1b0513",
+  "name": "Подключение к кассе",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f3dd9585e8a",
+  "name": "Подключение по сети",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c996778be89",
+  "name": "Подсветка",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_fca4f08c9bd",
+  "name": "Подставка под утюг",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_94cca6250ef",
+  "name": "Покрытие",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "12"
+ },
+ {
+  "key": "att_b912449635d",
+  "name": "Покрытие чаши",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d2904ddf46e",
+  "name": "Полезный объём",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_250968e9a15",
+  "name": "Полная мощность VA",
+  "controlType": "range",
+  "unit": "ВА",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_35ec66daeea",
+  "name": "Порода дерева",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_241cfef3081",
+  "name": "Порода древесины",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_32d7227b821",
+  "name": "Посадочный диаметр",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_001bb1671f7",
+  "name": "Посадочный квадрат",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_cb599c393bc",
+  "name": "Посадочный размер",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1af423cdf13",
+  "name": "Постоянная подача пара",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_bde666ce422",
+  "name": "Привод в комплекте",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1f14ddbb715",
+  "name": "Применение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_34ac5075834",
+  "name": "Присоединительный размер",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_1d5fa5a5e16",
+  "name": "Приёмник лазера",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_22587ab2d14",
+  "name": "Проводная или беспроводная",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_2b543b00a61",
+  "name": "Производительность",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_9ec604f9390",
+  "name": "Производительность воды",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_de3066a5c7a",
+  "name": "Производительность воздуха",
+  "controlType": "range",
+  "unit": "м³/ч",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_b9fa7c8552b",
+  "name": "Производительность распыления",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e310aa9cd36",
+  "name": "Происхождение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cb1c61523fb",
+  "name": "Пропускная способность",
+  "controlType": "range",
+  "unit": "м³/ч",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_c32bc4f03ca",
+  "name": "Противоскользящая поверхность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cabae50a09f",
+  "name": "Протокол подключения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4899a7332e7",
+  "name": "Профиль уплотнителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ee240f3912e",
+  "name": "Проходной",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ef345abf203",
+  "name": "Процессор",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_e53b9023bf0",
+  "name": "Прочность на сжатие",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bf4e7ae06c2",
+  "name": "Пустотность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_934be85efd1",
+  "name": "Пылеудаление",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9a780a0add2",
+  "name": "Рабочая высота",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2126cfb03c9",
+  "name": "Рабочая температура",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_5ca23ec83a4",
+  "name": "Рабочая ширина",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_72cb0766cdb",
+  "name": "Рабочее давление",
+  "controlType": "range",
+  "unit": "бар",
+  "examples": "",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_d27f7528026",
+  "name": "Рабочий диапазон напряжения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9be9ce15f32",
+  "name": "Рабочий захват",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_746667a3e8d",
+  "name": "Рабочий объём",
+  "controlType": "range",
+  "unit": "л",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b92829031e1",
+  "name": "Разборная штанга",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_98713e88140",
+  "name": "Размер",
+  "controlType": "composite_dimensions_needs_split",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_acaa1b908f2",
+  "name": "Размер ванночки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a3d1e2faf97",
+  "name": "Размер зева",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5e1e21701cd",
+  "name": "Размер зерна",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7fb781606e5",
+  "name": "Размер зуба",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_081e660c1ca",
+  "name": "Размер зуба TPI",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_114588dfd38",
+  "name": "Размер картриджа",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9718f03877c",
+  "name": "Размер лейки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fd7f47304bc",
+  "name": "Размер листа",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_aae93eaeb09",
+  "name": "Размер наконечника",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c55195865a7",
+  "name": "Размер одежды",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6278a9f6ffa",
+  "name": "Размер панели",
+  "controlType": "enum",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ef28d03eee4",
+  "name": "Размер перчаток",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_757b29379a5",
+  "name": "Размер платформы",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a7912e2a7a6",
+  "name": "Размер поверхности",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_414ef0dd977",
+  "name": "Размер полки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ab5ac94027b",
+  "name": "Размер предохранителя",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e368fad1938",
+  "name": "Размер рабочего стола",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6e0e53f8dd9",
+  "name": "Размер рабочей части",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_118e55807fd",
+  "name": "Размер скобы",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b65d48a25e8",
+  "name": "Размер чипа",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_227880d2ed6",
+  "name": "Размер элемента",
+  "controlType": "enum",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c40efcbc0fc",
+  "name": "Размер ячейки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_6df8a4d5d04",
+  "name": "Размеры",
+  "controlType": "composite_dimensions_needs_split",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_170f9936c9b",
+  "name": "Разметочная шкала",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b70e3187701",
+  "name": "Разрешение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_acbdadaceb7",
+  "name": "Разрешение камеры",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_74c6fd9b05f",
+  "name": "Разрешение экрана",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_cb2c7e279c2",
+  "name": "Разрывная нагрузка",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9a8185ac102",
+  "name": "Разъём RJ11/RJ12",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e96057fdfe9",
+  "name": "Раппорт рисунка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_fffb8979bd4",
+  "name": "Расход воздуха",
+  "controlType": "range",
+  "unit": "м³/ч",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_79cdcf8f018",
+  "name": "Расход на м²",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "9"
+ },
+ {
+  "key": "att_0f691d20ec0",
+  "name": "Расход на рулоны",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1921435b4bf",
+  "name": "Расход упаковки на м²",
+  "controlType": "range",
+  "unit": "м²",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9e785e8212c",
+  "name": "Расчётная нагрузка",
+  "controlType": "range",
+  "unit": "кг",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_09b1a9e7ac2",
+  "name": "Регулировка высоты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7635ee33e83",
+  "name": "Регулировка оборотов",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_2d3d4e0289d",
+  "name": "Регулировка оголовья",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9e8f4a630ec",
+  "name": "Регулировка сектора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d568f2a988c",
+  "name": "Регулировка силы удара",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4db463a3787",
+  "name": "Регулировка струи",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_448ebfcb754",
+  "name": "Регулировка температуры",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_a9c88d47aaa",
+  "name": "Регулируемая дужка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c64d162c2f4",
+  "name": "Регулируемые петли",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_43bfb06c087",
+  "name": "Регулируемый",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e59d4908e9d",
+  "name": "Режим всасывания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5465856f4be",
+  "name": "Режим рециркуляции",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_100572adaf3",
+  "name": "Режимы работы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_38d677ea4bd",
+  "name": "Режущий элемент",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_53272d1ddbc",
+  "name": "Резервирование АКБ",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a81ec7fa941",
+  "name": "Резервное питание",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_109a4ca04e5",
+  "name": "Резьба штатива",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_510dd4d7ed3",
+  "name": "Ректификация",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "да | нет",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_8c661f031b4",
+  "name": "Рекуперация",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1ab285264d8",
+  "name": "Ростовка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ff5f4068c87",
+  "name": "Ручное или машинное нанесение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_02fee29ab6c",
+  "name": "Ручной или электрический",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_757470d1081",
+  "name": "С аквастопом",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_11b8bb0a602",
+  "name": "С армированием",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_370d6f2e468",
+  "name": "С колёсами",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_dc553a01206",
+  "name": "С крышкой",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4f3c6933727",
+  "name": "С подставкой",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6208130f4d8",
+  "name": "С протяжкой",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_30c9437a35e",
+  "name": "С распылителем",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_62ee63f3d3a",
+  "name": "С расходомерами",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_85daccc0236",
+  "name": "С термостатом",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3a6ca3d7f9b",
+  "name": "С шурупом",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c5765b38c0e",
+  "name": "Самовыравнивание",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ad44fd57f75",
+  "name": "Самовыравнивающаяся",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_926e8175913",
+  "name": "Самоклеящаяся",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5186af5a3cc",
+  "name": "Самоклеящийся",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_cbaba4fb534",
+  "name": "Самоходная",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_59132ad0ff0",
+  "name": "Сварочный ток максимум",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_48789d296e0",
+  "name": "Световое оповещение",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f9531adcc7c",
+  "name": "Световой поток",
+  "controlType": "range",
+  "unit": "лм",
+  "examples": "",
+  "categoriesUsing": "8"
+ },
+ {
+  "key": "att_75129d88ec6",
+  "name": "Светоотражающие элементы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b17d9197777",
+  "name": "Светопропускание",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2d47124b299",
+  "name": "Сезонность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_2a99681a520",
+  "name": "Селективность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0dc90fa890d",
+  "name": "Серия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_80182bd6a9f",
+  "name": "Сертификация",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_52aff325fc2",
+  "name": "Сетевая интеграция",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0e3011f61cd",
+  "name": "Сетка в комплекте",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d9130c1a1b5",
+  "name": "Сечение",
+  "controlType": "enum",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e1232376fa1",
+  "name": "Сечение жилы",
+  "controlType": "range",
+  "unit": "мм²",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_c92d03f4500",
+  "name": "Сечение кабеля",
+  "controlType": "range",
+  "unit": "мм²",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_d1ef06ee9ff",
+  "name": "Система разморозки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e03c0d81bdc",
+  "name": "Складная",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_ebcc7cd685c",
+  "name": "Складная ручка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4335a214c14",
+  "name": "Складной",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c6299da6a2b",
+  "name": "Скороварка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bfee3090c47",
+  "name": "Скорость вращения",
+  "controlType": "range",
+  "unit": "об/мин",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6688ce48eff",
+  "name": "Скорость записи",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c912cefbd00",
+  "name": "Скорость отжима",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ae6b42e8186",
+  "name": "Скорость печати",
+  "controlType": "range",
+  "unit": "стр/мин",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8d4f48e7b01",
+  "name": "Скорость подъёма",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6db4f1c5dde",
+  "name": "Скорость портов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ceed529280e",
+  "name": "Скорость потока",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ed615e8dff6",
+  "name": "Скорость распознавания",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a5b5e622311",
+  "name": "Скорость чтения",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6e4fda76c8c",
+  "name": "Сменная насадка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_60c0c372157",
+  "name": "Сменное полотно",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_97bd9cc9853",
+  "name": "Сменные лезвия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a86bb2ba161",
+  "name": "Сменный блок",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f1e89b6c318",
+  "name": "Сменный грифель",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ead5103f397",
+  "name": "Сменный ролик",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0a7936c90cb",
+  "name": "Совместимая система",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_c38106b106f",
+  "name": "Совместимость СКУД",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_23ba07b6588",
+  "name": "Совместимость бренда",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_97f40a2db38",
+  "name": "Совместимость механизма",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b66d52ae267",
+  "name": "Совместимость модели",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_536c8432b54",
+  "name": "Совместимость с LED",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a2440fd0eb5",
+  "name": "Совместимость с каской",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d6df99d8e73",
+  "name": "Совместимость с краской",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a03fc91366f",
+  "name": "Совместимость с оборудованием",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_90a8ac081bb",
+  "name": "Совместимость с хладагентом",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f4dbe5197dc",
+  "name": "Совместимый светильник",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2d6a0cb7598",
+  "name": "Совместимый хладагент",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b91846d8c20",
+  "name": "Сорт древесины",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_409c172d54b",
+  "name": "Сортировка древесины",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c57680e0da7",
+  "name": "Способ доступа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dca11971fba",
+  "name": "Способ идентификации",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dd26d1de3c2",
+  "name": "Способ крепления",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_16e4672a273",
+  "name": "Способ монтажа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7ce48188fd2",
+  "name": "Способ нанесения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7be16d9cd0f",
+  "name": "Способ открывания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "поворотное | откидное | поворотно-откидное | раздвижное | глухое",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_a0c05be6c9d",
+  "name": "Способ установки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3dd0ebed278",
+  "name": "Стандарт",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_f49db8e0fb0",
+  "name": "Стандарт DIN/ISO",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a1986786b7c",
+  "name": "Стандарт безопасности",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2f53380b815",
+  "name": "Стартовая или финишная",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_93663846b7c",
+  "name": "Стеклопакет",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7784fece164",
+  "name": "Степень блеска",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_b603d037fc9",
+  "name": "Степень защиты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2e761dd0806",
+  "name": "Степень защиты IP",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "IP20 | IP44 | IP54 | IP65 | IP66 | IP67",
+  "categoriesUsing": "22"
+ },
+ {
+  "key": "att_4adba8b1bcf",
+  "name": "Степень фильтрации",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f6a2879f703",
+  "name": "Стиль",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0b05c52b655",
+  "name": "Стойкость к УФ",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_27162424628",
+  "name": "Сторона открывания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_7814f03a91f",
+  "name": "Сушка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8e4f0d14081",
+  "name": "Счётчик проходов",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_10752fdbb15",
+  "name": "Телескопическая",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_205d53f77fc",
+  "name": "Телескопическая штанга",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_215e9ba4a62",
+  "name": "Телескопические ручки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_336d09628ee",
+  "name": "Телескопический",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cd0cfd3f4d0",
+  "name": "Тематика рисунка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_943f588ffbb",
+  "name": "Температура застывания",
+  "controlType": "range",
+  "unit": "°C",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f27c0466027",
+  "name": "Температура кипения",
+  "controlType": "range",
+  "unit": "°C",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c1290716534",
+  "name": "Температура нагрева",
+  "controlType": "range",
+  "unit": "°C",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_242ad326775",
+  "name": "Температура размягчения",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ece33242345",
+  "name": "Температура эксплуатации",
+  "controlType": "range",
+  "unit": "°C",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_5155da2bd54",
+  "name": "Температурный диапазон",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_793f99830c9",
+  "name": "Тепловая мощность",
+  "controlType": "range",
+  "unit": "кВт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8e44c03d4c6",
+  "name": "Теплоизоляция",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_08f312261ac",
+  "name": "Теплоотдача",
+  "controlType": "range",
+  "unit": "кВт",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b5c04019f46",
+  "name": "Теплопроводность",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_a07a86b84c7",
+  "name": "Терморазрыв",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a3aecfe8394",
+  "name": "Терморегулятор в комплекте",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a012d2f835f",
+  "name": "Термостат",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_b9179d8a63d",
+  "name": "Термостойкость",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b2237026af4",
+  "name": "Технология печати",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_df1299df222",
+  "name": "Тип LVT или SPC",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_550d126c5ea",
+  "name": "Тип ИБП",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9eddddc8c4e",
+  "name": "Тип ПК",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e9e3abd41f9",
+  "name": "Тип ПРА",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_85aad8315bc",
+  "name": "Тип ТВ-розетки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8dac4049749",
+  "name": "Тип аккумулятора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_687bddccfbe",
+  "name": "Тип анкера",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_827c6e40b8b",
+  "name": "Тип арматуры",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e04f94078ae",
+  "name": "Тип армирования",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "без армирования | стекловолокно | алюминий",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7066f5888e8",
+  "name": "Тип батареи",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7f3a563594d",
+  "name": "Тип битума",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2d17d36afe6",
+  "name": "Тип бойка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2d8fdc10ee0",
+  "name": "Тип бурения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8caee3d55ad",
+  "name": "Тип вантуза",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dc1a525c9db",
+  "name": "Тип вентиля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4be590d59a8",
+  "name": "Тип весов",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_173f3df1294",
+  "name": "Тип вилки или розетки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b7cc10c38fa",
+  "name": "Тип винила",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_750e885f949",
+  "name": "Тип водонагревателя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_661a7c2ab09",
+  "name": "Тип воздуходува",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a325cfcd071",
+  "name": "Тип выключателя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_159cd349978",
+  "name": "Тип выпуска",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_85fbf920977",
+  "name": "Тип газа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_91ac0d75203",
+  "name": "Тип гарнитура",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2e7dd469429",
+  "name": "Тип гвоздя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5ae0f4f57d0",
+  "name": "Тип гидроизоляции",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a15bfe0aca1",
+  "name": "Тип головки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b0b70d0bea3",
+  "name": "Тип грунта",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_4716fd1d889",
+  "name": "Тип губок",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7f064514631",
+  "name": "Тип датчиков",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1f2e267c8bd",
+  "name": "Тип двери",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_2c8051bb65b",
+  "name": "Тип двигателя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_df8d4ea2468",
+  "name": "Тип дисплея",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b64d6075e20",
+  "name": "Тип дифзащиты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "AC | A | F | B",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_d280e86893a",
+  "name": "Тип добавок",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0d19a8c116a",
+  "name": "Тип душевой панели",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_142a1ca86e5",
+  "name": "Тип жала",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6d3c0f2054f",
+  "name": "Тип загрузки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6beff6b3fc2",
+  "name": "Тип замка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_f9c404aee39",
+  "name": "Тип запуска",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3e265ee18da",
+  "name": "Тип затирки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4f83d63a275",
+  "name": "Тип защиты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c18ea62b966",
+  "name": "Тип изделия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_916d5b86d1c",
+  "name": "Тип инвертора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0626011e1ed",
+  "name": "Тип индикатора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4c45908ff0d",
+  "name": "Тип инструмента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_4d71c06227f",
+  "name": "Тип кабеля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "витая пара | коаксиальный | силовой | сигнальный",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a28f4881f9e",
+  "name": "Тип клавиатуры",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_92b47cc0747",
+  "name": "Тип клеевого слоя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_1937b78e3f3",
+  "name": "Тип клея",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_e27911ae63a",
+  "name": "Тип климатического устройства",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e8ac2f8e10a",
+  "name": "Тип колбы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_030d5b18a72",
+  "name": "Тип колеса",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_87c9398d5b3",
+  "name": "Тип компрессора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_56beac62ed9",
+  "name": "Тип кондиционера",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bef0660e469",
+  "name": "Тип конструкции",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_aa115ad6ed8",
+  "name": "Тип корпуса камеры",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "цилиндрическая | купольная | поворотная | корпусная",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_6031187c940",
+  "name": "Тип котла",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ba043d52586",
+  "name": "Тип краскопульта",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_03fad3c79be",
+  "name": "Тип крепления",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_b959c3379df",
+  "name": "Тип кровли",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_26e612eb5c0",
+  "name": "Тип кромки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_d59e083e4c5",
+  "name": "Тип крышки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_12ffbde879f",
+  "name": "Тип кустореза",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_326481d1ef8",
+  "name": "Тип лампы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_80021c65fac",
+  "name": "Тип лезвия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_341e248c5be",
+  "name": "Тип линолеума",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_20b0b839bd5",
+  "name": "Тип листа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f3bf11efd75",
+  "name": "Тип лопаты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_91482c0128f",
+  "name": "Тип масла",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_be34dbd82f1",
+  "name": "Тип матрицы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_d313360a614",
+  "name": "Тип металлодетектора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8afd1a28fe8",
+  "name": "Тип механизма",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_8604239a5a7",
+  "name": "Тип миксера",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cbe6fd623b7",
+  "name": "Тип модуля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_082f57bab3d",
+  "name": "Тип мойки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_49d1afe3de9",
+  "name": "Тип монтажа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "12"
+ },
+ {
+  "key": "att_5b0a265560a",
+  "name": "Тип нагрева",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d52ce5e0087",
+  "name": "Тип нагрузки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_58f793d2441",
+  "name": "Тип наконечника",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_4e6d1b62973",
+  "name": "Тип накопителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_96ebb32f796",
+  "name": "Тип наполнителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8d4efe963db",
+  "name": "Тип направляющей",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9a529b1b128",
+  "name": "Тип насадки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_647158e7f0b",
+  "name": "Тип насоса",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_520c3f9d9ad",
+  "name": "Тип ножа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ea89caa008a",
+  "name": "Тип облицовки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cfca711316f",
+  "name": "Тип обогревателя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_496de2a9238",
+  "name": "Тип обоев",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b3342de8830",
+  "name": "Тип огнетушителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_36abf7835af",
+  "name": "Тип опрыскивателя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_990203fe69c",
+  "name": "Тип оросителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_37670aaf216",
+  "name": "Тип освежителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_57620327307",
+  "name": "Тип оснастки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_16788c45129",
+  "name": "Тип основания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_afa179d3921",
+  "name": "Тип отделки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_caa129bf0de",
+  "name": "Тип открывания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_d8e69e4d390",
+  "name": "Тип очков",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ad8f5967433",
+  "name": "Тип панели",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ae32255ea9b",
+  "name": "Тип патрона",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "SDS-plus | SDS-max | быстрозажимной | ключевой",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_6bba7400972",
+  "name": "Тип паяльника",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9a8daf62858",
+  "name": "Тип пены",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b0b44cf5d08",
+  "name": "Тип переключения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_65d391eecea",
+  "name": "Тип петли",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_05417a76db6",
+  "name": "Тип пиломатериала",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b619c427e13",
+  "name": "Тип пилы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_124c643b119",
+  "name": "Тип питания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "сеть | аккумулятор | бензин | дизель | ручной | пневматика",
+  "categoriesUsing": "19"
+ },
+ {
+  "key": "att_42c437270de",
+  "name": "Тип плавкой вставки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3a304e77a7f",
+  "name": "Тип плафона",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_16e9864535a",
+  "name": "Тип плиты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a2a0346e88e",
+  "name": "Тип пневмоинструмента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2df270bd914",
+  "name": "Тип поверхности",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4d7173466c8",
+  "name": "Тип подключения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_2b22eae5a1a",
+  "name": "Тип подогрева",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f88a4c81e7a",
+  "name": "Тип покрытия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_cc81a5b7074",
+  "name": "Тип помпы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4cb3ccd2a13",
+  "name": "Тип посыпки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c8da53c9b04",
+  "name": "Тип потолочной системы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d0160c5fdd2",
+  "name": "Тип прибора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dde29ec8a1a",
+  "name": "Тип привязи",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_bfb14835ee4",
+  "name": "Тип присоединения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3554fef8fb8",
+  "name": "Тип профиля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_5caf24ced49",
+  "name": "Тип пылесборника",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d9e3dcb878a",
+  "name": "Тип пылесоса",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_83784186500",
+  "name": "Тип радиатора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0ff6ebb629b",
+  "name": "Тип распылителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7561041472e",
+  "name": "Тип резьбы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_050b0ae4a52",
+  "name": "Тип розетки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a8ef3eb6232",
+  "name": "Тип рукоятки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_64ca86da46f",
+  "name": "Тип рулонной кровли",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_705012effb0",
+  "name": "Тип светильника",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6ba283239f4",
+  "name": "Тип сети",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_68867ba0de6",
+  "name": "Тип сетки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b7c874a7efb",
+  "name": "Тип сигнализации",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4e429befbb4",
+  "name": "Тип системы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9cf1a1e196f",
+  "name": "Тип сканера",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cc44b0f2e8d",
+  "name": "Тип скобы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_34e9748e3ab",
+  "name": "Тип смеси",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_41e09c2c754",
+  "name": "Тип смесителя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e7b108174a3",
+  "name": "Тип соединения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "резьбовое | пайка | сварка | пресс | раструб | клеевое",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_9538a346e99",
+  "name": "Тип средства",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_45b2be12d71",
+  "name": "Тип стабилизатора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6f0114455e3",
+  "name": "Тип станка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_12011cdb1a7",
+  "name": "Тип стеклопакета",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_c9a39a10090",
+  "name": "Тип степлера",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_90777fb44d0",
+  "name": "Тип струбцины",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c90ba247fbe",
+  "name": "Тип сушилки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_590a6ce09e2",
+  "name": "Тип тележки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d0b120cab48",
+  "name": "Тип топлива",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_6fb5d3d5020",
+  "name": "Тип точильного станка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_391bf37b280",
+  "name": "Тип трансформатора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_498dc610d30",
+  "name": "Тип турникета",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_183aa40634c",
+  "name": "Тип умывальника",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_94aad461180",
+  "name": "Тип упаковки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b683198c59f",
+  "name": "Тип управления",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "8"
+ },
+ {
+  "key": "att_447f80277d4",
+  "name": "Тип уровня",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_21a33c791ff",
+  "name": "Тип установки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_bb9659e8104",
+  "name": "Тип утюга",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9ea39487e6c",
+  "name": "Тип фасадного основания",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c2f2ad92a3e",
+  "name": "Тип фильтра",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_0068096d63f",
+  "name": "Тип фонаря",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8c5676c3688",
+  "name": "Тип хвостовика",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8bcb129db82",
+  "name": "Тип хладагента",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "R134a | R32 | R410A | R404A | R290 | R600a",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_e12ba67697d",
+  "name": "Тип холодильника",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2b2429eca28",
+  "name": "Тип хомута",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5a36cfdf378",
+  "name": "Тип швабры",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_198e80f25cb",
+  "name": "Тип шлифмашины",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0d3034ca813",
+  "name": "Тип шлица",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9a2aec4c9a9",
+  "name": "Тип шпинделя",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_405573532da",
+  "name": "Тип штуцера",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7a79805f076",
+  "name": "Тип щита",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c472868191a",
+  "name": "Тип ящика",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_aefa112afd6",
+  "name": "Типы головок",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_78192aced71",
+  "name": "Ток заряда",
+  "controlType": "range",
+  "unit": "А",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f5b9c3acdcb",
+  "name": "Ток утечки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "10 мА | 30 мА | 100 мА | 300 мА",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_0fb98448965",
+  "name": "Толщина",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "13"
+ },
+ {
+  "key": "att_1cc63857164",
+  "name": "Толщина защитного слоя",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_402fed2d76e",
+  "name": "Толщина листа",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_aa4284ca01b",
+  "name": "Толщина металла",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_0dcb72dca86",
+  "name": "Толщина панели",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e8e7946830b",
+  "name": "Толщина покрытия",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_3496e89ec01",
+  "name": "Толщина полотна",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_793e07bb78f",
+  "name": "Толщина реза максимум",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7196e31589c",
+  "name": "Толщина слоя",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c83b8c00604",
+  "name": "Толщина слоя максимум",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_59b90ac8c49",
+  "name": "Толщина слоя минимум",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6f651a84041",
+  "name": "Толщина стенки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_913eea7e42c",
+  "name": "Точность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_a8040c341e4",
+  "name": "Точность измерения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dc3d5878254",
+  "name": "Точность стабилизации",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b8664667092",
+  "name": "Трансформер",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5573a6127c1",
+  "name": "Трещотка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a3aeae47171",
+  "name": "Тёплый или холодный профиль",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7266e36ad14",
+  "name": "УФ-стойкость",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_c8baa289c32",
+  "name": "Уведомления на телефон",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_896df73c561",
+  "name": "Угол",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6ff58a1ee71",
+  "name": "Угол свечения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_256905c0b5c",
+  "name": "Угол уклона минимум",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a22fe12239e",
+  "name": "Удаление накипи",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a4e6de74ef0",
+  "name": "Удалённый доступ",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_95dfb541e73",
+  "name": "Ударный режим",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4fc937d0770",
+  "name": "Умные функции",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_81edf08c5b8",
+  "name": "Управление",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_67ca3b16506",
+  "name": "Управляемый",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_852040739f2",
+  "name": "Уровень защиты Up",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dd30c5f61ae",
+  "name": "Уровень шума",
+  "controlType": "range",
+  "unit": "дБ",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_d91cdd0cb43",
+  "name": "Усиленная ручка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e413d6d1cb4",
+  "name": "Усилие зажима",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b824885e69b",
+  "name": "Условный проход DN",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5c78ddc7647",
+  "name": "Утеплённые",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c370c1f67f5",
+  "name": "Фактура",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_56dac60d1e0",
+  "name": "Фаска",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b8fd7df0f33",
+  "name": "Фиксатор лезвия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d750779e260",
+  "name": "Фиксация",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e00a18c5881",
+  "name": "Фиксация в открытом положении",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8c31da19a94",
+  "name": "Фокусное расстояние",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_de1244ba064",
+  "name": "Фольгированный слой",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4d6aec3be21",
+  "name": "Форм-фактор",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_22af8f93585",
+  "name": "Форма",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_bfe3ffcea64",
+  "name": "Форма выпуска",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_60d78b9b87f",
+  "name": "Форма выходного сигнала",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_c1e560c9a5f",
+  "name": "Форма кабеля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_87f4eabc349",
+  "name": "Форма колбы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_5172a613ab4",
+  "name": "Форма поставки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_60e69a0ba27",
+  "name": "Форма чаши",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e72df1f8dd4",
+  "name": "Формат бумаги",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_00a4b94cb31",
+  "name": "Формат кирпича",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8cc0cd59cca",
+  "name": "Формат плитки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_ea59bdde64e",
+  "name": "Формат плитки максимум",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f8055d3b527",
+  "name": "Формат плиты",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_613ebf54261",
+  "name": "Формат упаковки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_dc9045cf8d7",
+  "name": "Форматы видео",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_12d6299fca2",
+  "name": "Фракция",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_66180d8aae1",
+  "name": "Функция вычисления площади",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4986801b704",
+  "name": "Характеристика отключения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "B | C | D",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_00fe69bb4bc",
+  "name": "Химическая основа",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8e7d888fe5d",
+  "name": "Химия аккумулятора",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6c0747883a5",
+  "name": "Холодный обдув",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3e760eb4397",
+  "name": "Холодопроизводительность",
+  "controlType": "range",
+  "unit": "кВт",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_c617317da45",
+  "name": "Храповый механизм",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_84b22ed2aa3",
+  "name": "Цвет",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "белый | чёрный | серый | коричневый | другой",
+  "categoriesUsing": "51"
+ },
+ {
+  "key": "att_b383a3aac58",
+  "name": "Цвет RAL",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_64043d843f3",
+  "name": "Цвет и декор",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_a01872253db",
+  "name": "Цвет корпуса",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e557d0b37c0",
+  "name": "Цвет лазера",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_370f0fb82e3",
+  "name": "Цвет покрытия",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_9ecb5cdc523",
+  "name": "Цвет профиля",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_9b17062405c",
+  "name": "Цвет разметки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3c736a418e6",
+  "name": "Цвет свечения",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a7dcd126be4",
+  "name": "Цветность печати",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2c017475970",
+  "name": "Цветовая температура",
+  "controlType": "range",
+  "unit": "°C",
+  "examples": "",
+  "categoriesUsing": "7"
+ },
+ {
+  "key": "att_d0432dd66d6",
+  "name": "Цена деления",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b80f6980404",
+  "name": "Цифровой дисплей",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_afb2d5c1abe",
+  "name": "Цоколь",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_50987454a74",
+  "name": "Частота вращения",
+  "controlType": "range",
+  "unit": "об/мин",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_cef6777d026",
+  "name": "Частота обновления",
+  "controlType": "range",
+  "unit": "Гц",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_fc8b6d02aaa",
+  "name": "Частота ударов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_489c3812325",
+  "name": "Частота хода",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cc326715a8b",
+  "name": "Число Ethernet-портов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_6ef8e5d7356",
+  "name": "Число IP-каналов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_baf248cde21",
+  "name": "Число абонентов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0cc542e1327",
+  "name": "Число вводов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9a41aee5102",
+  "name": "Число венчиков",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_f8e0f9de2a0",
+  "name": "Число выходов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_d2df0ffa256",
+  "name": "Число глазков",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_30472123044",
+  "name": "Число гнёзд",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_8da2ca47d0d",
+  "name": "Число датчиков",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5ec2a005ab0",
+  "name": "Число жил",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_9b82c5b3ac2",
+  "name": "Число зон",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_192c9efb546",
+  "name": "Число зон обнаружения",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ec4b9f18720",
+  "name": "Число камер",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_183be031be3",
+  "name": "Число камер профиля",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_dcd3d63c481",
+  "name": "Число каналов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_c64a7903104",
+  "name": "Число клавиш",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_588ff710a0f",
+  "name": "Число колёс",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_e6f821f4c2b",
+  "name": "Число контактов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4ed7ac1139c",
+  "name": "Число контуров уплотнения",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_5ae8cd0e6eb",
+  "name": "Число конфорок",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_6749f738166",
+  "name": "Число ламп",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2bad3065383",
+  "name": "Число лучей",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c19b8837b9f",
+  "name": "Число модулей",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_16724269966",
+  "name": "Число отделений",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_cc77b8770f4",
+  "name": "Число пользователей",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d8ba43d9921",
+  "name": "Число полюсов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_fb5d8996c8e",
+  "name": "Число постов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_d9934a9433c",
+  "name": "Число программ",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_990644f8cbd",
+  "name": "Число режимов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_e7a87d50947",
+  "name": "Число розеток",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_29de49188f8",
+  "name": "Число секций",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_92efb221b2b",
+  "name": "Число скоростей",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_74754313609",
+  "name": "Число слоёв",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_35a44a06ecb",
+  "name": "Число ступеней",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7f6931b641a",
+  "name": "Число температурных режимов",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_35644065c63",
+  "name": "Число точек крепления",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e0a0b9b6a98",
+  "name": "Чистота",
+  "controlType": "range",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d21cebb54df",
+  "name": "Чувствительность",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4247eeb392f",
+  "name": "Шаг резьбы",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d73c1c19330",
+  "name": "Ширина",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "11"
+ },
+ {
+  "key": "att_11c0f572663",
+  "name": "Ширина в модулях",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_c07e82a6d8a",
+  "name": "Ширина валика",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e8ed941e8f0",
+  "name": "Ширина вытяжки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_9ba51ec0665",
+  "name": "Ширина двери",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_76d3be7a03b",
+  "name": "Ширина двери максимум",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2d116f2dcf4",
+  "name": "Ширина изделия",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_48ec56b4d73",
+  "name": "Ширина кисти",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4b7a7cc2d09",
+  "name": "Ширина короба",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2b21bcb0920",
+  "name": "Ширина лезвия",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_e7a9b29a816",
+  "name": "Ширина ленты",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_d20b000ff7f",
+  "name": "Ширина листа",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_9d7365103c5",
+  "name": "Ширина ниши",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a7040ab8517",
+  "name": "Ширина обработки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ad440a2ea12",
+  "name": "Ширина окна",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "3"
+ },
+ {
+  "key": "att_137757b280d",
+  "name": "Ширина планки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_c6fc38fced8",
+  "name": "Ширина плиты",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "4"
+ },
+ {
+  "key": "att_76f88e44215",
+  "name": "Ширина полки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_369bc33cea1",
+  "name": "Ширина полотна",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "8"
+ },
+ {
+  "key": "att_93ae7b1362b",
+  "name": "Ширина профиля",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_940df43a3c0",
+  "name": "Ширина прохода",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_10ca11870b2",
+  "name": "Ширина проёма",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "6"
+ },
+ {
+  "key": "att_059b4072f5e",
+  "name": "Ширина рабочей части",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "5"
+ },
+ {
+  "key": "att_0da90081796",
+  "name": "Ширина рулона",
+  "controlType": "range",
+  "unit": "м",
+  "examples": "",
+  "categoriesUsing": "9"
+ },
+ {
+  "key": "att_09a4e08ae70",
+  "name": "Ширина скашивания",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_b69b056f492",
+  "name": "Ширина ступени",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_7a0df8687ee",
+  "name": "Ширина стяжки",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_ba538f64ab3",
+  "name": "Ширина шва",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_2b3144b9f9f",
+  "name": "Ширина штробы максимум",
+  "controlType": "range",
+  "unit": "мм",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a9c0236a13f",
+  "name": "Шторки",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3e2a526196c",
+  "name": "Щиток",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_0cca1274d41",
+  "name": "Экран",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_63844ddc6f0",
+  "name": "Экранирование",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_17aa1486b8f",
+  "name": "Электрический или водяной",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_c42ba02ee9f",
+  "name": "Электроизоляционная",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_3fca33c18c0",
+  "name": "Электроподжиг",
+  "controlType": "boolean",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_a322976f4b3",
+  "name": "Электророзетка",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "1"
+ },
+ {
+  "key": "att_4a666a39ea8",
+  "name": "Энергия удара",
+  "controlType": "range",
+  "unit": "Дж",
+  "examples": "",
+  "categoriesUsing": "2"
+ },
+ {
+  "key": "att_f8317a66e93",
+  "name": "Эффект поверхности",
+  "controlType": "enum",
+  "unit": "",
+  "examples": "",
+  "categoriesUsing": "2"
+ }
+]

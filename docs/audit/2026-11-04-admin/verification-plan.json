@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "runId": "admin-workspaces-2026-11-04",
+  "mode": "implement",
+  "inputRevision": "baseline-admin-2026-11-04",
+  "outputRevision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+  "inputHash": "38905b938054289ba7678c3f5c8629f8729f5c96232c437720a9c5fc5473ea7f",
+  "checks": [
+    {
+      "id": "types",
+      "kind": "static",
+      "allowNotApplicable": false
+    },
+    {
+      "id": "lint",
+      "kind": "static",
+      "allowNotApplicable": false
+    },
+    {
+      "id": "unit-integration",
+      "kind": "functional",
+      "allowNotApplicable": false
+    },
+    {
+      "id": "browser-flows",
+      "kind": "functional",
+      "allowNotApplicable": false
+    },
+    {
+      "id": "production-build",
+      "kind": "static",
+      "allowNotApplicable": false
+    },
+    {
+      "id": "visual-desktop-mobile",
+      "kind": "rendered",
+      "allowNotApplicable": false
+    },
+    {
+      "id": "keyboard-focus",
+      "kind": "accessibility",
+      "allowNotApplicable": false
+    }
+  ]
+}

@@ -1,6 +1,19 @@
 import { Workspace } from "@/components/workspace";
 import { AdminCatalogPanel } from "@/components/admin-catalog-panel";
-import { requirePageUser } from "@/modules/auth/page";
-import { ROLES } from "@/modules/rbac/permissions";
+import { requirePagePermission } from "@/modules/auth/page";
+import styles from "@/components/workspace-design.module.css";
 export const dynamic = "force-dynamic";
-export default async function AdminCatalogPage() { await requirePageUser([...ROLES.filter((role) => ["ADMIN", "SUPER_ADMIN", "CONTENT_MANAGER"].includes(role))], "/admin/catalog"); return <Workspace kind="admin"><h1>Каталог товаров</h1><AdminCatalogPanel /></Workspace>; }
+export default async function AdminCatalogPage() {
+  await requirePagePermission("catalog:manage", "/admin/catalog");
+  return (
+    <Workspace kind="admin">
+      <header className={styles.pageHeading}>
+        <div>
+          <h1>Каталог товаров</h1>
+          <p>Карточки товаров, публикация и модерация ассортимента.</p>
+        </div>
+      </header>
+      <AdminCatalogPanel />
+    </Workspace>
+  );
+}

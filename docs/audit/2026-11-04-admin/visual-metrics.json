@@ -1,0 +1,233 @@
+[
+  {
+    "route": "/admin",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-1440.png"
+  },
+  {
+    "route": "/admin",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-390.png"
+  },
+  {
+    "route": "/admin",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-360.png"
+  },
+  {
+    "route": "/admin/catalog",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-catalog-1440.png"
+  },
+  {
+    "route": "/admin/catalog",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-catalog-390.png"
+  },
+  {
+    "route": "/admin/catalog",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-catalog-360.png"
+  },
+  {
+    "route": "/admin/categories",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-categories-1440.png"
+  },
+  {
+    "route": "/admin/categories",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-categories-390.png"
+  },
+  {
+    "route": "/admin/categories",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-categories-360.png"
+  },
+  {
+    "route": "/admin/suppliers",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-suppliers-1440.png"
+  },
+  {
+    "route": "/admin/suppliers",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-suppliers-390.png"
+  },
+  {
+    "route": "/admin/suppliers",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-suppliers-360.png"
+  },
+  {
+    "route": "/admin/offers",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-offers-1440.png"
+  },
+  {
+    "route": "/admin/offers",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-offers-390.png"
+  },
+  {
+    "route": "/admin/offers",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-offers-360.png"
+  },
+  {
+    "route": "/admin/users",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-users-1440.png"
+  },
+  {
+    "route": "/admin/users",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-users-390.png"
+  },
+  {
+    "route": "/admin/users",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-users-360.png"
+  },
+  {
+    "route": "/admin/orders",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-orders-1440.png"
+  },
+  {
+    "route": "/admin/orders",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-orders-390.png"
+  },
+  {
+    "route": "/admin/orders",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-orders-360.png"
+  },
+  {
+    "route": "/admin/deliveries",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-deliveries-1440.png"
+  },
+  {
+    "route": "/admin/deliveries",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-deliveries-390.png"
+  },
+  {
+    "route": "/admin/deliveries",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-deliveries-360.png"
+  },
+  {
+    "route": "/admin/pricing",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-pricing-1440.png"
+  },
+  {
+    "route": "/admin/pricing",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-pricing-390.png"
+  },
+  {
+    "route": "/admin/pricing",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-pricing-360.png"
+  },
+  {
+    "route": "/admin/product-requests",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-product-requests-1440.png"
+  },
+  {
+    "route": "/admin/product-requests",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-product-requests-390.png"
+  },
+  {
+    "route": "/admin/product-requests",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-product-requests-360.png"
+  },
+  {
+    "route": "/admin/audit",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/admin-audit-1440.png"
+  },
+  {
+    "route": "/admin/audit",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/admin-audit-390.png"
+  },
+  {
+    "route": "/admin/audit",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/admin-audit-360.png"
+  }
+]

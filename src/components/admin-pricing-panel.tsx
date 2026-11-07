@@ -1,17 +1,77 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
-import { Button, DataTable, Field, Input, Modal, Select, Toast } from "@/components/ui";
-import { formatTJS, toDirams } from "@/modules/system/money";
-type Rule = { id: string; scope: string; scopeId: string | null; type: string; value: string; priority: number };
-type Option = { id: string; name?: string; nameRu?: string; sku?: string; categoryId?: string };
-type Preview = { supplierPriceDirams: string; markupDirams: string; customerPriceDirams: string };
+import { useState } from "react";
+import { DataTable, Input, Field } from "@/components/admin-ui";
+import { calculateOrderMarkup } from "@/modules/pricing/order-markup";
+import { toDirams, formatTJS } from "@/modules/system/money";
+import styles from "@/components/workspace-design.module.css";
+const tiers = [
+  { range: "Менее 50 000 сомони", rate: 7 },
+  { range: "От 50 000 до 100 000 сомони включительно", rate: 5 },
+  { range: "Свыше 100 000 сомони", rate: 3 },
+];
 export function AdminPricingPanel() {
-  const [rules, setRules] = useState<Rule[]>([]); const [suppliers, setSuppliers] = useState<Option[]>([]); const [products, setProducts] = useState<Option[]>([]); const [categories, setCategories] = useState<Option[]>([]); const [open, setOpen] = useState(false); const [form, setForm] = useState({ scope: "GLOBAL", scopeId: "", type: "PERCENT", value: "10", priority: 0 }); const [previewForm, setPreviewForm] = useState({ productId: "", supplierId: "", price: "100.00" }); const [preview, setPreview] = useState<Preview | null>(null); const [message, setMessage] = useState("");
-  const load = useCallback(async () => { const response = await fetch("/api/admin/pricing/rules"); if (response.ok) setRules((await response.json()).items); }, []);
-  useEffect(() => { void load(); void Promise.all([fetch("/api/admin/suppliers"), fetch("/api/admin/offers/options")]).then(async ([s, o]) => { const sd = await s.json(); const od = await o.json(); setSuppliers(sd.items); setProducts(od.products); setCategories(od.categories); setPreviewForm((current) => ({ ...current, productId: od.products[0]?.id ?? "", supplierId: sd.items[0]?.id ?? "" })); }); }, [load]);
-  function scopeName(rule: Rule) { if (rule.scope === "GLOBAL") return "Вся платформа"; const list = rule.scope === "PRODUCT" ? products : rule.scope === "SUPPLIER" ? suppliers : categories; const item = list.find((entry) => entry.id === rule.scopeId); return item?.nameRu ?? item?.name ?? item?.sku ?? rule.scopeId; }
-  async function create() { const value = form.type === "FIXED" ? toDirams(form.value).toString() : form.value; const response = await fetch("/api/admin/pricing/rules", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, value, scopeId: form.scopeId || null }) }); if (response.ok) { setOpen(false); setMessage("Правило добавлено"); await load(); } else setMessage("Проверьте правило"); }
-  async function remove(id: string) { await fetch(`/api/admin/pricing/rules/${id}`, { method: "DELETE" }); await load(); }
-  async function calculate() { const product = products.find((item) => item.id === previewForm.productId); const response = await fetch("/api/admin/pricing/preview", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ productId: previewForm.productId, supplierId: previewForm.supplierId, categoryId: product?.categoryId, supplierPriceDirams: toDirams(previewForm.price).toString() }) }); if (response.ok) setPreview(await response.json()); }
-  return <><section className="pricing-preview card"><div><span className="eyebrow">Калькулятор</span><h2>Закупка → наценка → витрина</h2></div><div className="pricing-form"><Select value={previewForm.productId} onChange={(e) => setPreviewForm({ ...previewForm, productId: e.target.value })} aria-label="Товар для расчёта">{products.map((product) => <option value={product.id} key={product.id}>{product.sku} · {product.name}</option>)}</Select><Select value={previewForm.supplierId} onChange={(e) => setPreviewForm({ ...previewForm, supplierId: e.target.value })} aria-label="Поставщик для расчёта">{suppliers.map((supplier) => <option value={supplier.id} key={supplier.id}>{supplier.name}</option>)}</Select><Input value={previewForm.price} onChange={(e) => setPreviewForm({ ...previewForm, price: e.target.value })} aria-label="Закупочная цена для расчёта" /><Button onClick={calculate}>Рассчитать</Button></div>{preview && <div className="pricing-result"><span>Закупка <strong>{formatTJS(preview.supplierPriceDirams)}</strong></span><span>Наценка <strong>{formatTJS(preview.markupDirams)}</strong></span><span>Покупатель <strong>{formatTJS(preview.customerPriceDirams)}</strong></span></div>}</section><div className="panel-toolbar"><span className="muted">Более специфичное правило имеет приоритет</span><Button onClick={() => setOpen(true)}>Добавить правило</Button></div><DataTable headers={["Область", "Объект", "Тип", "Значение", "Приоритет", "Действие"]}>{rules.map((rule) => <tr key={rule.id}><td>{rule.scope}</td><td>{scopeName(rule)}</td><td>{rule.type}</td><td>{rule.type === "PERCENT" ? `${rule.value}%` : formatTJS(rule.value)}</td><td>{rule.priority}</td><td><Button variant="ghost" onClick={() => remove(rule.id)}>Удалить</Button></td></tr>)}</DataTable><Modal open={open} title="Новое правило наценки" onClose={() => setOpen(false)}><div className="stack-form"><Field label="Область"><Select value={form.scope} onChange={(e) => setForm({ ...form, scope: e.target.value, scopeId: "" })}><option>GLOBAL</option><option>CATEGORY</option><option>SUPPLIER</option><option>PRODUCT</option></Select></Field>{form.scope !== "GLOBAL" && <Field label="Объект"><Select value={form.scopeId} onChange={(e) => setForm({ ...form, scopeId: e.target.value })}><option value="">Выберите</option>{(form.scope === "PRODUCT" ? products : form.scope === "SUPPLIER" ? suppliers : categories).map((item) => <option value={item.id} key={item.id}>{item.nameRu ?? item.name ?? item.sku}</option>)}</Select></Field>}<Field label="Тип"><Select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}><option value="PERCENT">Процент</option><option value="FIXED">Фиксированная сумма</option></Select></Field><Field label={form.type === "PERCENT" ? "Процент" : "Сумма, TJS"}><Input value={form.value} onChange={(e) => setForm({ ...form, value: e.target.value })} /></Field><Field label="Приоритет"><Input type="number" value={form.priority} onChange={(e) => setForm({ ...form, priority: Number(e.target.value) })} /></Field><Button onClick={create}>Добавить</Button></div></Modal>{message && <Toast text={message} onClose={() => setMessage("")} />}</>;
+  const [base, setBase] = useState("50000");
+  let quote: ReturnType<typeof calculateOrderMarkup> | null = null;
+  try {
+    quote = calculateOrderMarkup(toDirams(base));
+  } catch {
+    /* The input can be incomplete while typing. */
+  }
+  return (
+    <div className={styles.detailGrid}>
+      <section className={styles.panel}>
+        <div className={styles.panelHead}>
+          <h2>Наценка платформы</h2>
+        </div>
+        <p className={styles.emptyText}>
+          Одна ставка применяется к сумме материалов всего заказа до наценки. Доставка в пороги не
+          входит.
+        </p>
+        <DataTable headers={["Сумма материалов", "Наценка"]}>
+          {tiers.map((tier) => (
+            <tr key={tier.rate}>
+              <td>{tier.range}</td>
+              <td>
+                <strong>{tier.rate}%</strong>
+              </td>
+            </tr>
+          ))}
+        </DataTable>
+      </section>
+      <section className={styles.panel}>
+        <div className={styles.panelHead}>
+          <h2>Проверить расчёт</h2>
+        </div>
+        <Field label="Сумма материалов до наценки, TJS">
+          <Input
+            inputMode="decimal"
+            value={base}
+            onChange={(e) => setBase(e.target.value)}
+            aria-describedby="pricing-help"
+          />
+        </Field>
+        <p className={styles.subtle} id="pricing-help">
+          Предварительный расчёт без стоимости доставки.
+        </p>
+        {quote ? (
+          <dl className={styles.details}>
+            <dt>Ставка</dt>
+            <dd>
+              <strong>{quote.percent}%</strong>
+            </dd>
+            <dt>Наценка</dt>
+            <dd>{formatTJS(quote.markupDirams)}</dd>
+            <dt>Итого</dt>
+            <dd>
+              <strong>{formatTJS(quote.totalDirams)}</strong>
+            </dd>
+          </dl>
+        ) : (
+          <p className={styles.alert} role="status">
+            Введите сумму в сомони, не более двух знаков после запятой.
+          </p>
+        )}
+      </section>
+    </div>
+  );
 }

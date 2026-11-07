@@ -1,0 +1,104 @@
+.root {
+  display: inline-block;
+  position: relative;
+  min-width: 0;
+  vertical-align: middle;
+}
+.trigger {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #dce4ee;
+  border-radius: 10px;
+  background: #fff;
+  color: #172b45;
+  padding: 11px 13px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.trigger > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.trigger > svg {
+  flex-shrink: 0;
+  color: #53657b;
+  transition: transform 0.15s;
+}
+.trigger[aria-expanded="true"] {
+  border-color: #074089;
+  box-shadow: 0 0 0 3px #07408912;
+}
+.trigger[aria-expanded="true"] > svg {
+  transform: rotate(180deg);
+}
+.trigger:focus-visible {
+  outline: 3px solid #b6cceb;
+  outline-offset: 2px;
+}
+.trigger:disabled {
+  background: #f3f6fa;
+  color: #8995a4;
+  cursor: not-allowed;
+}
+.native {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none;
+  bottom: 0;
+  left: 0;
+  padding: 0 !important;
+  border: 0 !important;
+}
+.menu {
+  z-index: 10050;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #d6e1ee;
+  border-radius: 12px;
+  background: white;
+  padding: 5px;
+  box-shadow: 0 12px 40px #102f5720;
+}
+.option {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 38px;
+  padding: 9px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #172b45;
+}
+.option > span {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.option > small {
+  flex-basis: 100%;
+  font-size: 10px;
+  color: #718095;
+  text-transform: uppercase;
+}
+.option[data-active="true"] {
+  background: #edf3fb;
+}
+.option[aria-selected="true"] {
+  color: #074089;
+  font-weight: 650;
+}
+.option[aria-disabled="true"] {
+  color: #a0a8b3;
+  cursor: not-allowed;
+}

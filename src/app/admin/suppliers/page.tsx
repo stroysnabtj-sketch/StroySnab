@@ -1,6 +1,19 @@
 import { Workspace } from "@/components/workspace";
 import { AdminSuppliersPanel } from "@/components/admin-suppliers-panel";
-import { requirePageUser } from "@/modules/auth/page";
-import { ROLES } from "@/modules/rbac/permissions";
+import { requirePagePermission } from "@/modules/auth/page";
+import styles from "@/components/workspace-design.module.css";
 export const dynamic = "force-dynamic";
-export default async function AdminSuppliersPage() { await requirePageUser([...ROLES.filter((role) => ["ADMIN", "SUPER_ADMIN", "PROCUREMENT_MANAGER"].includes(role))], "/admin/suppliers"); return <Workspace kind="admin"><h1>Поставщики</h1><AdminSuppliersPanel /></Workspace>; }
+export default async function AdminSuppliersPage() {
+  await requirePagePermission("suppliers:manage", "/admin/suppliers");
+  return (
+    <Workspace kind="admin">
+      <header className={styles.pageHeading}>
+        <div>
+          <h1>Магазины</h1>
+          <p>Подключение магазинов, владельцы и доступ сотрудников.</p>
+        </div>
+      </header>
+      <AdminSuppliersPanel />
+    </Workspace>
+  );
+}

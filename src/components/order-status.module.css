@@ -1,0 +1,972 @@
+.page {
+  padding-top: 24px;
+  padding-bottom: 64px;
+}
+
+.statusOverview {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  background: var(--brand-graphite, #102f57);
+  color: white;
+  border-radius: 18px;
+  padding: 30px;
+  margin-bottom: 24px;
+}
+.overviewIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+  border: 1px solid #ffffff30;
+  border-radius: 18px;
+  background: #ffffff0d;
+}
+.overviewEyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #c3d7ef;
+}
+.statusOverview h2 {
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: white;
+  margin: 5px 0 8px;
+}
+.statusOverview p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #d7e4f5;
+  margin: 0;
+  max-width: 75ch;
+}
+.statusOverview[data-status="CANCELLED"] {
+  background: #fff1f0;
+  color: #9b2828;
+  border: 1px solid #efc4bf;
+}
+.statusOverview[data-status="CANCELLED"] h2,
+.statusOverview[data-status="CANCELLED"] p,
+.statusOverview[data-status="CANCELLED"] .overviewEyebrow {
+  color: #9b2828;
+}
+.stepDate {
+  font-size: 12px;
+  color: #53657c;
+  margin-top: 7px;
+  line-height: 1.5;
+}
+.itemsWrap {
+  min-width: 0;
+}
+.pickupLocation {
+  grid-column: 1/-1;
+}
+.page .sideColumn {
+  position: sticky;
+  top: 100px;
+}
+.page .card {
+  border-radius: 16px;
+  padding: 26px;
+}
+.page .stepperContainer {
+  padding: 26px;
+  border-radius: 16px;
+}
+.page .stepLabel {
+  font-size: 14px;
+  line-height: 1.4;
+}
+.page .stepSub {
+  font-size: 12px;
+  color: #5e6e83;
+  line-height: 1.5;
+}
+.page .infoTileLabel,
+.page .routePointLabel,
+.page .itemsTable th {
+  color: #5b6b80;
+  font-size: 12px;
+}
+.page .infoTileSub,
+.page .itemSku,
+.page .timelineTime {
+  font-size: 12px;
+  color: #5b6b80;
+}
+.page .infoTileValue {
+  font-size: 14px;
+}
+.page .summaryRow {
+  font-size: 14px;
+  align-items: flex-start;
+  gap: 18px;
+}
+.page .summaryRow > span:last-child {
+  text-align: right;
+}
+.page .itemsTable td {
+  overflow-wrap: anywhere;
+}
+.page .timelineTitle {
+  font-size: 14px;
+}
+.page .timelineDesc {
+  font-size: 13px;
+}
+.page .supportCard {
+  padding: 22px;
+  background: white;
+}
+.page .paymentNotice {
+  font-size: 13px;
+}
+@media (max-width: 1100px) {
+  .page .dashboardGrid {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 20px;
+  }
+  .page .vehicleHero {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+  .page .vehicleName {
+    font-size: 17px;
+  }
+  .page .card {
+    padding: 22px;
+  }
+}
+@media (max-width: 900px) {
+  .page .dashboardGrid {
+    grid-template-columns: 1fr;
+  }
+  .page .sideColumn {
+    position: static;
+  }
+  .page .vehicleHero {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .statusOverview {
+    align-items: flex-start;
+    padding: 22px;
+    gap: 14px;
+    border-radius: 14px;
+  }
+  .overviewIcon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+  .overviewIcon svg {
+    width: 22px;
+  }
+  .statusOverview h2 {
+    font-size: 20px;
+  }
+  .statusOverview p {
+    font-size: 13px;
+  }
+  .overviewEyebrow {
+    font-size: 10px;
+  }
+  .page .card,
+  .page .stepperContainer {
+    padding: 20px;
+  }
+  .page .stepper {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .page .step {
+    padding-left: 28px;
+  }
+  .page .stepBar {
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 5px;
+    bottom: 0;
+    height: auto;
+  }
+  .page .stepNumber {
+    display: none;
+  }
+  .page .stepHeader {
+    align-items: flex-start;
+  }
+  .page .vehicleHero {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+  .page .vehiclePhoto {
+    height: 180px;
+  }
+  .page .vehicleDetailsGrid {
+    grid-template-columns: 1fr;
+  }
+  .page .driverBox {
+    grid-column: 1;
+  }
+  .page .cardHead {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .page .itemsTable,
+  .page .itemsTable tbody,
+  .page .itemsTable tr {
+    display: block;
+  }
+  .page .itemsTable thead {
+    display: none;
+  }
+  .page .itemsTable tr {
+    padding: 16px 0;
+    border-bottom: 1px solid #dce3ec;
+  }
+  .page .itemsTable tr:first-child {
+    padding-top: 0;
+  }
+  .page .itemsTable td {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    text-align: right;
+    border: 0;
+    padding: 6px 0;
+    font-size: 13px;
+  }
+  .page .itemsTable td::before {
+    content: attr(data-label);
+    color: #5b6b80;
+    flex-shrink: 0;
+    font-weight: 400;
+  }
+  .page .itemsTable td:first-child {
+    display: block;
+    text-align: left;
+    padding: 0 0 10px;
+  }
+  .page .itemsTable td:first-child::before {
+    display: none;
+  }
+  .page .itemTitle {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .page .itemSupplier {
+    margin: 0;
+  }
+  .page .summaryTotalRow {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .page .actions {
+    flex-wrap: wrap;
+  }
+  .page .refreshButton {
+    min-height: 44px;
+  }
+  .page .metaRow {
+    font-size: 12px;
+    gap: 6px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #555c68;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.backLink:hover {
+  color: #102f57;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.titleArea {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  color: #102f57;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.statusBadge[data-status="NEW"] {
+  background: #eef4fc;
+  color: #074089;
+  border: 1px solid #b9d0ef;
+}
+
+.statusBadge[data-status="CONFIRMED"] {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.statusBadge[data-status="DISPATCHED"] {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.statusBadge[data-status="DELIVERED"] {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.statusBadge[data-status="CANCELLED"] {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.metaRow {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #717784;
+  flex-wrap: wrap;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.refreshButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #ffffff;
+  border: 1px solid #dce0e6;
+  border-radius: 8px;
+  color: #102f57;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refreshButton:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #c4c9d2;
+}
+
+.refreshButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinning {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Stepper */
+.stepperContainer {
+  background: #ffffff;
+  border: 1px solid #e2e4e8;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.stepperTitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #848a96;
+  margin: 0 0 16px;
+  font-weight: 700;
+}
+
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  position: relative;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.stepBar {
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  transition: background 0.3s;
+}
+
+.step[data-state="completed"] .stepBar {
+  background: #052c5e;
+}
+
+.step[data-state="active"] .stepBar {
+  background: #074089;
+}
+
+.stepHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stepNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  background: #f1f3f5;
+  color: #717784;
+}
+
+.step[data-state="completed"] .stepNumber {
+  background: #052c5e;
+  color: #ffffff;
+}
+
+.step[data-state="active"] .stepNumber {
+  background: #074089;
+  color: #ffffff;
+}
+
+.stepText {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: #102f57;
+}
+
+.stepSub {
+  font-size: 11px;
+  color: #838994;
+}
+
+.cancelledBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 16px;
+  color: #991b1b;
+  font-size: 13px;
+}
+
+/* Main Grid */
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 28px;
+  align-items: start;
+}
+
+.mainColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Cards */
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e4e8;
+  border-radius: 14px;
+  padding: 22px;
+  overflow: hidden;
+}
+
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  gap: 12px;
+}
+
+.cardTitle {
+  font-size: 17px;
+  font-weight: 750;
+  margin: 0;
+  color: #102f57;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.cardBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 9px;
+  background: #f4f4f5;
+  color: #555c68;
+  border-radius: 6px;
+}
+
+/* Vehicle Card */
+.vehicleHero {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  background: #fafafb;
+  border: 1px solid #eaebee;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.vehiclePhoto {
+  position: relative;
+  height: 140px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f0f1f3;
+}
+
+.vehiclePhoto img {
+  object-fit: cover;
+}
+
+.vehicleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vehicleName {
+  font-size: 18px;
+  font-weight: 750;
+  color: #102f57;
+  margin: 0;
+}
+
+.vehicleSpecs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.specBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ffffff;
+  border: 1px solid #e1e3e7;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4b525f;
+}
+
+.vehicleDimensions {
+  font-size: 12px;
+  color: #717784;
+}
+
+.vehicleDetailsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.infoTile {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.infoTileLabel {
+  font-size: 11px;
+  color: #7e8592;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.infoTileValue {
+  font-size: 13px;
+  font-weight: 700;
+  color: #102f57;
+}
+
+.infoTileSub {
+  font-size: 11px;
+  color: #8c929e;
+}
+
+.driverBox {
+  grid-column: span 2;
+  background: #f0f5fc;
+  border: 1px solid #dce8f8;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.driverBoxTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #074089;
+  margin: 0 0 2px;
+}
+
+.driverBoxText {
+  font-size: 12px;
+  color: #052c5e;
+  margin: 0;
+}
+
+/* Route / Destination Card */
+.routeList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.routePoint {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.routeIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #f4f4f5;
+  color: #102f57;
+  flex-shrink: 0;
+}
+
+.routePointBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.routePointLabel {
+  font-size: 11px;
+  color: #858b97;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.routePointAddress {
+  font-size: 14px;
+  font-weight: 700;
+  color: #102f57;
+}
+
+.routePointContact {
+  font-size: 12px;
+  color: #636a77;
+}
+
+.deliveryNote {
+  background: #f9fafb;
+  border-left: 3px solid #074089;
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 12px;
+  color: #4b525f;
+  margin-top: 6px;
+}
+
+/* Items Table */
+.itemsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.itemsTable th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #828894;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.itemsTable td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f2f5;
+  vertical-align: middle;
+}
+
+.itemTitle {
+  font-weight: 700;
+  color: #102f57;
+  margin: 0 0 2px;
+}
+
+.itemSku {
+  font-size: 11px;
+  color: #878d99;
+}
+
+.itemSupplier {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 11px;
+  color: #4f5663;
+  background: #f4f4f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.itemSubtotal {
+  font-weight: 750;
+  color: #102f57;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  padding-left: 18px;
+  border-left: 2px solid #e5e7eb;
+  margin-left: 6px;
+}
+
+.timelineItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timelineDot {
+  position: absolute;
+  left: -24px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #074089;
+  border: 2px solid #052c5e;
+}
+
+.timelineTitle {
+  font-size: 13px;
+  font-weight: 750;
+  color: #102f57;
+}
+
+.timelineDesc {
+  font-size: 12px;
+  color: #6a717e;
+  margin: 0;
+}
+
+.timelineTime {
+  font-size: 11px;
+  color: #9298a4;
+  margin-top: 2px;
+}
+
+/* Summary / Aside */
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 13px;
+  color: #555c68;
+}
+
+.summaryTotalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 14px;
+  margin-top: 10px;
+  border-top: 2px solid #102f57;
+  font-size: 16px;
+  font-weight: 750;
+  color: #102f57;
+}
+
+.totalPrice {
+  font-size: 24px;
+  color: #102f57;
+}
+
+.paymentNotice {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #555c68;
+}
+
+.supportCard {
+  background: #fafafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.supportTitle {
+  font-weight: 750;
+  color: #102f57;
+  margin: 0;
+}
+
+.supportPhone {
+  font-size: 16px;
+  font-weight: 750;
+  color: #102f57;
+  text-decoration: none;
+}
+
+.supportPhone:hover {
+  text-decoration: underline;
+}
+
+/* Responsiveness */
+@media (max-width: 900px) {
+  .dashboardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stepper {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .vehicleHero {
+    grid-template-columns: 1fr;
+  }
+
+  .vehiclePhoto {
+    height: 160px;
+  }
+}
+
+@media (max-width: 500px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .stepper {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .vehicleDetailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .driverBox {
+    grid-column: span 1;
+  }
+}

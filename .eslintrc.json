@@ -4,5 +4,5 @@
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/triple-slash-reference": "off"
   },
-  "ignorePatterns": ["next-env.d.ts", ".next/"]
+  "ignorePatterns": ["next-env.d.ts", ".next/", "_reference_app/"]
 }

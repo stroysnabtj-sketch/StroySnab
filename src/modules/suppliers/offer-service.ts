@@ -1,4 +1,5 @@
-import { and, desc, eq, sql } from "drizzle-orm";
+import { parseExplicitPatch } from "@/modules/system/patch";
+import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/db";
 import { products, supplierOffers, suppliers } from "@/db/schema";
@@ -14,7 +15,10 @@ const qty = z
 
 export const offerInput = z.object({
   productId: z.string().uuid(),
-  supplierPriceDirams: z.string().regex(/^\d+$/).refine((value) => BigInt(value) > 0n),
+  supplierPriceDirams: z
+    .string()
+    .regex(/^\d+$/)
+    .refine((value) => BigInt(value) > 0n),
   stockQty: qty,
   minOrderQty: qty.refine((value) => Number(value.replace(",", ".")) > 0),
   leadTimeDays: z.number().int().min(0).max(365),
@@ -72,7 +76,7 @@ export function serializeOffer(row: {
     updatedAt:
       row.updatedAt instanceof Date
         ? row.updatedAt.toISOString()
-        : row.updatedAt?.toString() ?? undefined,
+        : (row.updatedAt?.toString() ?? undefined),
   };
 }
 
@@ -105,6 +109,57 @@ export async function listOffers(supplierId?: string): Promise<OfferDTO[]> {
 
   return rows.map((r) => serializeOffer(r));
 }
+export async function searchOffers(query: {
+  supplierId?: string;
+  q?: string;
+  page?: number;
+  pageSize?: number;
+}) {
+  const db = await getDb();
+  const page = Number.isSafeInteger(query.page) ? Math.max(1, Math.min(100000, query.page!)) : 1,
+    pageSize = 24;
+  const filters = [];
+  if (query.supplierId) filters.push(eq(supplierOffers.supplierId, query.supplierId));
+  if (query.q?.trim())
+    filters.push(
+      or(ilike(products.nameRu, `%${query.q.trim()}%`), ilike(products.sku, `%${query.q.trim()}%`)),
+    );
+  const where = filters.length ? and(...filters) : undefined;
+  const [[count], rows] = await Promise.all([
+    db
+      .select({ value: sql<number>`count(*)::int` })
+      .from(supplierOffers)
+      .innerJoin(products, eq(products.id, supplierOffers.productId))
+      .where(where),
+    db
+      .select({
+        offer: supplierOffers,
+        sku: products.sku,
+        productName: products.nameRu,
+        unit: products.unit,
+        supplierName: suppliers.name,
+      })
+      .from(supplierOffers)
+      .innerJoin(products, eq(products.id, supplierOffers.productId))
+      .innerJoin(suppliers, eq(suppliers.id, supplierOffers.supplierId))
+      .where(where)
+      .orderBy(desc(supplierOffers.updatedAt), desc(supplierOffers.id))
+      .limit(pageSize)
+      .offset((page - 1) * pageSize),
+  ]);
+  return {
+    items: rows.map((row) => ({
+      ...serializeOffer(row.offer),
+      sku: row.sku,
+      productName: row.productName,
+      unit: row.unit,
+      supplierName: row.supplierName,
+    })),
+    total: count.value,
+    page,
+    pageSize,
+  };
+}
 
 export async function upsertOffer(
   actor: SessionUser,
@@ -115,7 +170,11 @@ export async function upsertOffer(
   const data = offerInput.parse(await Promise.resolve(input));
   const db = await getDb();
   return db.transaction(async (tx) => {
-    const [product] = await tx.select().from(products).where(eq(products.id, data.productId)).limit(1);
+    const [product] = await tx
+      .select()
+      .from(products)
+      .where(eq(products.id, data.productId))
+      .limit(1);
     if (!product) throw new ApiError(404, "not_found", "Товар не найден");
     const [saved] = await tx
       .insert(supplierOffers)
@@ -129,6 +188,7 @@ export async function upsertOffer(
       })
       .onConflictDoUpdate({
         target: [supplierOffers.productId, supplierOffers.supplierId],
+        setWhere: sql`${supplierOffers.reservedQty}::numeric <= ${data.stockQty.replace(",", ".")}::numeric`,
         set: {
           supplierPriceDirams: BigInt(data.supplierPriceDirams),
           stockQty: data.stockQty.replace(",", "."),
@@ -140,6 +200,12 @@ export async function upsertOffer(
       })
       .returning();
 
+    if (!saved)
+      throw new ApiError(
+        409,
+        "reserved_stock",
+        "Остаток не может быть меньше зарезервированного количества",
+      );
     await writeAudit(tx, {
       actorUserId: actor.id,
       actorRole: actor.role,
@@ -165,7 +231,10 @@ export async function updateOffer(
   input: unknown,
   ip?: string,
 ): Promise<OfferDTO> {
-  const data = offerInput.omit({ productId: true }).partial().parse(await Promise.resolve(input));
+  const data = parseExplicitPatch(
+    offerInput.omit({ productId: true }),
+    await Promise.resolve(input),
+  );
   const db = await getDb();
   return db.transaction(async (tx) => {
     const [before] = await tx
@@ -179,13 +248,29 @@ export async function updateOffer(
       .update(supplierOffers)
       .set({
         ...data,
-        supplierPriceDirams: data.supplierPriceDirams ? BigInt(data.supplierPriceDirams) : undefined,
+        supplierPriceDirams: data.supplierPriceDirams
+          ? BigInt(data.supplierPriceDirams)
+          : undefined,
         stockQty: data.stockQty?.replace(",", "."),
         minOrderQty: data.minOrderQty?.replace(",", "."),
         updatedAt: new Date(),
       })
-      .where(and(eq(supplierOffers.id, offerId), eq(supplierOffers.supplierId, supplierId)))
+      .where(
+        and(
+          eq(supplierOffers.id, offerId),
+          eq(supplierOffers.supplierId, supplierId),
+          data.stockQty !== undefined
+            ? sql`${supplierOffers.reservedQty}::numeric <= ${data.stockQty.replace(",", ".")}::numeric`
+            : undefined,
+        ),
+      )
       .returning();
+    if (!updated)
+      throw new ApiError(
+        409,
+        "reserved_stock",
+        "Остаток не может быть меньше зарезервированного количества",
+      );
 
     await writeAudit(tx, {
       actorUserId: actor.id,
@@ -222,7 +307,10 @@ export async function deactivateOffer(
       : eq(supplierOffers.id, offerId);
     const [before] = await tx.select().from(supplierOffers).where(condition).limit(1);
     if (!before) throw new ApiError(404, "not_found", "Предложение не найдено");
-    await tx.update(supplierOffers).set({ isActive: "false", updatedAt: new Date() }).where(condition);
+    await tx
+      .update(supplierOffers)
+      .set({ isActive: "false", updatedAt: new Date() })
+      .where(condition);
     await writeAudit(tx, {
       actorUserId: actor.id,
       actorRole: actor.role,

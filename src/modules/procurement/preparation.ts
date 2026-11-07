@@ -1,0 +1,103 @@
+import { and, eq, ilike, or, sql } from "drizzle-orm";
+import { z } from "zod";
+import { getDb } from "@/db";
+import { supplierOffers, products, suppliers } from "@/db/schema";
+import { visibleCategoryIds } from "@/modules/catalog/category-visibility";
+import type { SessionUser } from "@/modules/auth/session";
+import { hasPermission } from "@/modules/rbac/permissions";
+import { ApiError } from "@/server/api-error";
+import { getProcurementRequest } from "./service";
+const normalize = (s: string) =>
+  s
+    .toLowerCase()
+    .replaceAll("ё", "е")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
+const input = z
+  .array(
+    z.object({
+      name: z.string().trim().min(1).max(300),
+      qty: z
+        .string()
+        .regex(/^(?:0|[1-9]\d{0,6})(?:[.,]\d{1,3})?$/)
+        .refine((v) => Number(v.replace(",", ".")) > 0),
+      unit: z.string().trim().min(1).max(30),
+    }),
+  )
+  .min(1)
+  .max(200);
+export async function prepareQuotationCandidates(
+  requestId: string,
+  actor: SessionUser,
+  raw: unknown,
+) {
+  if (!hasPermission(actor.role, "product_requests:manage"))
+    throw new ApiError(403, "forbidden", "Недостаточно прав");
+  await getProcurementRequest(requestId, actor, null);
+  const lines = input.parse(raw),
+    db = await getDb();
+  const output = [];
+  // Bounded sequential batches avoid exhausting the database pool on large lists.
+  for (let offset = 0; offset < lines.length; offset += 5) {
+    const batch = await Promise.all(
+      lines.slice(offset, offset + 5).map(async (line, index) => {
+        const words = normalize(line.name)
+          .split(" ")
+          .filter((w) => w.length > 1)
+          .slice(0, 3);
+        const literal = line.name.replace(/[\\%_]/g, "\\$&");
+        const rows = await db
+          .select({
+            offerId: supplierOffers.id,
+            productName: products.nameRu,
+            sku: products.sku,
+            unit: products.unit,
+            supplierName: suppliers.name,
+            basePriceDirams: supplierOffers.supplierPriceDirams,
+            stockQty: supplierOffers.stockQty,
+            reservedQty: supplierOffers.reservedQty,
+            minOrderQty: supplierOffers.minOrderQty,
+            leadTimeDays: supplierOffers.leadTimeDays,
+          })
+          .from(supplierOffers)
+          .innerJoin(products, eq(products.id, supplierOffers.productId))
+          .innerJoin(suppliers, eq(suppliers.id, supplierOffers.supplierId))
+          .where(
+            and(
+              eq(supplierOffers.isActive, "true"),
+              eq(products.status, "PUBLISHED"),
+              eq(suppliers.status, "ACTIVE"),
+              sql`${products.categoryId} IN (${visibleCategoryIds})`,
+              sql`CAST(${supplierOffers.supplierPriceDirams} AS numeric)>0`,
+              or(
+                eq(products.sku, line.name),
+                ilike(products.nameRu, `%${literal}%`),
+                words.length
+                  ? and(...words.map((w) => ilike(products.nameRu, `%${w}%`)))
+                  : undefined,
+              ),
+            ),
+          )
+          .orderBy(
+            sql`CASE WHEN lower(${products.nameRu})=lower(${line.name}) OR ${products.sku}=${line.name} THEN 0 ELSE 1 END`,
+            products.nameRu,
+            supplierOffers.id,
+          )
+          .limit(12);
+        const candidates = rows.map((row) => ({
+          ...row,
+          basePriceDirams: row.basePriceDirams.toString(),
+          exact: normalize(row.productName) === normalize(line.name) || row.sku === line.name,
+          unitMatches: normalize(row.unit) === normalize(line.unit),
+          enoughStock:
+            Number(row.stockQty) - Number(row.reservedQty) >= Number(line.qty.replace(",", ".")),
+          minimumMet: Number(line.qty.replace(",", ".")) >= Number(row.minOrderQty),
+        }));
+        return { index: offset + index, requested: line, candidates };
+      }),
+    );
+    output.push(...batch);
+  }
+  return { mode: "LOCAL_CATALOG" as const, aiConnected: false as const, lines: output };
+}
+export type QuotationPreparation = Awaited<ReturnType<typeof prepareQuotationCandidates>>;

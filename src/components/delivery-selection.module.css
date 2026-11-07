@@ -1,0 +1,314 @@
+.fleet {
+  min-width: 0;
+}
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.heading h2 {
+  margin: 5px 0 0;
+  font-size: 24px;
+  letter-spacing: -0.035em;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #878c96;
+}
+.description {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #777d88;
+  max-width: 64ch;
+  margin: 12px 0 20px;
+}
+.tabs {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+  padding-bottom: 15px;
+}
+.tabs button {
+  border: 1px solid #e1e3e7;
+  border-radius: 20px;
+  background: white;
+  padding: 8px 13px;
+  color: #757b85;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.tabs button[aria-pressed="true"] {
+  background: #074089;
+  color: white;
+  border-color: #074089;
+}
+.grid {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+}
+.vehicle {
+  position: relative;
+  border: 1px solid #e0e3e7;
+  border-radius: 13px;
+  overflow: hidden;
+  background: white;
+  cursor: pointer;
+  min-width: 0;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.vehicle > input {
+  position: absolute;
+  inset: 12px 12px auto auto;
+  z-index: 2;
+  accent-color: #074089;
+  width: 17px;
+  height: 17px;
+}
+.vehicle[data-selected="true"] {
+  border: 2px solid #074089;
+  box-shadow: 0 0 0 3px rgba(7, 64, 137, 0.15);
+}
+.vehicle:focus-within {
+  outline: 2px solid #074089;
+  outline-offset: 3px;
+}
+.photo {
+  position: relative;
+  height: 125px;
+  background: #f3f4f5;
+}
+.photo img {
+  object-fit: cover;
+}
+.selected {
+  position: absolute;
+  left: 8px;
+  top: 9px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 7px;
+  background: #074089;
+border-radius: 15px;
+font-size: 9px;
+color: #ffffff;
+}
+.vehicleBody {
+  padding: 13px;
+  display: grid;
+  gap: 11px;
+}
+.vehicleBody h3 {
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.35;
+  margin: 0;
+  min-height: 35px;
+  color: #102f57;
+}
+.metrics {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  padding-block: 10px;
+  border-block: 1px solid #eceef0;
+  font-size: 10px;
+}
+.metrics span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.vehicleBody small {
+  font-size: 10px;
+  color: #979ca5;
+}
+.match,
+.warning {
+  font-size: 9px;
+  line-height: 1.4;
+  color: #074089;
+}
+.match {
+  color: #58745b;
+}
+.timeSummary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #e1e3e7;
+  border-radius: 12px;
+  margin-top: 22px;
+  background: #fafafa;
+}
+.timeSummary > svg {
+  color: #777d88;
+  flex-shrink: 0;
+}
+.timeSummary > div {
+  flex: 1;
+}
+.timeSummary strong {
+  font-size: 13px;
+}
+.timeSummary p {
+  font-size: 11px;
+  color: #8a909a;
+  margin: 4px 0 0;
+}
+.timeSummary button {
+  font-size: 11px;
+}
+.dialog {
+  width: min(640px, calc(100vw - 32px));
+  max-height: 90dvh;
+  overflow: auto;
+  border: 1px solid #e3e5e9;
+  border-radius: 20px;
+  background: white;
+  padding: 28px;
+  color: #102f57;
+  box-shadow: 0 25px 80px #0003;
+}
+.dialog::backdrop {
+  background: #25293166;
+  backdrop-filter: blur(4px);
+}
+.dialog header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.dialog header h2 {
+  font-size: 25px;
+  letter-spacing: -0.035em;
+  margin: 8px 0 0;
+}
+.dialog header button {
+  border: 0;
+  background: transparent;
+  padding: 5px;
+  color: #858b94;
+}
+.dialog > p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #8a909a;
+  margin-block: 18px;
+}
+.slots {
+  padding: 0;
+  border: 0;
+  margin: 22px 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.slots legend {
+  font-size: 12px;
+  font-weight: 600;
+  padding-bottom: 12px;
+}
+.slots label {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding: 16px 12px;
+  border: 1px solid #e1e4e8;
+  border-radius: 12px;
+  cursor: pointer;
+  min-width: 0;
+}
+.slots label[data-selected="true"] {
+  border-color: #074089;
+  background: #eef4fc;
+}
+.slots input {
+  accent-color: #074089;
+}
+.slots span {
+  font-size: 11px;
+  color: #9297a0;
+}
+.slots strong {
+  font-size: 15px;
+  letter-spacing: -0.03em;
+}
+.slots svg {
+  position: absolute;
+  right: 10px;
+  top: 14px;
+  color: #074089;
+}
+.dialog footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid #e6e8ec;
+}
+.dialog footer button {
+  font-size: 12px;
+}
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .grid {
+    gap: 10px;
+  }
+  .photo {
+    height: 110px;
+  }
+  .vehicleBody {
+    padding: 11px;
+  }
+  .metrics {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  .timeSummary {
+    padding: 14px;
+    gap: 10px;
+  }
+  .timeSummary > svg {
+    display: none;
+  }
+  .timeSummary button {
+    padding-inline: 12px;
+  }
+  .dialog {
+    padding: 22px 18px;
+  }
+  .dialog header h2 {
+    font-size: 23px;
+  }
+  .slots {
+    gap: 7px;
+  }
+  .slots label {
+    padding: 12px 8px;
+  }
+  .slots strong {
+    font-size: 12px;
+  }
+  .dialog footer {
+    flex-direction: column-reverse;
+  }
+  .dialog footer button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,77 @@
+[
+  {
+    "role": "guest",
+    "route": "/api/admin/users",
+    "status": 401
+  },
+  {
+    "role": "guest",
+    "route": "/api/admin/catalog/products",
+    "status": 401
+  },
+  {
+    "role": "guest",
+    "route": "/api/seller/offers",
+    "status": 401
+  },
+  {
+    "role": "guest",
+    "route": "/api/account/requests",
+    "status": 401
+  },
+  {
+    "check": "untrusted one-diram order without cart",
+    "status": 200,
+    "body": {
+      "id": "0ae1221b-bbce-4889-9d74-3da41cff47d6",
+      "orderNumber": "TJ-87846",
+      "status": "CONFIRMED"
+    }
+  },
+  {
+    "check": "guest can view synthetic order",
+    "status": 200,
+    "containsSyntheticCustomer": false,
+    "containsSyntheticAddress": true
+  },
+  {
+    "check": "login",
+    "role": "seller",
+    "status": 200
+  },
+  {
+    "role": "seller",
+    "route": "/api/admin/users",
+    "status": 403
+  },
+  {
+    "role": "seller",
+    "route": "/api/admin/catalog/products",
+    "status": 403
+  },
+  {
+    "role": "seller",
+    "route": "/api/seller/offers",
+    "status": 200
+  },
+  {
+    "check": "login",
+    "role": "customer",
+    "status": 200
+  },
+  {
+    "role": "customer",
+    "route": "/api/admin/users",
+    "status": 403
+  },
+  {
+    "role": "customer",
+    "route": "/api/admin/catalog/products",
+    "status": 403
+  },
+  {
+    "role": "customer",
+    "route": "/api/seller/offers",
+    "status": 403
+  }
+]

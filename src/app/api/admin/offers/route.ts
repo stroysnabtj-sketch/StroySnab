@@ -1,5 +1,5 @@
 import { requireUser } from "@/modules/auth/session";
-import { listOffers, upsertOffer } from "@/modules/suppliers/offer-service";
+import { searchOffers, listOffers, upsertOffer } from "@/modules/suppliers/offer-service";
 import { errorResponse } from "@/server/api-error";
 import { requestIp } from "@/server/request";
 import { assertSameOrigin } from "@/server/security";
@@ -9,9 +9,16 @@ import { jsonResponse } from "@/server/json";
 export async function GET(request: Request) {
   try {
     await requireUser("suppliers:manage");
-    return jsonResponse({
-      items: await listOffers(new URL(request.url).searchParams.get("supplierId") ?? undefined),
-    });
+    const params = new URL(request.url).searchParams;
+    return jsonResponse(
+      params.has("page")
+        ? await searchOffers({
+            supplierId: params.get("supplierId") || undefined,
+            q: params.get("q") ?? undefined,
+            page: Number(params.get("page")),
+          })
+        : { items: await listOffers(params.get("supplierId") ?? undefined) },
+    );
   } catch (error) {
     return errorResponse(error);
   }

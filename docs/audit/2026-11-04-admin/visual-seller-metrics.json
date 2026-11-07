@@ -1,0 +1,128 @@
+[
+  {
+    "route": "/seller",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/seller-1440.png"
+  },
+  {
+    "route": "/seller",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/seller-390.png"
+  },
+  {
+    "route": "/seller",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/seller-360.png"
+  },
+  {
+    "route": "/seller/products",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/seller-products-1440.png"
+  },
+  {
+    "route": "/seller/products",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/seller-products-390.png"
+  },
+  {
+    "route": "/seller/products",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/seller-products-360.png"
+  },
+  {
+    "route": "/seller/products/new",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/seller-products-new-1440.png"
+  },
+  {
+    "route": "/seller/products/new",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/seller-products-new-390.png"
+  },
+  {
+    "route": "/seller/products/new",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/seller-products-new-360.png"
+  },
+  {
+    "route": "/seller/orders",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/seller-orders-1440.png"
+  },
+  {
+    "route": "/seller/orders",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/seller-orders-390.png"
+  },
+  {
+    "route": "/seller/orders",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/seller-orders-360.png"
+  },
+  {
+    "route": "/seller/team",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/seller-team-1440.png"
+  },
+  {
+    "route": "/seller/team",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/seller-team-390.png"
+  },
+  {
+    "route": "/seller/team",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/seller-team-360.png"
+  },
+  {
+    "route": "/seller/orders/62e71f3b-6670-4181-b50c-bc85491d2e5d",
+    "status": 200,
+    "width": 1440,
+    "scroll": 1440,
+    "path": "docs/design/2026-11-04-admin/seller-orders-62e71f3b-6670-4181-b50c-bc85491d2e5d-1440.png"
+  },
+  {
+    "route": "/seller/orders/62e71f3b-6670-4181-b50c-bc85491d2e5d",
+    "status": 200,
+    "width": 390,
+    "scroll": 390,
+    "path": "docs/design/2026-11-04-admin/seller-orders-62e71f3b-6670-4181-b50c-bc85491d2e5d-390.png"
+  },
+  {
+    "route": "/seller/orders/62e71f3b-6670-4181-b50c-bc85491d2e5d",
+    "status": 200,
+    "width": 360,
+    "scroll": 360,
+    "path": "docs/design/2026-11-04-admin/seller-orders-62e71f3b-6670-4181-b50c-bc85491d2e5d-360.png"
+  }
+]

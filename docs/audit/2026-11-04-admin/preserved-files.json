@@ -1,0 +1,18 @@
+[
+  {
+    "Path": "src/components/ui.tsx",
+    "Unchanged": true
+  },
+  {
+    "Path": "src/app/globals.css",
+    "Unchanged": true
+  },
+  {
+    "Path": "src/app/storefront.css",
+    "Unchanged": true
+  },
+  {
+    "Path": "src/components/auth/auth-form.tsx",
+    "Unchanged": true
+  }
+]

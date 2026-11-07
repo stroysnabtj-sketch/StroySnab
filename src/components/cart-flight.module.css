@@ -1,0 +1,10 @@
+.flight {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  transform-origin: center;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 14px 36px #18304d26;
+  will-change: transform, opacity;
+}

@@ -1,0 +1,53 @@
+{
+  "observations": [
+    {
+      "width": 1440,
+      "scroll": 1440,
+      "photos": [
+        {
+          "loaded": true,
+          "width": 507.515625,
+          "height": 500
+        },
+        {
+          "loaded": true,
+          "width": 278,
+          "height": 160
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "scroll": 390,
+      "photos": [
+        {
+          "loaded": true,
+          "width": 358,
+          "height": 240
+        },
+        {
+          "loaded": true,
+          "width": 108,
+          "height": 210
+        }
+      ]
+    },
+    {
+      "width": 360,
+      "scroll": 360,
+      "photos": [
+        {
+          "loaded": true,
+          "width": 328,
+          "height": 240
+        },
+        {
+          "loaded": true,
+          "width": 108,
+          "height": 210
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

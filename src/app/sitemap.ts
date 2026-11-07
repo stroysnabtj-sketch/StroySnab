@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { getDb } from "@/db";
 import { products, categories } from "@/db/schema";
 import { eq } from "drizzle-orm";
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.APP_URL ?? "http://localhost:3000"; const db = await getDb();
   const [items, cats] = await Promise.all([db.select({ slug: products.slug, updatedAt: products.updatedAt }).from(products).where(eq(products.status, "PUBLISHED")), db.select({ slug: categories.slug }).from(categories).where(eq(categories.isActive, "true"))]);

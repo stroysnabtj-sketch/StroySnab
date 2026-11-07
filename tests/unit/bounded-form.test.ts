@@ -1,0 +1,4 @@
+import {it,expect} from 'vitest';
+import { boundedForm } from '@/server/bounded-form';
+it('limits actual streamed multipart bytes without Content-Length',async()=>{const stream=new ReadableStream({start(controller){controller.enqueue(new Uint8Array(200));controller.close();}});const request=new Request('http://localhost/upload',{method:'POST',body:stream,duplex:'half',headers:{'content-type':'multipart/form-data; boundary=test'}} as RequestInit);await expect(boundedForm(request,100)).rejects.toThrow('Файл слишком большой');});
+it('reads valid multipart fields within the byte limit',async()=>{const form=new FormData();form.set('file',new File(['Список'],'list.csv'));const result=await boundedForm(new Request('http://localhost/upload',{method:'POST',body:form}),2000);expect((result.get('file') as File).name).toBe('list.csv');});

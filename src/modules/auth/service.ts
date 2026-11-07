@@ -23,7 +23,11 @@ export async function registerCustomer(input: unknown, ip: string) {
     .where(or(eq(users.phone, phone), email ? eq(users.email, email) : sql`false`))
     .limit(1);
   if (duplicate) {
-    throw new ApiError(400, "user_exists", "Пользователь с таким телефоном или e-mail уже существует");
+    throw new ApiError(
+      400,
+      "user_exists",
+      "Пользователь с таким телефоном или e-mail уже существует",
+    );
   }
 
   const passwordHash = await bcrypt.hash(data.password, 12);
@@ -69,7 +73,11 @@ export async function registerCustomer(input: unknown, ip: string) {
     const code = (error as { code?: string })?.code ?? cause?.code;
     const msg = `${String(error)} ${cause?.message ?? ""}`;
     if (code === "23505" || msg.includes("unique") || msg.includes("duplicate")) {
-      throw new ApiError(400, "user_exists", "Пользователь с таким телефоном или e-mail уже существует");
+      throw new ApiError(
+        400,
+        "user_exists",
+        "Пользователь с таким телефоном или e-mail уже существует",
+      );
     }
     throw error;
   }
@@ -79,11 +87,15 @@ export async function login(input: unknown, ip: string, userAgent: string) {
   const data = loginSchema.parse(input);
   const db = await getDb();
   const identifier = data.identifier.trim();
-  const normalized = identifier.includes("@") ? identifier.toLowerCase() : normalizePhone(identifier);
+  const normalized = identifier.includes("@")
+    ? identifier.toLowerCase()
+    : normalizePhone(identifier);
   const [user] = await db
     .select()
     .from(users)
-    .where(and(or(eq(users.email, normalized), eq(users.phone, normalized)), isNull(users.deletedAt)))
+    .where(
+      and(or(eq(users.email, normalized), eq(users.phone, normalized)), isNull(users.deletedAt)),
+    )
     .limit(1);
 
   if (!user || user.status !== "ACTIVE") {
@@ -95,19 +107,33 @@ export async function login(input: unknown, ip: string, userAgent: string) {
 
   const valid = await bcrypt.compare(data.password, user.passwordHash);
   if (!valid) {
-    const attempts = user.failedLoginAttempts + 1;
-    await db
-      .update(users)
-      .set({
-        failedLoginAttempts: attempts,
-        lockedUntil: attempts >= 10 ? new Date(Date.now() + 900000) : null,
-      })
-      .where(eq(users.id, user.id));
+    await db.transaction(async (tx) => {
+      const [current] = await tx.select().from(users).where(eq(users.id, user.id)).for("update");
+      if (current && (!current.lockedUntil || current.lockedUntil <= new Date()))
+        await tx
+          .update(users)
+          .set({
+            failedLoginAttempts: current.failedLoginAttempts + 1,
+            lockedUntil:
+              current.failedLoginAttempts + 1 >= 10 ? new Date(Date.now() + 900000) : null,
+          })
+          .where(eq(users.id, current.id));
+    });
     throw new ApiError(401, "invalid_credentials", "Неверный логин или пароль");
   }
 
   const token = newSessionToken();
   await db.transaction(async (tx) => {
+    const [current] = await tx.select().from(users).where(eq(users.id, user.id)).for("update");
+    if (
+      !current ||
+      current.status !== "ACTIVE" ||
+      current.deletedAt ||
+      current.passwordHash !== user.passwordHash
+    )
+      throw new ApiError(401, "invalid_credentials", "Войдите заново");
+    if (current.lockedUntil && current.lockedUntil > new Date())
+      throw new ApiError(429, "account_locked", "Слишком много попыток. Повторите позже");
     await tx
       .update(users)
       .set({ failedLoginAttempts: 0, lockedUntil: null, lastLoginAt: new Date() })
@@ -128,13 +154,17 @@ export async function login(input: unknown, ip: string, userAgent: string) {
       ip,
     });
   });
-  return { token, role: user.role };
+  return { token, role: user.role, userId: user.id };
 }
 
 export async function logout(token: string | undefined, ip: string) {
   if (!token) return;
   const db = await getDb();
-  const [session] = await db.select().from(sessions).where(eq(sessions.tokenHash, hashToken(token))).limit(1);
+  const [session] = await db
+    .select()
+    .from(sessions)
+    .where(eq(sessions.tokenHash, hashToken(token)))
+    .limit(1);
   if (session) {
     await db.transaction(async (tx) => {
       await tx.delete(sessions).where(eq(sessions.id, session.id));
@@ -163,7 +193,8 @@ export async function forgotPassword(input: unknown) {
   });
 
   return {
-    developmentToken: !process.env.MAIL_HOST && process.env.NODE_ENV !== "production" ? token : undefined,
+    developmentToken:
+      !process.env.MAIL_HOST && process.env.NODE_ENV !== "production" ? token : undefined,
   };
 }
 

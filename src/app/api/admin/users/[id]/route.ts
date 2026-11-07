@@ -1,9 +1,16 @@
+import { assertSameOrigin } from "@/server/security";
 import { NextResponse } from "next/server";
 import { requireUser } from "@/modules/auth/session";
 import { updateUser } from "@/modules/auth/admin-service";
 import { errorResponse } from "@/server/api-error";
 import { requestIp } from "@/server/request";
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  try { const actor = await requireUser("users:manage"); const { id } = await params; return NextResponse.json(await updateUser(actor, id, await request.json(), requestIp(request))); }
-  catch (error) { return errorResponse(error); }
+  try {
+    assertSameOrigin(request);
+    const actor = await requireUser("users:manage");
+    const { id } = await params;
+    return NextResponse.json(await updateUser(actor, id, await request.json(), requestIp(request)));
+  } catch (error) {
+    return errorResponse(error);
+  }
 }

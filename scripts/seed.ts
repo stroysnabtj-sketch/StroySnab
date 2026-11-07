@@ -35,7 +35,6 @@ export async function seedDatabase(db: AppDatabase) {
   await db
     .insert(settings)
     .values([
-      { key: "pricing.global_percent", value: 10 },
       { key: "delivery.buffer_minutes", value: 30 },
       { key: "terms.current_version", value: "2026-10-30" },
     ])

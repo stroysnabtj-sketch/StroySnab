@@ -1,13 +1,22 @@
+import { parseExplicitPatch } from "@/modules/system/patch";
 import { createHash, randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { and, desc, eq, gt, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/db";
-import { supplierInvitations, supplierOffers, supplierUsers, suppliers, userRoles, users } from "@/db/schema";
+import {
+  supplierInvitations,
+  supplierOffers,
+  supplierUsers,
+  suppliers,
+  userRoles,
+  users,
+} from "@/db/schema";
 import type { SessionUser } from "@/modules/auth/session";
 import { writeAudit } from "@/modules/audit/service";
 import { normalizePhone } from "@/modules/system/phone";
 import { ApiError } from "@/server/api-error";
+import { hasPermission } from "@/modules/rbac/permissions";
 
 export const supplierInput = z.object({
   name: z.string().trim().min(2).max(200),
@@ -57,7 +66,7 @@ export async function createSupplier(actor: SessionUser, input: unknown, ip?: st
 }
 
 export async function updateSupplier(actor: SessionUser, id: string, input: unknown, ip?: string) {
-  const data = supplierInput.partial().parse(await Promise.resolve(input));
+  const data = parseExplicitPatch(supplierInput, await Promise.resolve(input));
   const db = await getDb();
   const [before] = await db.select().from(suppliers).where(eq(suppliers.id, id)).limit(1);
   if (!before) throw new ApiError(404, "not_found", "Поставщик не найден");
@@ -78,7 +87,12 @@ export async function updateSupplier(actor: SessionUser, id: string, input: unkn
   return updated;
 }
 
-export async function assignSupplierOwner(actor: SessionUser, supplierId: string, email: string, ip?: string) {
+export async function assignSupplierOwner(
+  actor: SessionUser,
+  supplierId: string,
+  email: string,
+  ip?: string,
+) {
   const db = await getDb();
   const [supplier] = await db.select().from(suppliers).where(eq(suppliers.id, supplierId)).limit(1);
   if (!supplier) throw new ApiError(404, "not_found", "Поставщик не найден");
@@ -86,11 +100,37 @@ export async function assignSupplierOwner(actor: SessionUser, supplierId: string
   const [user] = await db.select().from(users).where(eq(users.email, email.toLowerCase())).limit(1);
   if (!user) throw new ApiError(404, "not_found", "Пользователь с таким e-mail не найден");
   if (user.role === "SUPER_ADMIN") {
-    throw new ApiError(400, "cannot_reassign_super_admin", "Нельзя назначить суперадминистратора владельцем поставщика");
+    throw new ApiError(
+      400,
+      "cannot_reassign_super_admin",
+      "Нельзя назначить суперадминистратора владельцем поставщика",
+    );
   }
 
   await db.transaction(async (tx) => {
     // Find previous owners for this supplier
+    await tx.execute(sql`select pg_advisory_xact_lock(19401104)`);
+    const [target] = await tx.select().from(users).where(eq(users.id, user.id)).for("update");
+    if (!target || target.deletedAt || target.status !== "ACTIVE")
+      throw new ApiError(400, "inactive_owner", "Владелец должен быть активным пользователем");
+    if (
+      target.role === "SUPER_ADMIN" ||
+      (["ADMIN", "SALES_MANAGER", "PROCUREMENT_MANAGER", "LOGISTICS", "CONTENT_MANAGER"].includes(
+        target.role,
+      ) &&
+        !hasPermission(actor.role, "admins:manage"))
+    )
+      throw new ApiError(
+        403,
+        "protected_platform_user",
+        "Назначение сотрудника платформы владельцем доступно супер-администратору",
+      );
+    const memberships = await tx
+      .select()
+      .from(supplierUsers)
+      .where(eq(supplierUsers.userId, user.id));
+    if (memberships.some((row) => row.supplierId !== supplierId))
+      throw new ApiError(409, "already_bound", "Пользователь уже привязан к другому магазину");
     const previousOwners = await tx
       .select({ userId: supplierUsers.userId })
       .from(supplierUsers)
@@ -102,7 +142,9 @@ export async function assignSupplierOwner(actor: SessionUser, supplierId: string
         await tx
           .update(supplierUsers)
           .set({ role: "STAFF" })
-          .where(and(eq(supplierUsers.supplierId, supplierId), eq(supplierUsers.userId, prev.userId)));
+          .where(
+            and(eq(supplierUsers.supplierId, supplierId), eq(supplierUsers.userId, prev.userId)),
+          );
         await tx.update(users).set({ role: "SUPPLIER_STAFF" }).where(eq(users.id, prev.userId));
         await tx.delete(userRoles).where(eq(userRoles.userId, prev.userId));
         await tx.insert(userRoles).values({ userId: prev.userId, role: "SUPPLIER_STAFF" });
@@ -110,7 +152,9 @@ export async function assignSupplierOwner(actor: SessionUser, supplierId: string
     }
 
     // Set new owner membership and role
-    await tx.delete(supplierUsers).where(and(eq(supplierUsers.supplierId, supplierId), eq(supplierUsers.userId, user.id)));
+    await tx
+      .delete(supplierUsers)
+      .where(and(eq(supplierUsers.supplierId, supplierId), eq(supplierUsers.userId, user.id)));
     await tx.insert(supplierUsers).values({ supplierId, userId: user.id, role: "OWNER" });
     await tx.update(users).set({ role: "SUPPLIER_OWNER" }).where(eq(users.id, user.id));
     await tx.delete(userRoles).where(eq(userRoles.userId, user.id));
@@ -204,7 +248,8 @@ export async function acceptInvitation(input: unknown, ip?: string) {
       )
       .returning();
 
-    if (!invitation) throw new ApiError(404, "not_found", "Приглашение недействительно или истекло");
+    if (!invitation)
+      throw new ApiError(404, "not_found", "Приглашение недействительно или истекло");
 
     const phone = normalizePhone(data.phone);
     const email = data.email.toLowerCase();
@@ -218,7 +263,11 @@ export async function acceptInvitation(input: unknown, ip?: string) {
       })
       .returning()
       .catch(() => {
-        throw new ApiError(409, "conflict", "Пользователь с таким телефоном или e-mail уже существует");
+        throw new ApiError(
+          409,
+          "conflict",
+          "Пользователь с таким телефоном или e-mail уже существует",
+        );
       });
 
     await tx.insert(userRoles).values({ userId: created.id, role: "SUPPLIER_STAFF" });

@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.data
+tmp
+test-results
+playwright-report
+_reference_app
+картинки
+.env
+.env.*
+!.env.example

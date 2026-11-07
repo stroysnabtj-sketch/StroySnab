@@ -50,6 +50,97 @@
       "when": 1793542500000,
       "tag": "0006_product_requests_constraints",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793543000000,
+      "tag": "0007_orders_and_fleet_delivery",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793544000000,
+      "tag": "0008_secure_order_checkout",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793650000000,
+      "tag": "0009_delivery_preferences",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793740000000,
+      "tag": "0010_employee_names",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793741000000,
+      "tag": "0011_shop_order_snapshots",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793830000000,
+      "tag": "0012_home_collections",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793831000000,
+      "tag": "0013_procurement_and_payments",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793910000000,
+      "tag": "0014_home_collections_twelve",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1793911000000,
+      "tag": "0015_two_factor_authentication",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1793912000000,
+      "tag": "0016_contact_login_codes",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1793993000000,
+      "tag": "0017_order_delivery_coordinates",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1793993100000,
+      "tag": "0018_quotation_photos_and_submissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1793993200000,
+      "tag": "0019_notification_outbox",
+      "breakpoints": true
     }
   ]
 }

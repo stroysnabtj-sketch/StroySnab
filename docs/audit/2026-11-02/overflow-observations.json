@@ -1,0 +1,196 @@
+[
+  {
+    "name": "product",
+    "width": 390,
+    "scrollWidth": 748,
+    "overflow": [
+      {
+        "tag": "SPAN",
+        "className": "breadcrumb-current",
+        "right": 402,
+        "width": 386
+      },
+      {
+        "tag": "DIV",
+        "className": "product-info",
+        "right": 748,
+        "width": 380
+      },
+      {
+        "tag": "DIV",
+        "className": "product-info-meta",
+        "right": 748,
+        "width": 380
+      },
+      {
+        "tag": "A",
+        "className": "eyebrow",
+        "right": 418,
+        "width": 50
+      },
+      {
+        "tag": "SPAN",
+        "className": "meta-sep",
+        "right": 431,
+        "width": 5
+      },
+      {
+        "tag": "A",
+        "className": "product-brand-tag",
+        "right": 564,
+        "width": 126
+      },
+      {
+        "tag": "H1",
+        "className": "product-info-title",
+        "right": 748,
+        "width": 380
+      },
+      {
+        "tag": "P",
+        "className": "product-description",
+        "right": 748,
+        "width": 380
+      },
+      {
+        "tag": "DIV",
+        "className": "product-buy",
+        "right": 748,
+        "width": 380
+      },
+      {
+        "tag": "DIV",
+        "className": "product-price-box",
+        "right": 676,
+        "width": 283
+      },
+      {
+        "tag": "DIV",
+        "className": "product-price",
+        "right": 676,
+        "width": 283
+      },
+      {
+        "tag": "STRONG",
+        "className": "",
+        "right": 598,
+        "width": 205
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "right": 636,
+        "width": 38
+      },
+      {
+        "tag": "DIV",
+        "className": "product-subtext",
+        "right": 676,
+        "width": 283
+      },
+      {
+        "tag": "DIV",
+        "className": "product-availability",
+        "right": 723,
+        "width": 330
+      }
+    ]
+  },
+  {
+    "name": "checkout",
+    "width": 390,
+    "scrollWidth": 573,
+    "overflow": [
+      {
+        "tag": "DIV",
+        "className": "dispatch-vehicle-showcase",
+        "right": 573,
+        "width": 528
+      },
+      {
+        "tag": "DIV",
+        "className": "truck-illustration-wrap",
+        "right": 573,
+        "width": 528
+      },
+      {
+        "tag": "DIV",
+        "className": "truck-photo-stage",
+        "right": 562,
+        "width": 506
+      },
+      {
+        "tag": "IMG",
+        "className": "truck-photo-hero",
+        "right": 562,
+        "width": 506
+      },
+      {
+        "tag": "DIV",
+        "className": "truck-photo-gradient",
+        "right": 562,
+        "width": 506
+      },
+      {
+        "tag": "DIV",
+        "className": "truck-floating-stat stat-payload",
+        "right": 556,
+        "width": 147
+      },
+      {
+        "tag": "svg",
+        "className": "svg",
+        "right": 436,
+        "width": 14
+      },
+      {
+        "tag": "circle",
+        "className": "svg",
+        "right": 431,
+        "width": 4
+      },
+      {
+        "tag": "path",
+        "className": "svg",
+        "right": 435,
+        "width": 12
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "right": 543,
+        "width": 101
+      },
+      {
+        "tag": "STRONG",
+        "className": "",
+        "right": 509,
+        "width": 35
+      },
+      {
+        "tag": "DIV",
+        "className": "truck-floating-stat stat-driver",
+        "right": 558,
+        "width": 204
+      },
+      {
+        "tag": "SPAN",
+        "className": "",
+        "right": 545,
+        "width": 153
+      },
+      {
+        "tag": "DIV",
+        "className": "payload-meter-box",
+        "right": 573,
+        "width": 528
+      },
+      {
+        "tag": "DIV",
+        "className": "meter-label-row",
+        "right": 554,
+        "width": 490
+      }
+    ]
+  }
+]

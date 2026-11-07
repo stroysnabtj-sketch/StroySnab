@@ -1,20 +1,190 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, ClipboardList, Package, Truck, ChevronRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { ProductArt } from "@/components/product-art";
-import { t } from "@/i18n";
+import { CategoryTile } from "@/components/category-tile";
+import { ProductCard } from "@/components/product-card";
+import { ProductReveal, CategoryReveal } from "@/components/reveal";
+import { listCatalog, listCategories } from "@/modules/catalog/service";
+import { getHomeCollections } from "@/modules/merchandising/service";
 
-const categories = [
-  { slug: "cement", name: "Цемент и смеси", count: "01", art: "cement" as const },
-  { slug: "metal", name: "Металлопрокат", count: "02", art: "rebar" as const },
-  { slug: "masonry", name: "Кирпич и блоки", count: "03", art: "brick" as const },
-];
+import { CATEGORIES_TREE } from "@/modules/catalog/categories-data";
 
-export default function HomePage() {
-  return <><SiteHeader /><main>
-    <section className="hero shell"><div className="hero-copy"><div className="eyebrow">{t("home.eyebrow")}</div><h1><span>{t("home.titleA")}</span><span className="accent">{t("home.titleB")}</span></h1><p className="hero-lead">{t("home.lead")}</p><div className="hero-actions"><Link href="/catalog" className="button button-primary"><span className="button-label" data-label={t("home.cta")}>{t("home.cta")}<ArrowUpRight size={17} /></span></Link><Link href="/catalog/request" className="text-link">{t("home.request")}</Link></div><div className="hero-stats"><div className="hero-stat"><strong>200+</strong><span>{t("home.statProducts")}</span></div><div className="hero-stat"><strong>3</strong><span>{t("home.statSuppliers")}</span></div><div className="hero-stat"><strong>01</strong><span>{t("home.statWindow")}</span></div></div></div><div className="hero-visual" aria-label="Примеры строительных материалов"><article className="material-card"><div className="material-card-art"><ProductArt variant="cement" /></div><div className="material-card-meta"><span>М500 · 50 КГ</span><strong>Цемент портландский</strong></div></article><article className="material-card"><div className="material-card-art"><ProductArt variant="rebar" /></div><div className="material-card-meta"><span>А500С · Ø12 ММ</span><strong>Арматура стальная</strong></div></article><article className="material-card"><div className="material-card-art"><ProductArt variant="brick" /></div><div className="material-card-meta"><span>М150 · РЯДОВОЙ</span><strong>Кирпич керамический</strong></div></article></div></section>
-    <section className="home-section shell"><div className="section-head"><h2 className="section-title">{t("home.categories")}</h2><Link href="/catalog" className="text-link">Все категории <ArrowUpRight size={16} /></Link></div><div className="category-grid">{categories.map((category) => <Link href={`/catalog?category=${category.slug}`} className="category-tile" key={category.slug}><span className="mono">{category.count}</span><div className="category-tile-art"><ProductArt variant={category.art} /></div><h3>{category.name}</h3></Link>)}</div></section>
-    <section className="home-section shell"><div className="section-head"><h2 className="section-title">{t("home.how")}</h2></div><div className="process-grid">{[1,2,3].map((step) => <div className="process-step" key={step}><span className="mono">0{step}</span><h3>{t(`home.step${step}` as "home.step1")}</h3><p>{t(`home.step${step}Text` as "home.step1Text")}</p></div>)}</div></section>
-  </main><SiteFooter /></>;
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const [catalog, categories, collections] = await Promise.all([
+    listCatalog({ inStock: true, pageSize: 8, diverse: true }),
+    listCategories(),
+    getHomeCollections(),
+  ]);
+  const roots = categories.filter((category) => !category.parentId && category.isActive === "true");
+  const canonicalRoots = CATEGORIES_TREE.map((node) =>
+    roots.find((category) => category.slug === node.slug),
+  ).filter((row): row is (typeof roots)[number] => Boolean(row));
+  const featuredRoots = canonicalRoots.length === CATEGORIES_TREE.length ? canonicalRoots : roots;
+  return (
+    <>
+      <SiteHeader />
+      <main className="storefront-home">
+        <div className="shell home-intro">
+          <span>Строительство и ремонт</span>
+          <span>Таджикистан</span>
+        </div>
+        <section className="shell home-hero-wrap">
+          <div className="store-hero">
+            <div className="store-hero-copy">
+              <h1>
+                Строите?
+                <br />
+                Начните
+                <br />
+                <em>с материалов.</em>
+              </h1>
+              <p>
+                Подберите всё для стройки в каталоге
+                <br className="desktop-break" /> или отправьте список на расчёт.
+              </p>
+              <Link href="/catalog" className="button button-primary hero-shop-button">
+                <span className="button-label" data-label="Выбрать материалы">
+                  Выбрать материалы
+                </span>
+                <ArrowRight size={18} />
+              </Link>
+              <div className="hero-quick-links">
+                <Link href="/catalog?q=цемент">
+                  Цемент <ChevronRight size={13} />
+                </Link>
+                <Link href="/catalog?q=кирпич">
+                  Кирпич <ChevronRight size={13} />
+                </Link>
+                <Link href="/catalog?q=арматура">
+                  Арматура <ChevronRight size={13} />
+                </Link>
+              </div>
+            </div>
+            <div className="store-hero-scene hero-photo-scene">
+              <Image
+                src="/images/editorial/construction-crane-v2.webp"
+                alt="Башенный кран и строящийся дом на фоне гор"
+                fill
+                priority
+                sizes="(max-width: 600px) 100vw, (max-width: 900px) 75vw, 55vw"
+                className="hero-editorial-photo"
+              />
+            </div>
+          </div>
+          <Link href="/request" className="home-request-card">
+            <div className="request-photo">
+              <Image
+                src="/images/editorial/workshop-yellow-v1.webp"
+                alt="Замер деревянной доски на рабочем столе"
+                fill
+                sizes="(max-width: 600px) 360px, (max-width: 900px) 320px, 280px"
+                className="request-editorial-photo"
+              />
+              <span className="request-icon">
+                <ClipboardList size={24} />
+              </span>
+            </div>
+            <div className="request-copy">
+              <span className="small-label">Закупка по списку</span>
+              <h2>Рассчитаем ваш список</h2>
+              <p>Добавьте материалы или приложите файл. Получите коммерческое предложение.</p>
+            </div>
+            <span className="request-card-link">
+              Оставить заявку <ArrowRight size={18} />
+            </span>
+          </Link>
+        </section>
+        <section className="shell home-categories-section">
+          <div className="section-head">
+            <h2>Каталог</h2>
+            <Link href="/catalog" className="section-more">
+              Все разделы <ArrowRight size={17} />
+            </Link>
+          </div>
+          <div className="home-categories-grid">
+            {featuredRoots.slice(0, 12).map((category, index) => (
+              <CategoryReveal key={category.id} index={index} columns={4}>
+                <CategoryTile
+                  slug={category.slug}
+                  name={category.nameRu}
+                  childCount={categories.filter((child) => child.parentId === category.id).length}
+                />
+              </CategoryReveal>
+            ))}
+          </div>
+        </section>
+        {(["sale", "new"] as const).map(
+          (kind) =>
+            collections[kind].length > 0 && (
+              <section
+                className="shell home-products-section"
+                key={kind}
+                aria-labelledby={`home-${kind}-title`}
+              >
+                <div className="section-head">
+                  <h2 id={`home-${kind}-title`}>{kind === "new" ? "Новинки" : "Акции"}</h2>
+                  <Link href="/catalog" className="section-more">
+                    В каталог <ArrowRight size={17} />
+                  </Link>
+                </div>
+                <div className="product-grid product-grid-4">
+                  {collections[kind].map((product, index) => (
+                    <ProductReveal key={product.id} index={index} columns={4}>
+                      <ProductCard product={product} />
+                    </ProductReveal>
+                  ))}
+                </div>
+              </section>
+            ),
+        )}
+        {catalog.items.length > 0 && (
+          <section className="shell home-products-section">
+            <div className="section-head">
+              <div>
+                <span className="small-label">Можно заказать сейчас</span>
+                <h2>В наличии</h2>
+              </div>
+              <Link href="/catalog?inStock=1" className="section-more">
+                Все товары <ArrowRight size={17} />
+              </Link>
+            </div>
+            <div className="product-grid product-grid-4">
+              {catalog.items.map((product, index) => (
+                <ProductReveal key={product.id} index={index} columns={4}>
+                  <ProductCard product={product} />
+                </ProductReveal>
+              ))}
+            </div>
+          </section>
+        )}
+        <section className="shell home-service-section">
+          <div className="service-note">
+            <Truck size={27} />
+            <div>
+              <h3>Доставка на объект</h3>
+              <p>Адрес и способ получения — при оформлении заказа.</p>
+            </div>
+            <Link href="/delivery" aria-label="Условия доставки">
+              <ArrowRight size={19} />
+            </Link>
+          </div>
+          <div className="service-note">
+            <Package size={27} />
+            <div>
+              <h3>Предложения магазинов</h3>
+              <p>Выбирайте по цене, остатку и сроку поставки.</p>
+            </div>
+            <Link href="/catalog" aria-label="Посмотреть предложения">
+              <ArrowRight size={19} />
+            </Link>
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </>
+  );
 }

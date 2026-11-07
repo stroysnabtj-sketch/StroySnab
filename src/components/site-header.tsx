@@ -1,21 +1,94 @@
 "use client";
 import Link from "next/link";
-import { Menu, ShoppingCart, UserRound, X } from "lucide-react";
+import { PanelsTopLeft, MapPin, Menu, ShoppingCart, UserRound, X, Store } from "lucide-react";
 import { HeaderSearch } from "@/components/header-search";
-import { useState } from "react";
-import { t } from "@/i18n";
-
+import { useEffect, useState } from "react";
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  return <header className="site-header"><div className="shell header-inner">
-    <Link href="/" className="brand" aria-label="STROYHUB.TJ — на главную"><span className="brand-mark">K</span><span>STROYHUB<small>.TJ</small></span></Link>
-    <nav className={`main-nav ${open ? "is-open" : ""}`} aria-label="Основная навигация">
-      <Link href="/catalog" onClick={() => setOpen(false)}>{t("common.catalog")}</Link>
-      <Link href="/delivery" onClick={() => setOpen(false)}>{t("common.delivery")}</Link>
-      <Link href="/contacts" onClick={() => setOpen(false)}>{t("common.contacts")}</Link>
-      <Link href="/catalog/request" className="nav-request" onClick={() => setOpen(false)}>Оставить заявку</Link>
-    </nav>
-    <HeaderSearch />
-    <div className="header-actions"><Link className="icon-link" href="/account" aria-label={t("common.account")}><UserRound size={20} /></Link><Link className="icon-link" href="/cart" aria-label={t("common.cart")}><ShoppingCart size={20} /></Link><button className="menu-button" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={open ? t("common.close") : t("common.menu")}>{open ? <X /> : <Menu />}</button></div>
-  </div></header>;
+  const [session, setSession] = useState<{ role?: string; cartCount?: number }>({});
+  useEffect(() => {
+    const controller = new AbortController();
+    const refresh = () => {
+      fetch("/api/auth/me", { signal: controller.signal, cache: "no-store" })
+        .then((r) => (r.ok ? r.json() : {}))
+        .then(setSession)
+        .catch(() => {});
+    };
+    refresh();
+    window.addEventListener("cartUpdated", refresh);
+    return () => {
+      controller.abort();
+      window.removeEventListener("cartUpdated", refresh);
+    };
+  }, []);
+  const shop = session.role?.startsWith("SUPPLIER_");
+  const staff = session.role && !shop && session.role !== "CUSTOMER" && session.role !== "GUEST";
+  const accountHref = shop ? "/seller" : staff ? "/admin" : "/account";
+  return (
+    <header className="site-header">
+      <div className="header-utility">
+        <div className="shell">
+          <span>
+            <MapPin size={13} /> Таджикистан
+          </span>
+          <nav aria-label="Информация">
+            <Link href="/delivery">Доставка и оплата</Link>
+            <Link href="/contacts">Контакты</Link>
+            <Link href="/seller">
+              <Store size={13} /> Магазинам
+            </Link>
+          </nav>
+        </div>
+      </div>
+      <div className="shell header-inner">
+        <Link href="/" className="brand" aria-label="Stroysnab.tj — на главную">
+          <span className="brand-mark">S</span>
+          <span>
+            STROYSNAB<small>.TJ</small>
+          </span>
+        </Link>
+        <Link className="header-catalog-button" href="/catalog">
+          <PanelsTopLeft size={18} /> Каталог
+        </Link>
+        <HeaderSearch />
+        <div className="header-actions">
+          <Link className="header-action" href={accountHref}>
+            <UserRound size={21} />
+            <span>{shop ? "Магазин" : staff ? "Управление" : "Кабинет"}</span>
+          </Link>
+          <Link className="header-action" href="/cart">
+            <span className="cart-icon-wrap" data-cart-target>
+              <ShoppingCart size={21} />
+              {Boolean(session.cartCount) && (
+                <span className="cart-counter">{session.cartCount}</span>
+              )}
+            </span>
+            <span>Корзина</span>
+          </Link>
+          <button
+            className="menu-button"
+            onClick={() => setOpen(!open)}
+            aria-expanded={open}
+            aria-controls="mobile-site-nav"
+            aria-label={open ? "Закрыть меню" : "Открыть меню"}
+          >
+            {open ? <X /> : <Menu />}
+          </button>
+        </div>
+      </div>
+      {open && (
+        <nav className="mobile-site-nav shell" id="mobile-site-nav" aria-label="Меню">
+          <Link href="/catalog" onClick={() => setOpen(false)}>
+            Каталог
+          </Link>
+          <Link href={accountHref} onClick={() => setOpen(false)}>
+            {shop ? "Панель магазина" : staff ? "Управление" : "Личный кабинет"}
+          </Link>
+          <Link href="/catalog/request">Заявка на товар</Link>
+          <Link href="/delivery">Доставка и оплата</Link>
+          <Link href="/contacts">Контакты</Link>
+        </nav>
+      )}
+    </header>
+  );
 }

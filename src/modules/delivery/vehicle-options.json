@@ -1,0 +1,56 @@
+[
+  {
+    "code": "TAXI",
+    "title": "Экспресс-такси / Daewoo Damas",
+    "capacityKg": 250,
+    "volumeM3": 2.5,
+    "dimensions": "Багажник 1.4 × 1.1 м",
+    "photoUrl": "/vehicles/taxi.jpg",
+    "category": "taxi"
+  },
+  {
+    "code": "PORTER",
+    "title": "Лабо / Hyundai Porter",
+    "capacityKg": 1500,
+    "volumeM3": 9,
+    "dimensions": "2.8 × 1.6 × 1.5 м",
+    "photoUrl": "/vehicles/porter.jpg",
+    "category": "light"
+  },
+  {
+    "code": "GAZELLE",
+    "title": "Газель NEXT",
+    "capacityKg": 3500,
+    "volumeM3": 16,
+    "dimensions": "4.2 × 2.0 × 1.9 м",
+    "photoUrl": "/vehicles/gazelle.jpg",
+    "category": "light"
+  },
+  {
+    "code": "MANIPULATOR",
+    "title": "Кран-манипулятор",
+    "capacityKg": 7000,
+    "volumeM3": 18,
+    "dimensions": "6.0 × 2.45 м (вылет 8 м)",
+    "photoUrl": "/vehicles/manipulator.jpg",
+    "category": "special"
+  },
+  {
+    "code": "DUMP_TRUCK",
+    "title": "Самосвал HOWO / КАМАЗ",
+    "capacityKg": 15000,
+    "volumeM3": 12,
+    "dimensions": "Кузов 12 м³",
+    "photoUrl": "/vehicles/dumptruck.jpg",
+    "category": "heavy"
+  },
+  {
+    "code": "LONG_HAUL",
+    "title": "Тягач Длинномер / Шаланда",
+    "capacityKg": 25000,
+    "volumeM3": 45,
+    "dimensions": "13.6 × 2.45 м",
+    "photoUrl": "/vehicles/semi-truck.jpg",
+    "category": "heavy"
+  }
+]

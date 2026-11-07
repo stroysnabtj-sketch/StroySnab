@@ -1,18 +1,88 @@
+import { countNoun } from "@/modules/system/plural";
 import Link from "next/link";
-import { ProductArt } from "@/components/product-art";
+import Image from "next/image";
+import { ProductArt, getArtVariant } from "@/components/product-art";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { formatTJS } from "@/modules/system/money";
 import type { PublicProduct } from "@/modules/catalog/types";
-
-function artFor(category: string): "cement" | "rebar" | "brick" | "pipe" {
-  if (/metal|rebar|profile/.test(category)) return "rebar";
-  if (/masonry|brick|block/.test(category)) return "brick";
-  if (/plumb|pipe|fitting/.test(category)) return "pipe";
-  return "cement";
-}
 export function ProductCard({ product }: { product: PublicProduct }) {
-  return <article className="product-card">
-    <Link href={`/product/${product.slug}`} className="product-card-art"><ProductArt variant={artFor(product.categorySlug)} /><span className="product-card-sku mono">{product.sku}</span></Link>
-    <div className="product-card-body"><Link href={`/catalog?category=${product.categorySlug}`} className="product-card-category">{product.categoryName}</Link><Link href={`/product/${product.slug}`}><h3>{product.name}</h3></Link><div className="product-card-stock">{Number(product.stockQty) > 0 ? <span className="badge badge-success">В наличии · {product.stockQty} {product.unit}</span> : <span className="badge badge-warning">Под заказ · {product.leadTimeDays} дн.</span>}{product.offerCount > 1 && <span className="muted">{product.offerCount} предложения</span>}</div><div className="product-card-bottom"><div><strong>{formatTJS(product.priceDirams)}</strong><span> / {product.unit}</span></div><AddToCartButton offerId={product.offerId} disabled={Number(product.stockQty) <= 0} compact /></div></div>
-  </article>;
+  const inStock = Number(product.stockQty) >= Number(product.minOrderQty);
+  const details = product.keyAttributes?.filter(
+    (attribute) => !["Строительство и ремонт", "Таджикистан"].includes(attribute.value),
+  );
+  const image =
+    (product as PublicProduct & { imageUrl?: string | null }).imageUrl || product.imageKey;
+  return (
+    <article className="product-card">
+      <Link
+        href={`/product/${product.slug}`}
+        className="product-card-image"
+        aria-label={product.name}
+      >
+        {image ? (
+          <Image
+            src={image}
+            alt=""
+            fill
+            sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw"
+          />
+        ) : (
+          <ProductArt
+            variant={getArtVariant(product.categorySlug, product.name)}
+            className="product-art-svg"
+          />
+        )}
+      </Link>
+      <div className="product-card-body">
+        <div className="product-card-brand-row">
+          {product.brand ? (
+            <Link
+              href={`/catalog?brand=${encodeURIComponent(product.brand)}`}
+              className="product-card-brand"
+            >
+              {product.brand}
+            </Link>
+          ) : (
+            <span className="product-card-brand">{product.categoryName}</span>
+          )}
+        </div>
+        <Link href={`/product/${product.slug}`} className="product-card-title-link">
+          <h3 className="product-card-title">{product.name}</h3>
+        </Link>
+        <p className="card-key-specs" aria-hidden={!details?.length || undefined}>
+          {details
+            ?.slice(0, 2)
+            .map((a) => a.value)
+            .join(" · ")}
+        </p>
+        <div className="price-container">
+          <div className="product-card-price-row">
+            <strong className="product-card-price">{formatTJS(product.priceDirams)}</strong>
+            <span className="product-card-unit">/ {product.unit}</span>
+          </div>
+        </div>
+        <div className="product-card-status" data-stock={inStock}>
+          <span className="status-indicator" />
+          <span>{inStock ? "В наличии" : "Под заказ"}</span>
+          <span className="card-offer-count">
+            {countNoun(product.offerCount, "магазин", "магазина", "магазинов")}
+          </span>
+        </div>
+        <div className="product-card-action-bar">
+          {inStock ? (
+            <AddToCartButton offerId={product.offerId} minOrderQty={product.minOrderQty} />
+          ) : (
+            <Link
+              href={`/catalog/request?product=${encodeURIComponent(product.name)}`}
+              className="button button-secondary"
+            >
+              <span className="button-label" data-label="Запросить">
+                Запросить
+              </span>
+            </Link>
+          )}
+        </div>
+      </div>
+    </article>
+  );
 }

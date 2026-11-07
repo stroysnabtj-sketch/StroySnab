@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 2,
+  "runId": "admin-workspaces-2026-11-04",
+  "mode": "implement",
+  "inputRevision": "baseline-admin-2026-11-04",
+  "outputRevision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+  "inputHash": "38905b938054289ba7678c3f5c8629f8729f5c96232c437720a9c5fc5473ea7f",
+  "taskStatus": "COMPLETE",
+  "uiReadiness": "PASS",
+  "checks": [
+    {
+      "id": "types",
+      "kind": "static",
+      "required": true,
+      "status": "PASS",
+      "reason": "TypeScript completed with exit 0.",
+      "evidence": [
+        {
+          "artifact": "docs/audit/2026-11-04-admin/types.log",
+          "sha256": "f0e2815045ad68837dffc505c4baace6bc22b1024b0e4a2982683b8cdd9ae58c",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        }
+      ]
+    },
+    {
+      "id": "lint",
+      "kind": "static",
+      "required": true,
+      "status": "PASS",
+      "reason": "ESLint completed with exit 0 and no warnings.",
+      "evidence": [
+        {
+          "artifact": "docs/audit/2026-11-04-admin/lint.log",
+          "sha256": "a4558145c25f3bdde308d6d236ca11a6c0c33f422898e46b568a8ee7fc7369ca",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        }
+      ]
+    },
+    {
+      "id": "unit-integration",
+      "kind": "functional",
+      "required": true,
+      "status": "PASS",
+      "reason": "133 tests passed in 24 files; isolated database.",
+      "evidence": [
+        {
+          "artifact": "docs/audit/2026-11-04-admin/unit-integration.log",
+          "sha256": "69a6bb8b40040c1086d34d589ba187ae598bff6cef8f5a2642c6b69faf8a46cf",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        }
+      ]
+    },
+    {
+      "id": "browser-flows",
+      "kind": "functional",
+      "required": true,
+      "status": "PASS",
+      "reason": "All 28 unique scenarios have passing evidence across the full run and targeted rechecks; failures and test fixture limitations retained.",
+      "evidence": [
+        {
+          "artifact": "docs/audit/2026-11-04-admin/browser-flows.log",
+          "sha256": "cb391e4d5675b12db48a1e2c7c22a7e6853e9b5079355440f634029735245537",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        },
+        {
+          "artifact": "docs/audit/2026-11-04-admin/browser-recheck.log",
+          "sha256": "9227a2cb4f53530cc66ccf3c0de8f36744387db591cbdeeb7d570ac44bee92e5",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        },
+        {
+          "artifact": "docs/audit/2026-11-04-admin/browser-request-final.log",
+          "sha256": "0669a82b0bf08d92b04608f0ecf330c210d1346f44e35c43e02abd3df1473934",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        },
+        {
+          "artifact": "docs/audit/2026-11-04-admin/visual-review.md",
+          "sha256": "4a6eaeb9bcef1422e3f2c83ef3b3bfd336745ad4a84c0622c1b50d091a24efc5",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "observed"
+        }
+      ]
+    },
+    {
+      "id": "production-build",
+      "kind": "static",
+      "required": true,
+      "status": "PASS",
+      "reason": "Final Next.js production build completed with exit 0 in isolated source copy.",
+      "evidence": [
+        {
+          "artifact": "docs/audit/2026-11-04-admin/production-build.log",
+          "sha256": "6acf88efa9e5d0b1919900592e2f0f595a229d8574eb5c927529a8976b64715a",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        }
+      ]
+    },
+    {
+      "id": "visual-desktop-mobile",
+      "kind": "rendered",
+      "required": true,
+      "status": "PASS",
+      "reason": "51 route/viewport combinations plus request detail at three widths; selected screenshots visually inspected.",
+      "evidence": [
+        {
+          "artifact": "docs/audit/2026-11-04-admin/visual-run.log",
+          "sha256": "d28dd31473937681ac32d12f87817bb6e2d9900ddaf31610b594e3ff286726a6",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        },
+        {
+          "artifact": "docs/audit/2026-11-04-admin/visual-seller-run.log",
+          "sha256": "989f7c048b4136f4eae88394985a3de466e84c96ff374d5e2ba984fd399c84d4",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        },
+        {
+          "artifact": "docs/audit/2026-11-04-admin/request-visual.log",
+          "sha256": "9e1fb9321259f2d07e0ff99344318cee9d2f6cbc4936ea5066f3d130d7287e9a",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        },
+        {
+          "artifact": "docs/audit/2026-11-04-admin/visual-review.md",
+          "sha256": "4a6eaeb9bcef1422e3f2c83ef3b3bfd336745ad4a84c0622c1b50d091a24efc5",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "observed"
+        },
+        {
+          "artifact": "docs/design/2026-11-04-admin/admin-1440.png",
+          "sha256": "9d0ce7efdc69a6da0d514256a41d0bbcc1c8090b9305fe1bb6735b9527977d58",
+          "producer": "Rendered screenshot inspected",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "observed"
+        },
+        {
+          "artifact": "docs/design/2026-11-04-admin/seller-products-new-360.png",
+          "sha256": "15acb2d7e6ffa903690a6df3b37df4426b262717977c17c176a92de2008d1565",
+          "producer": "Rendered screenshot inspected",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "observed"
+        }
+      ]
+    },
+    {
+      "id": "keyboard-focus",
+      "kind": "accessibility",
+      "required": true,
+      "status": "PASS",
+      "reason": "Browser tests passed mobile menu/modal Escape and focus restoration.",
+      "evidence": [
+        {
+          "artifact": "docs/audit/2026-11-04-admin/browser-flows.log",
+          "sha256": "cb391e4d5675b12db48a1e2c7c22a7e6853e9b5079355440f634029735245537",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "early-form-input",
+      "severity": "major",
+      "blocking": true,
+      "resolved": true,
+      "summary": "Request response controls were usable before hydration; disabled fieldset now waits for handlers. Browser lifecycle and three viewports pass.",
+      "evidence": [
+        {
+          "artifact": "docs/audit/2026-11-04-admin/browser-request-final.log",
+          "sha256": "0669a82b0bf08d92b04608f0ecf330c210d1346f44e35c43e02abd3df1473934",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        },
+        {
+          "artifact": "docs/audit/2026-11-04-admin/request-visual.log",
+          "sha256": "9e1fb9321259f2d07e0ff99344318cee9d2f6cbc4936ea5066f3d130d7287e9a",
+          "producer": "Local verification",
+          "revision": "b8be5962865be9b00c21c333035b4cce3a619c7c2d441f250fb4ef14c051ab33",
+          "origin": "executed"
+        }
+      ]
+    }
+  ],
+  "changes": [
+    "drizzle/0010_employee_names.sql",
+    "drizzle/0011_shop_order_snapshots.sql",
+    "drizzle/meta/_journal.json",
+    "src/app/admin/audit/page.tsx",
+    "src/app/admin/catalog/page.tsx",
+    "src/app/admin/categories/page.tsx",
+    "src/app/admin/deliveries/page.tsx",
+    "src/app/admin/offers/page.tsx",
+    "src/app/admin/orders/[id]/page.tsx",
+    "src/app/admin/orders/page.tsx",
+    "src/app/admin/page.tsx",
+    "src/app/admin/pricing/page.tsx",
+    "src/app/admin/suppliers/page.tsx",
+    "src/app/admin/users/page.tsx",
+    "src/app/api/admin/catalog/categories/[id]/route.ts",
+    "src/app/api/admin/catalog/categories/route.ts",
+    "src/app/api/admin/catalog/products/[id]/images/route.ts",
+    "src/app/api/admin/catalog/products/[id]/route.ts",
+    "src/app/api/admin/catalog/products/import/route.ts",
+    "src/app/api/admin/catalog/products/route.ts",
+    "src/app/api/admin/offers/import/route.ts",
+    "src/app/api/admin/offers/route.ts",
+    "src/app/api/admin/orders/[id]/delivery/route.ts",
+    "src/app/api/admin/pricing/preview/route.ts",
+    "src/app/api/admin/pricing/rules/[id]/route.ts",
+    "src/app/api/admin/pricing/rules/route.ts",
+    "src/app/api/admin/suppliers/[id]/invitations/route.ts",
+    "src/app/api/admin/suppliers/[id]/owner/route.ts",
+    "src/app/api/admin/suppliers/[id]/route.ts",
+    "src/app/api/admin/suppliers/route.ts",
+    "src/app/api/admin/users/[id]/route.ts",
+    "src/app/api/admin/users/route.ts",
+    "src/app/api/public/orders/quote/route.ts",
+    "src/app/api/seller/orders/[id]/route.ts",
+    "src/app/orders/[id]/page.tsx",
+    "src/app/seller/orders/page.tsx",
+    "src/app/seller/page.tsx",
+    "src/app/seller/products/page.tsx",
+    "src/app/seller/team/page.tsx",
+    "src/components/admin-catalog-panel.tsx",
+    "src/components/admin-categories-panel.tsx",
+    "src/components/admin-offers-panel.tsx",
+    "src/components/admin-pricing-panel.tsx",
+    "src/components/admin-product-requests-panel.tsx",
+    "src/components/admin-suppliers-panel.tsx",
+    "src/components/admin-ui.tsx",
+    "src/components/admin-users-panel.tsx",
+    "src/components/delivery-assignment.tsx",
+    "src/components/product-request-respond.tsx",
+    "src/components/seller-workspace.module.css",
+    "src/components/shop-order-status-control.tsx",
+    "src/components/workspace-design.module.css",
+    "src/components/workspace-frame.tsx",
+    "src/components/workspace-refresh.tsx",
+    "src/components/workspace.tsx",
+    "src/db/schema/auth.ts",
+    "src/db/schema/orders.ts",
+    "src/modules/auth/admin-service.ts",
+    "src/modules/auth/page.ts",
+    "src/modules/cart/service.ts",
+    "src/modules/catalog/admin-service.ts",
+    "src/modules/catalog/category-visibility.ts",
+    "src/modules/catalog/service.ts",
+    "src/modules/orders/customer-view.ts",
+    "src/modules/orders/delivery-service.ts",
+    "src/modules/orders/service.ts",
+    "src/modules/suppliers/offer-service.ts",
+    "src/modules/suppliers/order-status.ts",
+    "src/modules/suppliers/service.ts",
+    "src/modules/suppliers/shop-service.ts",
+    "src/modules/system/admin-labels.ts",
+    "src/modules/system/patch.ts"
+  ],
+  "limitations": [
+    "Verified isolated demo databases; original WAL-damaged database not recovered.",
+    "Root Vite app/ conflicts with Next.js src/app discovery; user files preserved, preview/build use isolated source copies.",
+    "No real payments, payouts, partial returns, live GPS or fleet availability.",
+    "No staff membership revocation UI or database editor of attribute definitions.",
+    "Historic base prices are unknown when not previously snapshotted.",
+    "28 unique browser scenarios passed across runs, not one entirely green monolithic run; original logs retained.",
+    "Visual review covers Chromium and selected screenshots, not cross-browser certification or full WCAG audit."
+  ]
+}

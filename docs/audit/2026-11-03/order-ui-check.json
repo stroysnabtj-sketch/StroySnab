@@ -1,0 +1,6 @@
+{
+  "orderNumber": "ORD-0003",
+  "status": "CANCELLED",
+  "legacyRedirect": "http://localhost:3000/catalog?category=tsement-beton&sort=price_asc",
+  "products": 15
+}

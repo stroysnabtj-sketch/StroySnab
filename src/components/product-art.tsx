@@ -1,10 +1,29 @@
-export function ProductArt({ variant = "cement", className = "" }: { variant?: "cement" | "rebar" | "brick" | "pipe"; className?: string }) {
-  return <svg className={className} viewBox="0 0 320 260" fill="none" role="img" aria-label="Строительный материал">
-    <defs><linearGradient id={`shade-${variant}`} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#F8F7ED"/><stop offset="1" stopColor="#C9C8B9"/></linearGradient></defs>
-    <ellipse cx="160" cy="222" rx="112" ry="18" fill="#232323" opacity=".1"/>
-    {variant === "cement" && <><path d="M90 52h140l-12 156H102L90 52Z" fill={`url(#shade-${variant})`} stroke="#232323" strokeWidth="3"/><path d="M90 52l22-22h98l20 22" fill="#E5E4D5" stroke="#232323" strokeWidth="3"/><path d="M102 89h116v70H102z" fill="#184DC4"/><path d="M120 110h78v11h-78zm0 22h55v7h-55z" fill="#F2F1E4"/><path d="M111 180h98" stroke="#232323" strokeWidth="3"/></>}
-    {variant === "rebar" && <><g stroke="#184DC4" strokeWidth="15" strokeLinecap="round"><path d="M55 198 225 46"/><path d="M82 214 252 62"/><path d="M37 175 207 30"/></g><g stroke="#232323" strokeWidth="3" opacity=".65"><path d="m74 175 16 9m10-32 16 9m10-32 16 9m10-32 16 9m10-32 16 9m10-32 16 9M99 193l16 9m10-32 16 9m10-32 16 9m10-32 16 9m10-32 16 9"/></g></>}
-    {variant === "brick" && <><g stroke="#232323" strokeWidth="3"><path d="m55 139 105-54 105 50-105 56-105-52Z" fill="#E5E4D5"/><path d="M55 139v51l105 52v-51l-105-52Z" fill="#C9C8B9"/><path d="m160 191 105-56v50l-105 57v-51Z" fill="#A9A899"/><path d="m55 139 52-26 53 26-53 26-52-26Zm107 0 51-27 52 23-52 28-51-24Z" fill="#F2F1E4"/></g></>}
-    {variant === "pipe" && <><path d="m75 177 130-125c26-24 68 12 43 37L118 214c-26 24-68-12-43-37Z" fill={`url(#shade-${variant})`} stroke="#232323" strokeWidth="3"/><ellipse cx="227" cy="70" rx="34" ry="25" transform="rotate(-44 227 70)" fill="#184DC4" stroke="#232323" strokeWidth="3"/><ellipse cx="227" cy="70" rx="19" ry="12" transform="rotate(-44 227 70)" fill="#232323"/><path d="m94 177 24 18" stroke="#232323" strokeWidth="3"/></>}
-  </svg>;
+import Image from "next/image";
+import {
+  placeholderPhoto,
+  productPhotoKind,
+  type ProductPhotoKind,
+} from "@/modules/catalog/placeholder-images";
+export type ArtVariant = ProductPhotoKind;
+export const getArtVariant = productPhotoKind;
+export function ProductArt({
+  variant = "generic",
+  className = "",
+  large = false,
+}: {
+  variant?: ArtVariant;
+  className?: string;
+  large?: boolean;
+}) {
+  return (
+    <Image
+      src={placeholderPhoto(variant)}
+      alt="Типовое изображение товарной группы"
+      width={720}
+      height={720}
+      sizes={large ? "(max-width: 760px) 100vw, 50vw" : "(max-width: 760px) 50vw, 30vw"}
+      priority={large}
+      className={`catalog-placeholder-photo ${className}`}
+    />
+  );
 }

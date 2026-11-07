@@ -1,10 +1,67 @@
 "use client";
 
 import { X } from "lucide-react";
+import { CustomSelect } from "./custom-select";
 import { useEffect, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
 
-export function Button({ children, variant = "primary", className = "", loading = false, disabled, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "ghost" | "danger"; loading?: boolean }) {
-  return <button aria-label={typeof children === "string" ? children : undefined} className={`button button-${variant} ${className}`} disabled={disabled || loading} {...props}><span className="button-label" data-label={typeof children === "string" ? children : undefined}>{children}</span></button>;
+function extractLabel(node: ReactNode): string {
+  if (typeof node === "string") return node;
+  if (typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(extractLabel).filter(Boolean).join(" ").trim();
+  if (node && typeof node === "object" && "props" in node) {
+    const p = (node as { props?: { children?: ReactNode } }).props;
+    if (p?.children) return extractLabel(p.children);
+  }
+  return "";
+}
+
+export function Button({
+  children,
+  variant = "primary",
+  className = "",
+  loading = false,
+  disabled,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "primary" | "secondary" | "ghost" | "danger";
+  loading?: boolean;
+}) {
+  const textLabel = typeof children === "string" ? children : extractLabel(children);
+
+  let iconNode: ReactNode = null;
+  let textNode: ReactNode = children;
+
+  if (Array.isArray(children)) {
+    const icons: ReactNode[] = [];
+    const texts: ReactNode[] = [];
+    for (const child of children) {
+      if (typeof child === "string" || typeof child === "number") {
+        texts.push(child);
+      } else if (child && typeof child === "object") {
+        icons.push(child);
+      } else {
+        texts.push(child);
+      }
+    }
+    if (icons.length > 0 && texts.length > 0) {
+      iconNode = icons;
+      textNode = texts;
+    }
+  }
+
+  return (
+    <button
+      aria-label={textLabel || undefined}
+      className={`button button-${variant} ${className}`}
+      disabled={disabled || loading}
+      {...props}
+    >
+      {iconNode}
+      <span className="button-label" data-label={textLabel || undefined}>
+        {textNode}
+      </span>
+    </button>
+  );
 }
 
 export function Field({ label, error, hint, children }: { label: string; error?: string; hint?: string; children: ReactNode }) {
@@ -12,7 +69,7 @@ export function Field({ label, error, hint, children }: { label: string; error?:
 }
 
 export function Input(props: InputHTMLAttributes<HTMLInputElement>) { return <input className="input" {...props} />; }
-export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) { return <select className="input" {...props} />; }
+export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) { return <CustomSelect {...props} />; }
 export function Textarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) { return <textarea className="input" {...props} />; }
 export function Checkbox({ label, ...props }: InputHTMLAttributes<HTMLInputElement> & { label: ReactNode }) {
   return <label className="checkbox"><input type="checkbox" {...props} /><span>{label}</span></label>;

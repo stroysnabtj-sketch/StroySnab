@@ -1,0 +1,360 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  padding-block: 64px 80px;
+  max-width: 1100px;
+  min-height: 70vh;
+}
+.intro {
+  align-self: stretch;
+  background: var(--brand-graphite, #102f57);
+  color: white;
+  border-radius: 24px;
+  padding: 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.intro::after {
+  content: "";
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border: 1px solid #ffffff20;
+  border-radius: 50%;
+  right: -100px;
+  bottom: -100px;
+  box-shadow:
+    0 0 0 42px #ffffff08,
+    0 0 0 84px #ffffff05;
+  pointer-events: none;
+}
+.brand {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: #c6d7ed;
+  font-weight: 700;
+  margin-bottom: 48px;
+}
+.intro h1 {
+  font-size: clamp(30px, 3vw, 42px);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  margin: 0 0 20px;
+  color: white;
+}
+.intro p {
+  font-size: 16px;
+  line-height: 1.65;
+  max-width: 31ch;
+  color: #d9e4f3;
+  margin: 0;
+}
+.benefits {
+  display: grid;
+  gap: 22px;
+  margin-top: 36px;
+  position: relative;
+  z-index: 1;
+}
+.benefits > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.benefits svg {
+  flex-shrink: 0;
+  color: #b6d2f4;
+  margin-top: 1px;
+}
+.card {
+  min-width: 0;
+  padding: 12px 0;
+}
+.card h2 {
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  margin: 0 0 10px;
+  color: var(--brand-graphite);
+}
+.caption {
+  font-size: 14px;
+  color: #5b6678;
+  line-height: 1.6;
+  margin: 0 0 26px;
+}
+.switch {
+  margin: 24px 0 0;
+  border-top: 1px solid #dce3ec;
+  padding-top: 22px;
+  text-align: center;
+  font-size: 14px;
+  color: #556276;
+}
+.switch a {
+  color: var(--brand, #074089);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.form {
+  display: grid;
+  gap: 18px;
+}
+.form :global(.field) {
+  margin: 0;
+  gap: 7px;
+  font-size: 14px;
+}
+.form :global(.input) {
+  min-height: 50px;
+  background: white;
+  border-radius: 10px;
+  font-size: 16px;
+}
+.form :global(.field-hint),
+.form :global(.field-error) {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.form :global(.checkbox) {
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.form :global(.checkbox input) {
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.form :global(.button[type="submit"]) {
+  min-height: 50px;
+  margin-top: 4px;
+}
+.password {
+  position: relative;
+  display: block;
+}
+.password input {
+  padding-right: 52px !important;
+}
+.reveal {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: #52627a;
+}
+.reveal:hover {
+  background: #eef3fa;
+  color: var(--brand);
+}
+.reveal:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+.form :global(.demo-logins) {
+  margin-top: 12px;
+  border-top: 1px solid #dce3ec;
+  padding-top: 20px;
+}
+.form :global(.auth-secondary-link) {
+  font-size: 14px;
+  text-align: center;
+  color: var(--brand);
+}
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    padding-block: 24px 48px;
+    max-width: 520px;
+  }
+  .intro {
+    padding: 28px;
+    border-radius: 18px;
+  }
+  .brand {
+    margin-bottom: 20px;
+  }
+  .intro h1 {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .intro p {
+    max-width: none;
+    font-size: 14px;
+  }
+  .benefits {
+    display: none;
+  }
+  .card {
+    padding: 0 4px;
+  }
+  .card h2 {
+    font-size: 24px;
+  }
+}
+
+.channelTabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  gap: 4px;
+  background: #edf2f8;
+  border-radius: 10px;
+}
+.channelTabs button {
+  padding: 11px 8px;
+  min-height: 44px;
+  border-radius: 7px;
+  color: #53657b;
+  font-size: 14px;
+}
+.channelTabs button[aria-pressed="true"] {
+  background: #fff;
+  color: #074089;
+  box-shadow: 0 1px 5px #102f5710;
+}
+.codeActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.codeActions button {
+  min-height: 36px;
+}
+.codeActions button:disabled {
+  color: #718095;
+  cursor: default;
+}
+
+/* Compact authentication surface. */
+.layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1100px;
+  min-height: 68vh;
+  padding: 56px 20px 72px;
+}
+.card {
+  width: 100%;
+  max-width: 460px;
+  padding: 36px;
+  border: 1px solid #dce4ee;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 18px 60px #102f5708;
+}
+.card h1 {
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  margin: 30px 0 26px;
+  color: #102f57;
+}
+.authBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #102f57;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.04em;
+}
+.authBrand > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: #fff;
+  background: #074089;
+  border-radius: 9px;
+  font-size: 24px;
+}
+.authBrand small {
+  font-size: 11px;
+  margin-left: -8px;
+  align-self: flex-end;
+  margin-bottom: 7px;
+}
+.passwordLink {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #074089;
+  font-size: 13px;
+  padding: 6px;
+}
+.otpControl {
+  display: block;
+  position: relative;
+}
+.otpInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+  cursor: text;
+  font-size: 16px;
+}
+.otpCells {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+.otpCells > span {
+  display: grid;
+  place-items: center;
+  height: 56px;
+  border: 1px solid #cbd6e4;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #102f57;
+  font-size: 24px;
+  font-weight: 650;
+}
+.otpControl:focus-within .otpCells > span[data-active="true"] {
+  border-color: #074089;
+  box-shadow: 0 0 0 3px #07408912;
+  background: #fff;
+}
+@media (max-width: 600px) {
+  .layout {
+    padding: 28px 16px 40px;
+    min-height: 65vh;
+  }
+  .card {
+    padding: 25px 22px;
+    border-radius: 18px;
+  }
+  .card h1 {
+    font-size: 26px;
+    margin-top: 25px;
+  }
+  .otpCells {
+    gap: 6px;
+  }
+  .otpCells > span {
+    height: 48px;
+    font-size: 22px;
+  }
+}
