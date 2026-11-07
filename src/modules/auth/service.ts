@@ -87,14 +87,27 @@ export async function login(input: unknown, ip: string, userAgent: string, super
   const data = loginSchema.parse(input);
   const db = await getDb();
   const identifier = data.identifier.trim();
-  const normalized = identifier.includes("@")
-    ? identifier.toLowerCase()
-    : normalizePhone(identifier);
+  const normalized = identifier.toLowerCase();
+  let phoneNormalized = normalized;
+  if (!identifier.includes("@")) {
+    try {
+      phoneNormalized = normalizePhone(identifier);
+    } catch {
+      // keep identifier if normalize fails
+    }
+  }
   const [user] = await db
     .select()
     .from(users)
     .where(
-      and(or(eq(users.email, normalized), eq(users.phone, normalized)), isNull(users.deletedAt)),
+      and(
+        or(
+          eq(users.email, normalized),
+          eq(users.phone, normalized),
+          eq(users.phone, phoneNormalized),
+        ),
+        isNull(users.deletedAt),
+      ),
     )
     .limit(1);
 

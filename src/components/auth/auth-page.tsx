@@ -42,14 +42,11 @@ export function AuthPage({
           ) : (
             <AuthForm mode={mode} next={next} refCode={refCode} token={token} />
           )}
-          {mode === "login" &&
-            !passwordLogin &&
-            (process.env.NODE_ENV !== "production" ||
-              process.env.AUTH_LEGACY_PASSWORD_LOGIN === "true") && (
-              <Link className={styles.passwordLink} href={`/auth/password${destination}`}>
-                Войти по паролю
-              </Link>
-            )}
+          {mode === "login" && !passwordLogin && (
+            <Link className={styles.passwordLink} href={`/auth/password${destination}`}>
+              Войти по паролю
+            </Link>
+          )}
           {passwordLogin && (
             <Link className={styles.passwordLink} href={`/auth/login${destination}`}>
               Войти по коду
