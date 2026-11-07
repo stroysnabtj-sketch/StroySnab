@@ -33,54 +33,64 @@ export default async function HomePage() {
           <span>Таджикистан</span>
         </div>
         <section className="shell home-hero-wrap">
-          <div className="store-hero">
-            <div className="store-hero-copy">
-              <h1>
-                Строите?
-                <br />
-                Начните
-                <br />
-                <em>с материалов.</em>
-              </h1>
-              <p>
-                Подберите всё для стройки в каталоге
-                <br className="desktop-break" /> или отправьте список на расчёт.
-              </p>
-              <Link href="/catalog" className="button button-primary hero-shop-button">
+          <div
+            className="store-hero hero-video-banner"
+            style={{
+              position: "relative",
+              minHeight: "360px",
+              borderRadius: "16px",
+              overflow: "hidden",
+              background: "transparent",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gridTemplateColumns: "none",
+            }}
+          >
+            <video
+              src="/videos/hero-crane.webm"
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster="/images/editorial/construction-crane-v2.webp"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                zIndex: 1,
+              }}
+            />
+            <div
+              style={{
+                position: "relative",
+                zIndex: 2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "100%",
+                background: "transparent",
+              }}
+            >
+              <Link
+                href="/catalog"
+                className="button button-primary hero-shop-button"
+                style={{
+                  fontSize: "15px",
+                  fontWeight: 600,
+                  padding: "14px 28px",
+                  borderRadius: "10px",
+                  boxShadow: "0 8px 30px rgba(0, 0, 0, 0.35)",
+                }}
+              >
                 <span className="button-label" data-label="Выбрать материалы">
                   Выбрать материалы
                 </span>
                 <ArrowRight size={18} />
               </Link>
-              <div className="hero-quick-links">
-                <Link href="/catalog?q=цемент">
-                  Цемент <ChevronRight size={13} />
-                </Link>
-                <Link href="/catalog?q=кирпич">
-                  Кирпич <ChevronRight size={13} />
-                </Link>
-                <Link href="/catalog?q=арматура">
-                  Арматура <ChevronRight size={13} />
-                </Link>
-              </div>
-            </div>
-            <div className="store-hero-scene hero-photo-scene">
-              <video
-                src="/videos/hero-crane.webm"
-                autoPlay
-                loop
-                muted
-                playsInline
-                poster="/images/editorial/construction-crane-v2.webp"
-                className="hero-editorial-photo"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
             </div>
           </div>
           <Link href="/request" className="home-request-card">
