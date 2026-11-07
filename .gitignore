@@ -12,3 +12,4 @@ _reference_app/
 *.tsbuildinfo
 .DS_Store
 *.log
+docs/StroySnab/
