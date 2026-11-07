@@ -65,13 +65,21 @@ export default async function HomePage() {
               </div>
             </div>
             <div className="store-hero-scene hero-photo-scene">
-              <Image
-                src="/images/editorial/construction-crane-v2.webp"
-                alt="Башенный кран и строящийся дом на фоне гор"
-                fill
-                priority
-                sizes="(max-width: 600px) 100vw, (max-width: 900px) 75vw, 55vw"
+              <video
+                src="/videos/hero-crane.webm"
+                autoPlay
+                loop
+                muted
+                playsInline
+                poster="/images/editorial/construction-crane-v2.webp"
                 className="hero-editorial-photo"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
               />
             </div>
           </div>
