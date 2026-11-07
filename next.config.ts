@@ -2,12 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  outputFileTracingIncludes: {
-    "/api/procurement/*/pdf": ["./assets/fonts/CourierNew*.ttf"],
-    "/orders/*/pdf": ["./assets/fonts/CourierNew*.ttf"],
-  },
   poweredByHeader: false,
-  serverExternalPackages: ["@electric-sql/pglite", "pg", "pdfkit"],
+  serverExternalPackages: ["@electric-sql/pglite", "pg", "pdfkit", "sharp"],
   async headers() {
     return [
       {

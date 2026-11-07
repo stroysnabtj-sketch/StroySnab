@@ -13,3 +13,5 @@ _reference_app/
 .DS_Store
 *.log
 docs/StroySnab/
+*.mov
+*.webm

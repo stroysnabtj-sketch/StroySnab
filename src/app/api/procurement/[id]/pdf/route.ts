@@ -1,6 +1,10 @@
 import { optionalUser } from "@/modules/auth/session";
 import { quotationPdf } from "@/modules/procurement/pdf";
 import { errorResponse } from "@/server/api-error";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const pdf = await quotationPdf(
