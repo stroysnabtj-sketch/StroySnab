@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { optionalUser, requireUser } from "@/modules/auth/session";
+import { requireCustomer, requireUser } from "@/modules/auth/session";
 import { createProductRequest, listManagedRequests } from "@/modules/product-requests/service";
 import { errorResponse } from "@/server/api-error";
 import { requestIp } from "@/server/request";
@@ -26,8 +26,8 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
+    const user = await requireCustomer();
     const body = await parseJsonBody(request);
-    const user = await optionalUser();
     const result = await createProductRequest(body, user, requestIp(request));
     return NextResponse.json(result, { status: 201 });
   } catch (error) {

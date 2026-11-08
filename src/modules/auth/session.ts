@@ -81,6 +81,13 @@ export async function optionalUser(): Promise<SessionUser | null> {
   return getCurrentUser();
 }
 
+export async function requireCustomer(): Promise<SessionUser> {
+  const user = await requireUser();
+  if (user.role !== "CUSTOMER")
+    throw new ApiError(403, "forbidden", "Требуется аккаунт покупателя");
+  return user;
+}
+
 export async function assertNotDeleted(userId: string): Promise<void> {
   const db = await getDb();
   const [user] = await db

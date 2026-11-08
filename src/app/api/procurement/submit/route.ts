@@ -1,4 +1,4 @@
-import { optionalUser } from "@/modules/auth/session";
+import { requireCustomer } from "@/modules/auth/session";
 import { submitProcurementRequest } from "@/modules/procurement/submit";
 import { assertSameOrigin } from "@/server/security";
 import { consumeRateLimit } from "@/server/rate-limit";
@@ -11,6 +11,7 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
+    const user = await requireCustomer();
     await consumeRateLimit(`procurement:${requestIp(request)}`, 10, 3600);
     const form = await boundedForm(request, 51 * 1024 * 1024);
     const payload = form.get("payload");
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
     if (files.some((file) => !(file instanceof File)))
       throw new ApiError(400, "invalid_file", "Выберите файл");
     return jsonResponse(
-      await submitProcurementRequest(input, files as File[], await optionalUser()),
+      await submitProcurementRequest(input, files as File[], user),
       { status: 201 },
     );
   } catch (error) {

@@ -1,34 +1,32 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FileUp, Plus, X } from "lucide-react";
 import { api } from "./shared";
 import s from "./procurement.module.css";
 import styles from "./request-form.module.css";
 
-type Created = { id: string; number: string; accessToken?: string };
+type Created = { id: string };
 type RequestLine = { id: string; name: string; qty: string; unit: string };
 const emptyLine = (id: string): RequestLine => ({ id, name: "", qty: "1", unit: "" });
 export function ProcurementRequestForm({
   contactName = "",
   contactPhone = "",
   contactEmail = "",
-  signedIn = false,
 }: {
   contactName?: string;
   contactPhone?: string;
   contactEmail?: string;
-  signedIn?: boolean;
 }) {
+  const router = useRouter();
   const [mode, setMode] = useState<"file" | "manual">("file");
   const [lines, setLines] = useState<RequestLine[]>([emptyLine("first")]);
   const [files, setFiles] = useState<File[]>([]);
-  const [created, setCreated] = useState<Created | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const submission = useRef<{ key: string; token: string; fingerprint: string } | null>(null);
-  const contactsComplete = signedIn && Boolean(contactName && contactPhone);
+  const submission = useRef<{ key: string; fingerprint: string } | null>(null);
+  const contactsComplete = Boolean(contactName && contactPhone);
   const updateLine = (id: string, key: "name" | "qty" | "unit", value: string) =>
     setLines((current) =>
       current.map((line) => (line.id === id ? { ...line, [key]: value } : line)),
@@ -64,37 +62,24 @@ export function ProcurementRequestForm({
         })),
       });
       if (!submission.current || submission.current.fingerprint !== fingerprint)
-        submission.current = { key: crypto.randomUUID(), token: crypto.randomUUID(), fingerprint };
+        submission.current = { key: crypto.randomUUID(), fingerprint };
       const body = new FormData();
       body.set(
         "payload",
         JSON.stringify({
           ...payload,
           submissionKey: submission.current.key,
-          accessToken: submission.current.token,
         }),
       );
       for (const file of requestFiles) body.append("files", file);
-      setCreated(await api<Created>("/api/procurement/submit", { method: "POST", body }));
+      const created = await api<Created>("/api/procurement/submit", { method: "POST", body });
+      router.replace(`/requests/${created.id}`);
     } catch (cause) {
       setError((cause as Error).message);
     } finally {
       setBusy(false);
     }
   }
-  if (created)
-    return (
-      <section className={s.card} aria-live="polite">
-        <h2>Заявка {created.number} отправлена</h2>
-        <p>Менеджер подготовит предложение по вашему списку.</p>
-        <Link
-          className="button button-primary"
-          href={`/requests/${created.id}${created.accessToken ? `?access=${encodeURIComponent(created.accessToken)}` : ""}`}
-        >
-          Открыть заявку
-        </Link>
-      </section>
-    );
   return (
     <form onSubmit={submit} className={styles.form} aria-busy={busy}>
       <fieldset disabled={busy} className={styles.fieldset}>
