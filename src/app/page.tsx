@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
 import { connection } from "next/server";
@@ -12,6 +13,8 @@ import { listCatalog, listCategories } from "@/modules/catalog/service";
 import { getHomeCollections } from "@/modules/merchandising/service";
 
 import { CATEGORIES_TREE } from "@/modules/catalog/categories-data";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const getHomeCatalog = unstable_cache(
   () =>

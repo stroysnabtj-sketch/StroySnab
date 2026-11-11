@@ -8,11 +8,11 @@ export async function generateMetadata({
   params: Promise<{ categorySlug: string }>;
 }): Promise<Metadata> {
   const { categorySlug } = await params;
-  const category = (await listCategories()).find(item => item.slug === categorySlug);
+  const category = (await listCategories()).find((item) => item.slug === categorySlug);
   const title = category?.nameRu ?? "Каталог строительных материалов";
 
   return {
-    title: `${title} — материалы и цены | STROYHUB.TJ`,
+    title: `${title} — материалы и цены | Stroysnab.tj`,
     description: `Товары в категории «${title}». Цены в сомони, характеристики и предложения магазинов.`,
     alternates: { canonical: `/catalog/${categorySlug}` },
   };
