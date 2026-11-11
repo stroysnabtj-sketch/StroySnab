@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AddressFields, type AddressValue } from "@/components/address-fields";
@@ -10,12 +10,12 @@ export function ProcurementDetail({
   id,
   access = "",
   manager = false,
-  canSaveAddress = false,
+  customer = false,
 }: {
   id: string;
   access?: string;
   manager?: boolean;
-  canSaveAddress?: boolean;
+  customer?: boolean;
 }) {
   const [data, setData] = useState<Detail | null>(null),
     [error, setError] = useState(""),
@@ -23,6 +23,7 @@ export function ProcurementDetail({
     [address, setAddress] = useState<AddressValue>({ city: "Душанбе", street: "", point: null }),
     [loaded, setLoaded] = useState(false),
     [decision, setDecision] = useState(false);
+  const downloaded = useRef<string | null>(null);
   const headers: Record<string, string> = access ? { "x-request-access": access } : {};
   async function refresh() {
     setError("");
@@ -37,6 +38,53 @@ export function ProcurementDetail({
   useEffect(() => {
     void refresh(); /* request identity controls reload */ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, access]);
+  const ownRequest = customer && !access && data?.request.id === id;
+  const waitingForQuote =
+    ownRequest && !data.quotation && ["NEW", "IN_REVIEW"].includes(data.request.status);
+  useEffect(() => {
+    if (!waitingForQuote) return;
+    const controller = new AbortController();
+    let checking = false;
+    const interval = window.setInterval(async () => {
+      if (document.hidden || checking) return;
+      checking = true;
+      try {
+        const detail = await api<Detail>(`/api/procurement/${id}`, {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!controller.signal.aborted) setData(detail);
+      } catch {
+        // A temporary error leaves the last loaded request visible.
+      } finally {
+        checking = false;
+      }
+    }, 15000);
+    return () => {
+      window.clearInterval(interval);
+      controller.abort();
+    };
+  }, [id, waitingForQuote]);
+  const downloadKey =
+    ownRequest && data.quotation?.status === "SENT"
+      ? `quote-pdf:${id}:${data.quotation.version}`
+      : null;
+  useEffect(() => {
+    if (!downloadKey || downloaded.current === downloadKey) return;
+    downloaded.current = downloadKey;
+    try {
+      if (sessionStorage.getItem(downloadKey)) return;
+      sessionStorage.setItem(downloadKey, "1");
+    } catch {
+      // The ref also prevents repeated attempts when storage is unavailable.
+    }
+    const link = document.createElement("a");
+    link.href = `/api/procurement/${id}/pdf`;
+    link.download = "";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }, [downloadKey, id]);
   async function decide(action: "ACCEPT" | "DECLINE") {
     if (!data?.quotation) return;
     setBusy(true);
@@ -158,8 +206,7 @@ export function ProcurementDetail({
                 <a
                   className="button button-secondary"
                   href={resource("pdf")}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  download
                 >
                   Скачать PDF
                 </a>
@@ -224,7 +271,7 @@ export function ProcurementDetail({
               {q.conditions && <p className={s.note}>{q.conditions}</p>}
               {!manager && q.status === "SENT" && !expired && (
                 <div>
-                  <AddressFields value={address} onChange={setAddress} canSave={canSaveAddress} />
+                  <AddressFields value={address} onChange={setAddress} canSave={customer} />
                   <div className={s.actions}>
                     <button
                       className="button button-primary"

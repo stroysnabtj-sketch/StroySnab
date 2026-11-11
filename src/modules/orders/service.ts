@@ -24,6 +24,7 @@ import { ApiError } from "@/server/api-error";
 import { nextDocNumber } from "@/modules/system/doc-number";
 import { normalizePhone } from "@/modules/system/phone";
 import { hasPermission, type Role } from "@/modules/rbac/permissions";
+import { verifyGuestOrderLink } from "./guest-link";
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 export const orderInputSchema = z
   .object({
@@ -31,7 +32,8 @@ export const orderInputSchema = z
     expectedTotalDirams: z.string().regex(/^\d+$/).optional(),
     customerName: z.string().trim().min(2).max(120),
     customerPhone: z.string().regex(/^\+?[\d ()-]{9,24}$/),
-    deliveryCity: z.string().trim().min(2).max(100),
+    customerEmail: z.email().max(254).trim().toLowerCase().optional(),
+    deliveryCity: z.string().trim().max(100),
     deliveryAddress: z.string().trim().max(500).default(""),
     deliveryNotes: z.string().trim().max(1000).optional(),
     deliveryLat: z.number().finite().min(-90).max(90).optional(),
@@ -60,8 +62,17 @@ export const orderInputSchema = z
         path: ["preferredDeliveryDate"],
         message: "Укажите дату доставки",
       });
-    if (v.fulfillment === "DELIVERY" && v.deliveryAddress.length < 5)
-      c.addIssue({ code: "custom", path: ["deliveryAddress"], message: "Укажите адрес доставки" });
+    if (
+      v.fulfillment === "DELIVERY" &&
+      v.deliveryLat === undefined &&
+      !v.deliveryNotes &&
+      (v.deliveryCity.length < 2 || v.deliveryAddress.length < 5)
+    )
+      c.addIssue({
+        code: "custom",
+        path: ["deliveryAddress"],
+        message: "Укажите точку на карте, адрес или комментарий",
+      });
   });
 type Identity = { userId?: string; guestToken?: string };
 type OrderInput = z.infer<typeof orderInputSchema> & Identity;
@@ -225,6 +236,7 @@ export async function createOrder(input: OrderInput) {
         idempotencyKey: key,
         customerName: body.customerName,
         customerPhone: phone,
+        customerEmail: body.customerEmail,
         deliveryCity: body.deliveryCity,
         deliveryAddress:
           body.fulfillment === "PICKUP"
@@ -393,7 +405,11 @@ export async function getOrder(id: string, input: Identity): Promise<FullOrder |
     : [];
   const owns = order.customerId
     ? customer?.id === order.customerId
-    : !!input.guestToken && order.guestAccessTokenHash === hash(input.guestToken);
+    : !!input.guestToken &&
+      !!order.guestAccessTokenHash &&
+      (input.guestToken.includes(".")
+        ? verifyGuestOrderLink(id, order.guestAccessTokenHash, input.guestToken)
+        : order.guestAccessTokenHash === hash(input.guestToken));
   if (!owns) return null;
   return loadOrderDetails(db, order);
 }

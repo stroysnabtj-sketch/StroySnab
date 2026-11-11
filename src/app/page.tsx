@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import { unstable_cache } from "next/cache";
+import { connection } from "next/server";
 import { ArrowRight, ClipboardList, Package, Truck, ChevronRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -11,14 +13,20 @@ import { getHomeCollections } from "@/modules/merchandising/service";
 
 import { CATEGORIES_TREE } from "@/modules/catalog/categories-data";
 
-export const dynamic = "force-dynamic";
+const getHomeCatalog = unstable_cache(
+  () =>
+    Promise.all([
+      listCatalog({ inStock: true, pageSize: 8, diverse: true }),
+      listCategories(),
+      getHomeCollections(),
+    ]),
+  ["storefront-home-v1"],
+  { revalidate: 30 },
+);
 
 export default async function HomePage() {
-  const [catalog, categories, collections] = await Promise.all([
-    listCatalog({ inStock: true, pageSize: 8, diverse: true }),
-    listCategories(),
-    getHomeCollections(),
-  ]);
+  await connection();
+  const [catalog, categories, collections] = await getHomeCatalog();
   const roots = categories.filter((category) => !category.parentId && category.isActive === "true");
   const canonicalRoots = CATEGORIES_TREE.map((node) =>
     roots.find((category) => category.slug === node.slug),
@@ -33,64 +41,46 @@ export default async function HomePage() {
           <span>Таджикистан</span>
         </div>
         <section className="shell home-hero-wrap">
-          <div
-            className="store-hero hero-video-banner"
-            style={{
-              position: "relative",
-              minHeight: "360px",
-              borderRadius: "16px",
-              overflow: "hidden",
-              background: "transparent",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gridTemplateColumns: "none",
-            }}
-          >
-            <video
-              src="/videos/hero-crane.webm"
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/images/editorial/construction-crane-v2.webp"
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                zIndex: 1,
-              }}
-            />
-            <div
-              style={{
-                position: "relative",
-                zIndex: 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                height: "100%",
-                background: "transparent",
-              }}
-            >
-              <Link
-                href="/catalog"
-                className="button button-primary hero-shop-button"
-                style={{
-                  fontSize: "15px",
-                  fontWeight: 600,
-                  padding: "14px 28px",
-                  borderRadius: "10px",
-                  boxShadow: "0 8px 30px rgba(0, 0, 0, 0.35)",
-                }}
-              >
+          <div className="store-hero">
+            <div className="store-hero-copy">
+              <h1>
+                Строите?
+                <br />
+                Начните
+                <br />
+                <em>с материалов.</em>
+              </h1>
+              <p>
+                Подберите всё для стройки в каталоге
+                <br className="desktop-break" /> или отправьте список на расчёт.
+              </p>
+              <Link href="/catalog" className="button button-primary hero-shop-button">
                 <span className="button-label" data-label="Выбрать материалы">
                   Выбрать материалы
                 </span>
                 <ArrowRight size={18} />
               </Link>
+              <div className="hero-quick-links">
+                <Link href="/catalog?q=цемент">
+                  Цемент <ChevronRight size={13} />
+                </Link>
+                <Link href="/catalog?q=кирпич">
+                  Кирпич <ChevronRight size={13} />
+                </Link>
+                <Link href="/catalog?q=арматура">
+                  Арматура <ChevronRight size={13} />
+                </Link>
+              </div>
+            </div>
+            <div className="store-hero-scene hero-photo-scene">
+              <Image
+                src="/images/editorial/construction-crane-v2.webp"
+                alt="Башенный кран и строящийся дом на фоне гор"
+                fill
+                priority
+                sizes="(max-width: 600px) 100vw, (max-width: 900px) 75vw, 55vw"
+                className="hero-editorial-photo"
+              />
             </div>
           </div>
           <Link href="/request" className="home-request-card">

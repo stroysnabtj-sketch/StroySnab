@@ -5,16 +5,7 @@ import { DeliveryTimePicker } from "@/components/delivery-time-picker";
 import { type DeliveryTimeSlot } from "@/modules/delivery/preferences";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Truck,
-  Store,
-  CreditCard,
-  Banknote,
-  Check,
-  MapPin,
-  UserRound,
-} from "lucide-react";
+import { ArrowLeft, Truck, Store, CreditCard, Banknote, Check, MapPin } from "lucide-react";
 import { Button } from "@/components/ui";
 import styles from "./purchase-experience.module.css";
 import { useRouter } from "next/navigation";
@@ -45,7 +36,7 @@ export function CheckoutView({
   currentUser,
 }: {
   initialCart: { id: string | null; items: CartItem[]; totalDirams: string };
-  currentUser?: { phone?: string; fullName?: string };
+  currentUser?: { phone?: string; email?: string; fullName?: string };
 }) {
   const router = useRouter();
   const key = useRef<string | null>(null);
@@ -56,8 +47,9 @@ export function CheckoutView({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [customerName, setName] = useState(currentUser?.fullName ?? "");
-  const [customerPhone, setPhone] = useState(currentUser?.phone ?? "+992");
-  const [city, setCity] = useState("Кушониён");
+  const [customerPhone, setPhone] = useState(currentUser?.phone || "+992");
+  const [customerEmail, setEmail] = useState(currentUser?.email ?? "");
+  const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [paymentMethod, setPayment] = useState("CASH_ON_DELIVERY");
@@ -95,8 +87,13 @@ export function CheckoutView({
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (busy || !quote || quoteLoading) return;
-    if (fulfillment === "DELIVERY" && !point) {
-      setError("Укажите точку доставки на карте");
+    if (
+      fulfillment === "DELIVERY" &&
+      !point &&
+      !notes.trim() &&
+      (city.trim().length < 2 || address.trim().length < 5)
+    ) {
+      setError("Укажите точку на карте, адрес или комментарий");
       return;
     }
     setBusy(true);
@@ -111,7 +108,8 @@ export function CheckoutView({
           expectedTotalDirams: quote.totalDirams,
           customerName,
           customerPhone,
-          deliveryCity: city,
+          customerEmail: customerEmail.trim() || undefined,
+          deliveryCity: fulfillment === "PICKUP" ? city || "Кушониён" : city,
           deliveryAddress: address,
           deliveryNotes: notes,
           fulfillment,
@@ -137,6 +135,18 @@ export function CheckoutView({
         setQuoteRefresh((value) => value + 1);
     }
   }
+  const commentField = (
+    <label className="field">
+      {fulfillment === "DELIVERY" ? "Комментарий к адресу" : "Комментарий к заказу"}
+      <textarea
+        className="input"
+        rows={3}
+        maxLength={1000}
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+      />
+    </label>
+  );
   return (
     <form onSubmit={submit} className={`checkout-flow ${styles.checkout}`}>
       <Link className={styles.back} href="/cart">
@@ -148,11 +158,6 @@ export function CheckoutView({
           <h1>Оформление заказа</h1>
           <p>Укажите контакты и выберите, как получить материалы.</p>
         </div>
-        {!currentUser?.phone && (
-          <Link href="/auth/login?next=%2Fcheckout" className={styles.signIn}>
-            Есть аккаунт? Войти <UserRound size={16} />
-          </Link>
-        )}
       </header>
       <div className="checkout-grid">
         <div className="checkout-main">
@@ -193,8 +198,11 @@ export function CheckoutView({
                   setAddress(next.street);
                   setPoint(next.point);
                 }}
-                canSave={!!currentUser?.phone}
-              />
+                canSave={!!currentUser}
+                requireStreet={false}
+              >
+                {commentField}
+              </AddressFields>
             ) : (
               <p className={styles.notice}>
                 <MapPin size={18} /> Магазин сообщит адрес склада и время выдачи после подтверждения
@@ -230,6 +238,17 @@ export function CheckoutView({
                   autoComplete="tel"
                   value={customerPhone}
                   onChange={(e) => setPhone(e.target.value)}
+                />
+              </label>
+              <label className="field">
+                E-mail (необязательно)
+                <input
+                  className="input"
+                  type="email"
+                  maxLength={254}
+                  autoComplete="email"
+                  value={customerEmail}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </label>
             </div>
@@ -280,17 +299,7 @@ export function CheckoutView({
                 </label>
               ))}
             </fieldset>
-            <label className="field">
-              Комментарий к заказу <span className={styles.optional}>Необязательно</span>
-              <textarea
-                className="input"
-                rows={3}
-                maxLength={1000}
-                placeholder="Ориентир, особенности подъезда или пожелания"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              />
-            </label>
+            {fulfillment === "PICKUP" && commentField}
           </section>
         </div>
         <aside className="checkout-summary checkout-section">

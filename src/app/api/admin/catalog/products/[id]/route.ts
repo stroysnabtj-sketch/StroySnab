@@ -1,4 +1,5 @@
 import { assertSameOrigin } from "@/server/security";
+import { parseJsonBody } from "@/server/validation";
 import { NextResponse } from "next/server";
 import { requireUser } from "@/modules/auth/session";
 import {
@@ -20,8 +21,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   try {
     assertSameOrigin(request);
     const actor = await requireUser("catalog:manage");
-    const body = (await request.json()) as { status?: string };
-    if (body.status) await requireUser("catalog:moderate");
+    const body = await parseJsonBody<{ status?: string } | null>(request, 512 * 1024);
+    if (body?.status) await requireUser("catalog:moderate");
     return NextResponse.json(
       await updateProduct(actor, (await params).id, body, requestIp(request)),
     );

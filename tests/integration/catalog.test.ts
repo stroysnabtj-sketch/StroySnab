@@ -2,6 +2,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import { closeDb, getDb } from "@/db";
 import { carts } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { strToU8, zipSync } from "fflate";
 import { getPublicProduct, listCatalog, searchSuggestions } from "@/modules/catalog/service";
 import { addCartItem, getCart } from "@/modules/cart/service";
 import { calculateCustomerPrice } from "@/modules/pricing/service";
@@ -59,5 +60,25 @@ describe("public catalog and pricing", () => {
     ).rejects.toThrow();
     const db = await getDb();
     if (cart.id) await db.delete(carts).where(eq(carts.id, cart.id));
+  });
+  it("rejects XLSX with oversized worksheets, XML declarations of entities or excess columns", async () => {
+    const workbook = (xml: string) =>
+      new File(
+        [new Uint8Array(zipSync({ "xl/worksheets/sheet1.xml": strToU8(xml) }))],
+        "materials.xlsx",
+      );
+    await expect(
+      parseProductFile(workbook("x".repeat(20 * 1024 * 1024 + 1))),
+    ).rejects.toMatchObject({ status: 413, code: "file_too_large" });
+    await expect(
+      parseProductFile(workbook('<!DOCTYPE worksheet [<!ENTITY data "value">]><worksheet/>')),
+    ).rejects.toMatchObject({ status: 400, code: "invalid_xlsx" });
+    await expect(
+      parseProductFile(
+        workbook(
+          '<worksheet><sheetData><row><c r="XFD1"><v>1</v></c></row></sheetData></worksheet>',
+        ),
+      ),
+    ).rejects.toMatchObject({ status: 400, code: "too_many_columns" });
   });
 });

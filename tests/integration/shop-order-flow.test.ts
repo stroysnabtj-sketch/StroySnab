@@ -80,6 +80,10 @@ it("routes shop orders, snapshots base prices and applies 7/5/3 percent to the w
       firstId = order.id;
       firstToken = guestToken;
       await expect(getShopOrder(b.actor, order.id)).rejects.toThrow("Заказ не найден");
+      await expect(
+        updateShopOrderStatus(b.actor, order.id, { status: "ACCEPTED", expectedStatus: "NEW" }),
+      ).rejects.toMatchObject({ status: 404 });
+      expect(await getOrder(order.id, { guestToken: crypto.randomUUID() })).toBeNull();
     }
   }
   await updateShopOrderStatus(a.actor, sharedId, { status: "ACCEPTED", expectedStatus: "NEW" });

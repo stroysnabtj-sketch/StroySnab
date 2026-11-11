@@ -1,6 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray, isNull, lt, lte, or, sql } from "drizzle-orm";
+import { and, eq, gte, inArray, isNull, lt, lte, or, sql } from "drizzle-orm";
 import type { AppDatabase, DbExecutor } from "@/db";
+import { orders } from "@/db/schema";
+import { guestOrderLink } from "@/modules/orders/guest-link";
 import {
   notificationAttempts,
   notificationDispatchBudget,
@@ -8,7 +10,14 @@ import {
 } from "@/db/schema/notifications";
 import type { SmsTransport } from "./transport";
 
-type DispatchOptions = { batchSize?: number; dailyLimit?: number; now?: Date; onlyIds?: string[] };
+type DispatchOptions = {
+  batchSize?: number;
+  dailyLimit?: number;
+  now?: Date;
+  onlyIds?: string[];
+  channel?: "sms" | "email";
+  createdSince?: Date;
+};
 
 export async function dispatchNotifications(
   db: AppDatabase,
@@ -18,11 +27,14 @@ export async function dispatchNotifications(
   if (!transport) return { connected: false, processed: 0 };
   const batchSize = Math.max(1, Math.min(100, options.batchSize ?? 20));
   const dailyLimit = Math.max(0, Math.min(10000, options.dailyLimit ?? 100));
+  const channel = options.channel ?? "sms";
   let processed = 0;
   for (let n = 0; n < batchSize; n++) {
     const now = options.now ?? new Date();
     const claim = await db.transaction(async (tx) => {
       const due = and(
+        eq(notificationOutbox.channel, channel),
+        options.createdSince ? gte(notificationOutbox.createdAt, options.createdSince) : undefined,
         eq(notificationOutbox.state, "queued"),
         lte(notificationOutbox.availableAt, now),
         or(isNull(notificationOutbox.leaseUntil), lte(notificationOutbox.leaseUntil, now)),
@@ -65,19 +77,19 @@ export async function dispatchNotifications(
       const day = now.toISOString().slice(0, 10);
       await tx
         .insert(notificationDispatchBudget)
-        .values({ id: "sms", day, used: 0 })
+        .values({ id: channel, day, used: 0 })
         .onConflictDoNothing();
       const [budget] = await tx
         .select()
         .from(notificationDispatchBudget)
-        .where(eq(notificationDispatchBudget.id, "sms"))
+        .where(eq(notificationDispatchBudget.id, channel))
         .for("update");
       const used = budget.day === day ? budget.used : 0;
       if (used >= dailyLimit) return null;
       await tx
         .update(notificationDispatchBudget)
         .set({ day, used: used + 1 })
-        .where(eq(notificationDispatchBudget.id, "sms"));
+        .where(eq(notificationDispatchBudget.id, channel));
       const claimToken = randomUUID();
       const [claimed] = await tx
         .update(notificationOutbox)
@@ -85,6 +97,7 @@ export async function dispatchNotifications(
           claimToken,
           leaseUntil: new Date(now.getTime() + 60000),
           attemptCount: row.attemptCount + 1,
+          ...(transport.retrySafe === false ? { maxAttempts: row.attemptCount + 1 } : {}),
         })
         .where(eq(notificationOutbox.id, row.id))
         .returning();
@@ -106,9 +119,21 @@ export async function dispatchNotifications(
     if (!claim) break;
     let providerMessageId: string | undefined;
     try {
+      let body = claim.body;
+      if (claim.audience === "customer" && /^(ORDER_|PAYMENT_CONFIRMED$)/.test(claim.event)) {
+        const [order] = await db
+          .select({ accessHash: orders.guestAccessTokenHash, customerId: orders.customerId })
+          .from(orders)
+          .where(eq(orders.id, claim.entityId));
+        if (order?.accessHash && !order.customerId) {
+          const link = guestOrderLink(claim.entityId, order.accessHash, claim.createdAt);
+          if (!link) throw new Error("guest_link_unavailable");
+          body += ` ${link}`;
+        }
+      }
       const result = await transport.send({
         recipient: claim.recipient,
-        body: claim.body,
+        body,
         idempotencyKey: claim.eventKey,
       });
       if (!result.providerMessageId) throw new Error("provider_send_failed");

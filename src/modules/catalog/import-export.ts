@@ -2,6 +2,7 @@ import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
 import { XMLParser } from "fast-xml-parser";
 import { getDb } from "@/db";
 import { categories, products } from "@/db/schema";
+import { ApiError } from "@/server/api-error";
 import { adminListProducts, productInput } from "./admin-service";
 const headers = [
   "sku",
@@ -14,6 +15,12 @@ const headers = [
   "descriptionRu",
 ] as const;
 type Row = Record<string, string>;
+const maxRows = 5000;
+const maxColumns = 100;
+const maxBytes = 20 * 1024 * 1024;
+const tooManyColumns = () => new ApiError(400, "too_many_columns", "Не более 100 столбцов");
+const tooManyRows = () => new ApiError(400, "too_many_rows", "Не более 5000 строк данных");
+const fileTooLarge = () => new ApiError(413, "file_too_large", "Файл слишком большой");
 const safe = (value: unknown) => {
   const text = String(value ?? "");
   return /^[=+\-@]/.test(text) ? `'${text}` : text;
@@ -108,12 +115,14 @@ function parseCsv(text: string): Row[] {
         i++;
       } else quoted = !quoted;
     } else if (char === "," && !quoted) {
+      if (row.length >= maxColumns - 1) throw tooManyColumns();
       row.push(cell);
       cell = "";
     } else if ((char === "\n" || char === "\r") && !quoted) {
       if (char === "\r" && source[i + 1] === "\n") i++;
       row.push(cell);
       if (row.some((value) => value.trim())) matrix.push(row);
+      if (matrix.length > maxRows + 1) throw tooManyRows();
       row = [];
       cell = "";
     } else cell += char;
@@ -134,7 +143,16 @@ function textValue(value: unknown): string {
   return String(value);
 }
 function parseXlsx(bytes: Buffer): Row[] {
-  const files = unzipSync(new Uint8Array(bytes));
+  const required = new Set(["xl/worksheets/sheet1.xml", "xl/sharedStrings.xml"]);
+  let expanded = 0;
+  const files = unzipSync(new Uint8Array(bytes), {
+    filter(entry) {
+      if (!required.has(entry.name)) return false;
+      expanded += entry.compression === 0 ? entry.size : entry.originalSize;
+      if (expanded > maxBytes) throw fileTooLarge();
+      return true;
+    },
+  });
   const parser = new XMLParser({
     ignoreAttributes: false,
     attributeNamePrefix: "",
@@ -142,9 +160,14 @@ function parseXlsx(bytes: Buffer): Row[] {
   });
   const sheetFile = files["xl/worksheets/sheet1.xml"];
   if (!sheetFile) throw new Error("worksheet_not_found");
+  const parseXml = (bytes: Uint8Array) => {
+    const xml = strFromU8(bytes);
+    if (/<!DOCTYPE/i.test(xml)) throw new Error("invalid_xlsx");
+    return parser.parse(xml);
+  };
   const shared: string[] = [];
   if (files["xl/sharedStrings.xml"]) {
-    const data = parser.parse(strFromU8(files["xl/sharedStrings.xml"]));
+    const data = parseXml(files["xl/sharedStrings.xml"]);
     for (const item of array(data.sst?.si))
       shared.push(
         item.t !== undefined
@@ -154,15 +177,18 @@ function parseXlsx(bytes: Buffer): Row[] {
               .join(""),
       );
   }
-  const data = parser.parse(strFromU8(sheetFile));
+  const data = parseXml(sheetFile);
   const matrix: string[][] = [];
-  for (const row of array(data.worksheet?.sheetData?.row)) {
+  const sheetRows = array(data.worksheet?.sheetData?.row);
+  if (sheetRows.length > maxRows + 1) throw tooManyRows();
+  for (const row of sheetRows) {
     const values: string[] = [];
     for (const cell of array(row.c)) {
       const reference = String(cell.r ?? "A1");
       const letters = reference.match(/[A-Z]+/)?.[0] ?? "A";
       const index =
         letters.split("").reduce((sum, letter) => sum * 26 + letter.charCodeAt(0) - 64, 0) - 1;
+      if (index >= maxColumns) throw tooManyColumns();
       let value = "";
       if (cell.t === "inlineStr") value = textValue(cell.is?.t);
       else if (cell.t === "s") value = shared[Number(cell.v)] ?? "";
@@ -172,17 +198,28 @@ function parseXlsx(bytes: Buffer): Row[] {
     matrix.push(values);
   }
   const [head = [], ...body] = matrix;
+  const columns = Object.entries(head).map(
+    ([index, name]) => [Number(index), name.trim()] as const,
+  );
   return body.map((values) =>
-    Object.fromEntries(head.map((key, index) => [String(key ?? "").trim(), values[index] ?? ""])),
+    Object.fromEntries(columns.map(([index, name]) => [name, values[index] ?? ""])),
   );
 }
 export async function parseProductFile(file: File): Promise<Row[]> {
-  if (file.size > 20 * 1024 * 1024) throw new Error("file_too_large");
+  if (file.size > maxBytes) throw fileTooLarge();
   const bytes = Buffer.from(await file.arrayBuffer());
-  const rows = file.name.toLowerCase().endsWith(".csv")
-    ? parseCsv(bytes.toString("utf8"))
-    : parseXlsx(bytes);
-  if (rows.length > 5000) throw new Error("too_many_rows");
+  let rows: Row[];
+  if (file.name.toLowerCase().endsWith(".csv")) {
+    rows = parseCsv(bytes.toString("utf8"));
+  } else {
+    try {
+      rows = parseXlsx(bytes);
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+      throw new ApiError(400, "invalid_xlsx", "Некорректный файл XLSX");
+    }
+  }
+  if (rows.length > maxRows) throw tooManyRows();
   return rows;
 }
 export async function validateImportRows(rows: Row[]) {

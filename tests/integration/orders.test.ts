@@ -4,7 +4,13 @@ import { eq, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { supplierOffers, users } from "@/db/schema";
 import { addCartItem } from "@/modules/cart/service";
-import { createOrder, getOrder, quoteOrder, changeOrderStatus } from "@/modules/orders/service";
+import {
+  createOrder,
+  getOrder,
+  quoteOrder,
+  changeOrderStatus,
+  orderInputSchema,
+} from "@/modules/orders/service";
 it("prices from offers, reserves once, protects guest access and rejects excess stock", async () => {
   const db = await getDb();
   const [offer] = await db
@@ -105,6 +111,38 @@ it("allows only the owning customer and keeps customer prices on linked lines", 
       .where(eq(supplierOffers.id, offer.id));
     await db.delete(users).where(eq(users.id, userId));
   }
+});
+
+it("accepts a delivery comment in place of a street address", () => {
+  const delivery = {
+    idempotencyKey: crypto.randomUUID(),
+    customerName: "Покупатель",
+    customerPhone: "+992900001122",
+    deliveryCity: "Душанбе",
+    deliveryAddress: "",
+    fulfillment: "DELIVERY",
+    paymentMethod: "CASH_ON_DELIVERY",
+  };
+  expect(orderInputSchema.safeParse(delivery).success).toBe(false);
+  expect(
+    orderInputSchema.safeParse({
+      ...delivery,
+      deliveryCity: "",
+      deliveryLat: 38.56,
+      deliveryLng: 68.79,
+    }).success,
+  ).toBe(true);
+  expect(
+    orderInputSchema.safeParse({ ...delivery, deliveryCity: "", deliveryLat: 38.56 }).success,
+  ).toBe(false);
+  expect(orderInputSchema.safeParse({ ...delivery, deliveryAddress: "Рудаки, 10" }).success).toBe(
+    true,
+  );
+  expect(orderInputSchema.safeParse({ ...delivery, deliveryNotes: "  " }).success).toBe(false);
+  expect(orderInputSchema.parse({ ...delivery, deliveryNotes: "У входа в рынок" })).toMatchObject({
+    deliveryAddress: "",
+    deliveryNotes: "У входа в рынок",
+  });
 });
 
 async function makeStatusOrder() {

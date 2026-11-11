@@ -143,6 +143,10 @@ describe("auth concurrency and role consistency", () => {
       assignSupplierOwner(adminActor, membership.supplier.id, "admin@stroyhub.tj", "ip"),
     ).rejects.toThrow("Нельзя назначить суперадминистратора");
 
+    await db
+      .update(users)
+      .set({ emailVerifiedAt: new Date() })
+      .where(eq(users.id, newOwnerReg.id));
     // Transfer ownership to new candidate
     await assignSupplierOwner(adminActor, membership.supplier.id, staffEmail, "ip");
 
@@ -163,7 +167,15 @@ describe("auth concurrency and role consistency", () => {
     expect(oldMembership.role).toBe("STAFF");
 
     // Restore original owner
+    await db
+      .update(users)
+      .set({ emailVerifiedAt: new Date() })
+      .where(eq(users.id, sellerUser.id));
     await assignSupplierOwner(adminActor, membership.supplier.id, "seller@stroyhub.tj", "ip");
+    await db
+      .update(users)
+      .set({ emailVerifiedAt: sellerUser.emailVerifiedAt })
+      .where(eq(users.id, sellerUser.id));
     await db.delete(users).where(eq(users.id, newOwnerReg.id));
   });
 });

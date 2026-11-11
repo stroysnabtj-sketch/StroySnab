@@ -1,3 +1,4 @@
+import { assertSameOrigin } from "@/server/security";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { currentUserId } from "@/modules/cart/service";
@@ -6,6 +7,7 @@ import { parseJsonBody } from "@/server/validation";
 import { errorResponse } from "@/server/api-error";
 export async function POST(req: Request) {
   try {
+    assertSameOrigin(req);
     const body = orderInputSchema.parse(await parseJsonBody(req));
     const jar = await cookies();
     const guestToken = jar.get("kh_cart")?.value;

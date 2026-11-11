@@ -92,7 +92,7 @@ export async function getShopProduct(actor: SessionUser, id: string) {
         .from(productImages)
         .where(eq(productImages.productId, id))
         .orderBy(productImages.sort)
-    ).map((image) => ({ id: image.id, url: `/api/files/${image.fileId}` })),
+    ).map((image) => ({ id: image.id, url: `/api/files/${image.fileId}?preview=1` })),
   };
 }
 export async function createShopProduct(actor: SessionUser, input: unknown) {
@@ -215,13 +215,7 @@ export async function uploadShopImage(actor: SessionUser, id: string, file: File
   const row = await getShopProduct(actor, id);
   if (!row.canEditProduct)
     throw new ApiError(403, "shared_product", "Изображения общей карточки изменяет платформа");
-  const image = await uploadProductImage(actor, id, file);
-  const db = await getDb();
-  await db
-    .update(products)
-    .set({ status: "PENDING", updatedAt: new Date() })
-    .where(eq(products.id, id));
-  return image;
+  return uploadProductImage(actor, id, file, { sendToModeration: true });
 }
 function ownedOrderItems(supplierId: string) {
   return or(

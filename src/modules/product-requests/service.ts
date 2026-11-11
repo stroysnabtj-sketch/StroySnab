@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { and, asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { z } from "zod";
 import { getDb } from "@/db";
 import { auditLog, productRequests, products, users } from "@/db/schema";
 import type { SessionUser } from "@/modules/auth/session";
@@ -292,6 +293,8 @@ export async function getManagedRequest(
   if (!hasPermission(actor.role, "product_requests:manage")) {
     throw new ApiError(403, "forbidden", "Недостаточно прав для просмотра заявки");
   }
+  if (!z.uuid().safeParse(id).success)
+    throw new ApiError(404, "not_found", "Заявка не найдена");
 
   const db = await getDb();
   const [row] = await db
@@ -397,6 +400,8 @@ export async function respondProductRequest(
   if (!hasPermission(actor.role, "product_requests:manage")) {
     throw new ApiError(403, "forbidden", "Недостаточно прав для ответа на заявку");
   }
+  if (!z.uuid().safeParse(id).success)
+    throw new ApiError(404, "not_found", "Заявка не найдена");
 
   const data = respondProductRequestSchema.parse(input);
   const db = await getDb();
@@ -611,6 +616,8 @@ export async function getOwnRequest(
   userId: string,
   id: string
 ): Promise<CustomerProductRequestDTO> {
+  if (!z.uuid().safeParse(id).success)
+    throw new ApiError(404, "not_found", "Заявка не найдена");
   const db = await getDb();
   const [row] = await db
     .select({
@@ -668,6 +675,8 @@ export async function cancelOwnRequest(
   input: unknown,
   ip: string
 ): Promise<CustomerProductRequestDTO> {
+  if (!z.uuid().safeParse(id).success)
+    throw new ApiError(404, "not_found", "Заявка не найдена");
   const data = customerCancelSchema.parse(input);
   const db = await getDb();
 
@@ -699,7 +708,13 @@ export async function cancelOwnRequest(
         version: sql`${productRequests.version} + 1`,
         updatedAt: new Date(),
       })
-      .where(and(eq(productRequests.id, id), eq(productRequests.version, data.version)))
+      .where(
+        and(
+          eq(productRequests.id, id),
+          eq(productRequests.userId, userId),
+          eq(productRequests.version, data.version)
+        )
+      )
       .returning();
 
     if (!updated) {

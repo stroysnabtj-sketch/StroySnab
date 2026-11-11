@@ -15,8 +15,8 @@ export default async function AccountProfilePage() {
     .where(eq(customers.userId, user.id))
     .limit(1);
   return (
-    <CustomerWorkspace title="Профиль" identity={user.phone}>
-      <ProfilePanel initialName={customer?.fullName ?? ""} initialPhone={user.phone} />
+    <CustomerWorkspace title="Профиль" identity={user.phone || user.email || undefined}>
+      <ProfilePanel initialName={customer?.fullName ?? ""} initialPhone={user.phone ?? ""} />
     </CustomerWorkspace>
   );
 }

@@ -39,6 +39,7 @@ const UNLOADING_LABELS: Record<string, string> = {
 
 export type OrderDashboardProps = {
   payment: { status: string; paidDirams: string; balanceDirams: string };
+  guestRegistrationHref?: string;
   order: {
     id: string;
     orderNumber: string;
@@ -86,7 +87,11 @@ export type OrderDashboardProps = {
   };
 };
 
-export function OrderStatusDashboard({ order, payment }: OrderDashboardProps) {
+export function OrderStatusDashboard({
+  order,
+  payment,
+  guestRegistrationHref,
+}: OrderDashboardProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -194,6 +199,11 @@ export function OrderStatusDashboard({ order, payment }: OrderDashboardProps) {
         </div>
 
         <div className={styles.actions}>
+          {guestRegistrationHref && (
+            <Link href={guestRegistrationHref} className={styles.refreshButton}>
+              Создать аккаунт
+            </Link>
+          )}
           <button
             type="button"
             className={styles.refreshButton}

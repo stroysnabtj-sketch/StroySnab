@@ -1,5 +1,6 @@
-import { optionalUser, requireUser } from "@/modules/auth/session";
+import { requireCustomer, requireUser } from "@/modules/auth/session";
 import { createProcurementRequest, listProcurementRequests } from "@/modules/procurement/service";
+import { parseJsonBody } from "@/server/validation";
 import { assertSameOrigin } from "@/server/security";
 import { consumeRateLimit } from "@/server/rate-limit";
 import { requestIp } from "@/server/request";
@@ -8,9 +9,10 @@ import { jsonResponse } from "@/server/json";
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
+    const user = await requireCustomer();
     await consumeRateLimit(`procurement:${requestIp(request)}`, 10, 3600);
     return jsonResponse(
-      await createProcurementRequest(await request.json(), await optionalUser()),
+      await createProcurementRequest(await parseJsonBody(request, 262_144), user),
       { status: 201 },
     );
   } catch (e) {

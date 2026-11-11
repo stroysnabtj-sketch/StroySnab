@@ -1,4 +1,5 @@
 import { assertSameOrigin } from "@/server/security";
+import { parseJsonBody } from "@/server/validation";
 import { NextResponse } from "next/server";
 import { requireUser } from "@/modules/auth/session";
 import {
@@ -31,8 +32,8 @@ export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const actor = await requireUser("catalog:manage");
-    const body = (await request.json()) as { status?: string };
-    if (body.status && body.status !== "DRAFT") await requireUser("catalog:moderate");
+    const body = await parseJsonBody<{ status?: string } | null>(request, 512 * 1024);
+    if (body?.status && body.status !== "DRAFT") await requireUser("catalog:moderate");
     return NextResponse.json(await createProduct(actor, body, requestIp(request)), { status: 201 });
   } catch (error) {
     return errorResponse(error);

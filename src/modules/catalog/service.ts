@@ -301,7 +301,7 @@ export async function listCatalog(query: CatalogQuery) {
   };
 }
 
-export async function getPublicProduct(slug: string) {
+export async function getPublicProduct(slug: string, includeRelated = true) {
   const db = await getDb();
   const [row] = await db
     .select({ product: products, category: categories })
@@ -356,9 +356,11 @@ export async function getPublicProduct(slug: string) {
     );
   });
 
-  const relatedProducts = (await listCatalog({ category: row.category.slug, pageSize: 5 })).items
-    .filter((product) => product.id !== row.product.id)
-    .slice(0, 4);
+  const relatedProducts = includeRelated
+    ? (await listCatalog({ category: row.category.slug, pageSize: 5 })).items
+        .filter((product) => product.id !== row.product.id)
+        .slice(0, 4)
+    : [];
 
   return {
     ...row,

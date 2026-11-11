@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap, Marker } from "leaflet";
-import { LocateFixed, MapPin, Crosshair } from "lucide-react";
+import { LocateFixed, Crosshair } from "lucide-react";
 import styles from "./address-map.module.css";
 export type MapPoint = { lat: number; lng: number };
 export function AddressMap({
@@ -124,23 +124,30 @@ export function AddressMap({
   }
   return (
     <div className={styles.wrap}>
-      <div className={styles.toolbar}>
-        <strong>
-          <MapPin size={16} />
-          Точка доставки
-        </strong>
-        <button type="button" onClick={locate} aria-label="Моё местоположение">
+      <div ref={host} className={styles.map} aria-label="Карта выбора адреса доставки" />
+      <div className={styles.controls}>
+        <button
+          type="button"
+          disabled={!ready}
+          onClick={locate}
+          aria-label="Моё местоположение"
+          title="Моё местоположение"
+        >
           <LocateFixed size={18} />
         </button>
-      </div>
-      <div ref={host} className={styles.map} aria-label="Карта выбора адреса доставки" />
-      <div className={styles.footer}>
-        <span>{value ? "Точка выбрана" : "Выберите точку на карте"}</span>
-        <button type="button" disabled={!ready} onClick={center}>
-          <Crosshair size={15} />
-          Выбрать центр
+        <button
+          type="button"
+          disabled={!ready}
+          onClick={center}
+          aria-label="Выбрать центр карты"
+          title="Выбрать центр карты"
+        >
+          <Crosshair size={18} />
         </button>
       </div>
+      <span className="sr-only" role="status">
+        {value ? "Точка выбрана" : "Выберите точку на карте"}
+      </span>
       {error && (
         <p className={styles.error} role="alert">
           {error}

@@ -1,6 +1,6 @@
-import { randomBytes, randomInt } from "node:crypto";
+import { randomInt } from "node:crypto";
 import bcrypt from "bcryptjs";
-import { and, desc, eq, isNull, or, sql } from "drizzle-orm";
+import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/db";
 import { users, customers, userRoles, sessions, loginCodes } from "@/db/schema";
@@ -10,17 +10,23 @@ import { ApiError } from "@/server/api-error";
 import { consumeRateLimit } from "@/server/rate-limit";
 import { hashToken, newSessionToken, sessionExpiry } from "./session";
 import { sendContactCode, type CodeDelivery } from "./code-delivery";
+import { registrationPasswordError } from "./registration-password";
 const requestInput = z.object({
-  purpose: z.enum(["login", "register"]),
+  purpose: z.enum(["login", "register", "recover"]),
   channel: z.enum(["sms", "email"]),
   identifier: z.string().trim().min(3).max(254),
   fullName: z.string().trim().min(2).max(120).optional(),
-  phone: z.string().max(30).optional(),
-  email: z.union([z.email(), z.literal("")]).optional(),
   termsAccepted: z.boolean().optional(),
   refCode: z.string().trim().max(16).optional(),
 });
-const verifyInput = z.object({ challengeId: z.uuid(), code: z.string().regex(/^\d{6}$/) });
+const verifyInput = z.object({
+  challengeId: z.uuid(),
+  code: z.string().regex(/^\d{6}$/),
+  password: z.string().max(128).optional(),
+  passwordConfirmation: z.string().max(128).optional(),
+});
+const duplicateContact = () =>
+  new ApiError(409, "user_exists", "Аккаунт уже существует. Войдите в него.");
 export async function requestContactCode(
   input: unknown,
   ip: string,
@@ -32,22 +38,17 @@ export async function requestContactCode(
         ? z.email().parse(data.identifier).toLowerCase()
         : normalizePhone(data.identifier);
   const db = await getDb();
+  if (data.channel === "sms" && !/^\+992\d{9}$/.test(identifier))
+    throw new ApiError(400, "invalid_phone", "Введите девять цифр после +992");
   await consumeRateLimit(`contact-code-send:${hashToken(identifier)}`, 3, 900);
   let registration: typeof loginCodes.$inferInsert.registration = null;
   if (data.purpose === "register") {
-    if (!data.fullName || !data.phone || !data.termsAccepted)
-      throw new ApiError(400, "registration_incomplete", "Укажите имя, телефон и примите условия");
+    if (!data.fullName || !data.termsAccepted)
+      throw new ApiError(400, "registration_incomplete", "Укажите имя и примите условия");
     registration = {
       fullName: data.fullName,
-      phone: normalizePhone(data.phone),
-      email: data.email?.trim().toLowerCase() || null,
       refCode: data.refCode,
     };
-    if (
-      (data.channel === "sms" && registration.phone !== identifier) ||
-      (data.channel === "email" && registration.email !== identifier)
-    )
-      throw new ApiError(400, "contact_mismatch", "Проверьте контакт для отправки кода");
   }
   const code = randomInt(0, 1000000).toString().padStart(6, "0"),
     codeHash = await bcrypt.hash(code, 12);
@@ -69,24 +70,11 @@ export async function requestContactCode(
       .where(
         and(
           data.channel === "email" ? eq(users.email, identifier) : eq(users.phone, identifier),
-          isNull(users.deletedAt),
+          registration ? undefined : isNull(users.deletedAt),
         ),
       )
       .limit(1);
-    if (registration) {
-      const duplicate = await tx
-        .select({ id: users.id })
-        .from(users)
-        .where(
-          or(
-            eq(users.phone, registration.phone),
-            registration.email ? eq(users.email, registration.email) : undefined,
-          ),
-        )
-        .limit(1);
-      if (duplicate.length)
-        throw new ApiError(409, "user_exists", "Аккаунт уже существует. Войдите по коду.");
-    }
+    if (registration && user) throw duplicateContact();
     await tx
       .update(loginCodes)
       .set({ usedAt: new Date() })
@@ -103,7 +91,8 @@ export async function requestContactCode(
         expiresAt: new Date(Date.now() + 300000),
       })
       .returning({ id: loginCodes.id });
-    await deliver({ channel: data.channel, recipient: identifier, code, expiresInSeconds: 300 });
+    if (data.purpose !== "recover" || user?.status === "ACTIVE")
+      await deliver({ channel: data.channel, recipient: identifier, code, expiresInSeconds: 300 });
     const masked =
       data.channel === "sms"
         ? maskPhone(identifier)
@@ -145,35 +134,28 @@ export async function verifyContactCode(input: unknown, ip: string, userAgent: s
       return invalid();
     }
     let userId = challenge.userId;
+    const password = data.password ?? "";
+    if (challenge.purpose !== "login") {
+      const passwordError = registrationPasswordError(password, data.passwordConfirmation ?? "");
+      if (passwordError)
+        return { error: new ApiError(400, "invalid_registration_password", passwordError) };
+    }
     if (challenge.purpose === "register" && challenge.registration) {
       const reg = challenge.registration;
-      for (const key of [
-        `register-phone:${reg.phone}`,
-        ...(reg.email ? [`register-email:${reg.email}`] : []),
-      ].sort()) {
-        await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${key}))`);
-      }
-      const duplicate = await tx
-        .select({ id: users.id })
-        .from(users)
-        .where(or(eq(users.phone, reg.phone), reg.email ? eq(users.email, reg.email) : undefined))
-        .limit(1);
-      if (duplicate.length)
-        return {
-          error: new ApiError(409, "user_exists", "Аккаунт уже существует. Войдите по коду."),
-        };
       const [created] = await tx
         .insert(users)
         .values({
-          phone: reg.phone,
-          email: reg.email,
+          phone: challenge.channel === "sms" ? challenge.identifier : null,
+          email: challenge.channel === "email" ? challenge.identifier : null,
           fullName: reg.fullName,
-          passwordHash: await bcrypt.hash(randomBytes(32).toString("base64url"), 12),
+          passwordHash: await bcrypt.hash(password, 12),
           role: "CUSTOMER",
           termsAcceptedAt: new Date(),
           termsVersion: "2026-10-30",
         })
-        .returning();
+        .onConflictDoNothing()
+        .returning({ id: users.id });
+      if (!created) return { error: duplicateContact() };
       userId = created.id;
       await tx
         .insert(customers)
@@ -190,6 +172,7 @@ export async function verifyContactCode(input: unknown, ip: string, userAgent: s
       });
     }
     if (!userId) {
+      if (challenge.purpose === "recover") return invalid();
       await tx
         .update(loginCodes)
         .set({ usedAt: new Date() })
@@ -213,12 +196,15 @@ export async function verifyContactCode(input: unknown, ip: string, userAgent: s
     )
       return invalid();
     await tx.update(loginCodes).set({ usedAt: new Date() }).where(eq(loginCodes.id, challenge.id));
+    const recovering = challenge.purpose === "recover";
+    if (recovering) await tx.delete(sessions).where(eq(sessions.userId, userId));
     await tx
       .update(users)
       .set({
         lastLoginAt: new Date(),
         failedLoginAttempts: 0,
         lockedUntil: null,
+        ...(recovering ? { passwordHash: await bcrypt.hash(password, 12) } : {}),
         ...(challenge.channel === "email"
           ? { emailVerifiedAt: new Date() }
           : { phoneVerifiedAt: new Date() }),
@@ -234,7 +220,7 @@ export async function verifyContactCode(input: unknown, ip: string, userAgent: s
     await writeAudit(tx, {
       actorUserId: userId,
       actorRole: user.role,
-      action: "user.login_code",
+      action: recovering ? "user.password_recovered" : "user.login_code",
       entity: "user",
       entityId: userId,
       data: { channel: challenge.channel },

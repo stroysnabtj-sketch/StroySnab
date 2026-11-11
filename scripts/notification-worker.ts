@@ -1,19 +1,37 @@
 import { closeDb, getDb } from "../src/db";
-import { configuredNotificationTransport } from "../src/modules/notifications/transport";
+import {
+  configuredNotificationTransport,
+  configuredNotificationEmail,
+} from "../src/modules/notifications/transport";
 import { dispatchNotifications } from "../src/modules/notifications/worker";
 
 async function main() {
-  const transport = configuredNotificationTransport();
-  if (!transport) {
-    console.log("SMS notifications are disconnected; no messages sent.");
-    return;
+  for (const [channel, transport] of [
+    ["sms", configuredNotificationTransport()],
+    ["email", configuredNotificationEmail()],
+  ] as const) {
+    if (!transport) continue;
+    const cutover = process.env.NOTIFICATIONS_SEND_AFTER;
+    const createdSince = cutover ? new Date(cutover) : undefined;
+    if (
+      (process.env.NODE_ENV === "production" && !createdSince) ||
+      (createdSince && !Number.isFinite(createdSince.getTime()))
+    )
+      throw new Error("Set NOTIFICATIONS_SEND_AFTER to the activation timestamp");
+    const key =
+      channel === "sms" ? "NOTIFICATIONS_SMS_DAILY_LIMIT" : "NOTIFICATIONS_EMAIL_DAILY_LIMIT";
+    const dailyLimit = Number(process.env[key] ?? "100");
+    if (!Number.isSafeInteger(dailyLimit) || dailyLimit < 1 || dailyLimit > 10000)
+      throw new Error(`Invalid ${key}`);
+    console.log({
+      channel,
+      ...(await dispatchNotifications(await getDb(), transport, {
+        channel,
+        dailyLimit,
+        createdSince,
+      })),
+    });
   }
-  const configuredLimit = Number(process.env.NOTIFICATIONS_SMS_DAILY_LIMIT ?? "100");
-  if (!Number.isSafeInteger(configuredLimit) || configuredLimit < 1 || configuredLimit > 10000)
-    throw new Error("Invalid NOTIFICATIONS_SMS_DAILY_LIMIT");
-  console.log(
-    await dispatchNotifications(await getDb(), transport, { dailyLimit: configuredLimit }),
-  );
 }
 main()
   .catch(() => {

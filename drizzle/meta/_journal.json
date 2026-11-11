@@ -141,6 +141,27 @@
       "when": 1793993200000,
       "tag": "0019_notification_outbox",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1794326400000,
+      "tag": "0020_order_notification_email",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1794330000000,
+      "tag": "0021_allow_email_only_registration",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1794330001000,
+      "tag": "0022_password_recovery_codes",
+      "breakpoints": true
     }
   ]
 }

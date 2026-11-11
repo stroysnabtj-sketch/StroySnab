@@ -1,5 +1,6 @@
 import { optionalUser, requireUser } from "@/modules/auth/session";
 import { saveQuotation, decideQuotation } from "@/modules/procurement/service";
+import { parseJsonBody } from "@/server/validation";
 import { assertSameOrigin } from "@/server/security";
 import { errorResponse } from "@/server/api-error";
 import { jsonResponse } from "@/server/json";
@@ -11,7 +12,7 @@ export async function PUT(request: Request, { params }: Context) {
       await saveQuotation(
         (await params).id,
         await requireUser("product_requests:manage"),
-        await request.json(),
+        await parseJsonBody(request, 262_144),
       ),
     );
   } catch (e) {
@@ -26,7 +27,7 @@ export async function POST(request: Request, { params }: Context) {
         (await params).id,
         await optionalUser(),
         token,
-        await request.json(),
+        await parseJsonBody(request, 262_144),
       );
     const response=jsonResponse(result);
     if(result.orderId&&token)response.cookies.set(`kh_order_${result.orderId}`,token,{httpOnly:true,sameSite:'lax',secure:new URL(request.url).protocol==='https:',path:'/',maxAge:30*86400});

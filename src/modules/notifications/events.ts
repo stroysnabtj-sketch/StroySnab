@@ -59,21 +59,25 @@ async function enqueue(
     entityId: string;
     event: string;
     version: string;
-    recipient: string;
+    recipient: string | null;
     audience: "customer" | "shop";
     supplierId?: string;
     body: string;
+    channel?: "sms" | "email";
   },
 ) {
-  const recipient = phone(input.recipient);
+  if (!input.recipient) return;
+  const channel = input.channel ?? "sms";
+  const recipient =
+    channel === "sms" ? phone(input.recipient) : input.recipient.trim().toLowerCase();
   if (!recipient) return;
   // Dedupe by event/version/number, including when a person is also a shop contact.
   const eventKey = createHash("sha256")
-    .update(JSON.stringify([input.entityId, input.event, input.version, recipient, "sms"]))
+    .update(JSON.stringify([input.entityId, input.event, input.version, recipient, channel]))
     .digest("hex");
   await tx
     .insert(notificationOutbox)
-    .values({ ...input, recipient, eventKey })
+    .values({ ...input, recipient, eventKey, channel })
     .onConflictDoNothing({ target: notificationOutbox.eventKey });
 }
 
@@ -97,15 +101,18 @@ export async function enqueueOrderNotifications(
         ? "выдан"
         : labels[input.event];
   const body = `Заказ ${safeLabel(order.orderNumber)}: ${statusLabel}.`;
-  if (input.event !== "SHOP_STATUS_CHANGED")
-    await enqueue(tx, {
+  if (input.event !== "SHOP_STATUS_CHANGED") {
+    const message = {
       entityId: order.id,
       event: input.event,
       version: input.version,
-      recipient: order.customerPhone,
-      audience: "customer",
+      audience: "customer" as const,
       body: body + (order.customerId ? secureLink(`/orders/${order.id}`) : ""),
-    });
+    };
+    await enqueue(tx, { ...message, recipient: order.customerPhone });
+    if (order.customerEmail)
+      await enqueue(tx, { ...message, recipient: order.customerEmail, channel: "email" });
+  }
   // Payment information is customer-only. Shops receive no totals, item lists or customer credentials.
   if (input.event === "PAYMENT_CONFIRMED") return;
   if (input.event === "SHOP_STATUS_CHANGED" && !input.supplierId)

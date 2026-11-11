@@ -437,7 +437,7 @@ describe("product request management and customer isolation", () => {
         quantity: "50",
         unit: "м²",
         contactName: "Покупатель 1",
-        contactPhone: customerActor.phone,
+        contactPhone: customerActor.phone!,
       })
       .returning();
 
@@ -454,6 +454,10 @@ describe("product request management and customer isolation", () => {
 
     // Customer B cannot view Customer A request (404)
     await expect(getOwnRequest(otherCustomerActor.id, requestId)).rejects.toThrow("Заявка не найдена");
+    await expect(getOwnRequest(customerActor.id, "invalid-id")).rejects.toMatchObject({ status: 404 });
+    await expect(
+      cancelOwnRequest(otherCustomerActor.id, requestId, { version: req[0].version }, "test")
+    ).rejects.toMatchObject({ status: 404 });
 
     // Customer B list does NOT include Customer A request
     const otherList = await listOwnRequests(otherCustomerActor.id, {});

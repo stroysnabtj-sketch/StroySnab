@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { AuthForm } from "./auth-form";
 import { ContactAuthForm } from "./contact-auth-form";
 import { t } from "@/i18n";
+import { safeAuthDestination } from "@/modules/auth/destination";
 import styles from "./auth-experience.module.css";
 export function AuthPage({
   mode,
@@ -26,8 +27,8 @@ export function AuthPage({
         : mode === "forgot"
           ? "auth.forgotTitle"
           : "auth.resetTitle";
-  const destination =
-    next?.startsWith("/") && !next.startsWith("//") ? `?next=${encodeURIComponent(next)}` : "";
+  const destination = next ? `?next=${encodeURIComponent(safeAuthDestination(next))}` : "";
+  const codeLogin = `/auth/login${destination ? `${destination}&` : "?"}method=code`;
   return (
     <>
       <SiteHeader />
@@ -36,9 +37,14 @@ export function AuthPage({
           <Link href="/" className={styles.authBrand}>
             <span>S</span> STROYSNAB<small>.TJ</small>
           </Link>
-          <h1>{passwordLogin ? "Вход по паролю" : t(titleKey)}</h1>
-          {!passwordLogin && (mode === "login" || mode === "register") ? (
-            <ContactAuthForm mode={mode} next={next} refCode={refCode} />
+          <h1>{t(titleKey)}</h1>
+          {!passwordLogin && (mode === "login" || mode === "register" || mode === "forgot") ? (
+            <ContactAuthForm
+              mode={mode === "forgot" ? "recover" : mode}
+              next={next}
+              refCode={refCode}
+              captchaSiteKey={process.env.TURNSTILE_SITE_KEY}
+            />
           ) : (
             <AuthForm mode={mode} next={next} refCode={refCode} token={token} />
           )}
@@ -48,7 +54,7 @@ export function AuthPage({
             </Link>
           )}
           {passwordLogin && (
-            <Link className={styles.passwordLink} href={`/auth/login${destination}`}>
+            <Link className={styles.passwordLink} href={codeLogin}>
               Войти по коду
             </Link>
           )}

@@ -132,8 +132,9 @@ button:disabled { cursor: not-allowed; opacity: .45; }
 .field-label { font-size: 14px; font-weight: 700; }
 .field-hint { color: oklch(var(--muted)); font-size: 12px; }
 .field-error { color: oklch(var(--danger)); font-size: 13px; }
-.input { width: 100%; min-height: 46px; border: 1px solid oklch(var(--line)); border-radius: 12px; background: oklch(var(--surface)); color: oklch(var(--ink)); padding: 10px 13px; outline: 0; transition: border-color 180ms ease-out, box-shadow 180ms ease-out; }
-.input:focus { border-color: oklch(var(--action)); box-shadow: 0 0 0 3px oklch(var(--action) / .12); }
+.input { width: 100%; min-height: 46px; border: 1px solid #cbd6e4; border-radius: 12px; background: #f8fafc; color: #172b45; padding: 10px 13px; outline: 0; transition: border-color 180ms ease-out, box-shadow 180ms ease-out; }
+.input:focus { border-color: #074089; box-shadow: 0 0 0 3px #0740891f; }
+.input::placeholder { color: #8994a3; opacity: 1; }
 textarea.input { min-height: 120px; resize: vertical; }
 .checkbox { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
 .checkbox input { width: 20px; height: 20px; flex: 0 0 auto; margin-top: 2px; accent-color: oklch(var(--action)); }

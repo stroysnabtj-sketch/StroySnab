@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { AddressMap, type MapPoint } from "./address-map";
 import { Select, Input, Field, Button } from "./ui";
 import type { SavedAddress } from "@/modules/account/addresses";
@@ -16,19 +16,25 @@ export function AddressFields({
   onChange,
   canSave = false,
   manage = false,
+  requireStreet = true,
+  children,
 }: {
   value: AddressValue;
   onChange: (value: AddressValue) => void;
   canSave?: boolean;
   manage?: boolean;
+  requireStreet?: boolean;
+  children?: ReactNode;
 }) {
   const [items, setItems] = useState<SavedAddress[]>([]),
+    [manual, setManual] = useState(false),
     [selected, setSelected] = useState(""),
     [label, setLabel] = useState("Адрес"),
     [primary, setPrimary] = useState(false),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [message, setMessage] = useState("");
+  const manualId = useId();
   const current = useRef(value),
     change = useRef(onChange);
   current.current = value;
@@ -45,6 +51,7 @@ export function AddressFields({
           setSelected(first.id);
           setLabel(first.label);
           setPrimary(first.isDefault);
+          setManual(first.lat === null || first.lng === null);
           change.current({
             city: first.city,
             street: first.street,
@@ -68,6 +75,7 @@ export function AddressFields({
     if (item) {
       setLabel(item.label);
       setPrimary(item.isDefault);
+      setManual(item.lat === null || item.lng === null);
       onChange({
         city: item.city,
         street: item.street,
@@ -76,14 +84,11 @@ export function AddressFields({
     } else {
       setLabel("Адрес");
       setPrimary(false);
-      onChange({ city: "Душанбе", street: "", point: null });
+      setManual(false);
+      onChange({ city: "", street: "", point: null });
     }
   }
   async function save() {
-    if (!value.point) {
-      setError("Укажите точку на карте");
-      return;
-    }
     setBusy(true);
     setError("");
     setMessage("");
@@ -97,7 +102,7 @@ export function AddressFields({
           ...(manage && primary ? { isDefault: true } : {}),
           city: value.city,
           street: value.street,
-          ...value.point,
+          ...(value.point ?? {}),
         }),
       });
       const refreshed = (await api<{ items: SavedAddress[] }>("/api/account/addresses")).items;
@@ -140,9 +145,7 @@ export function AddressFields({
         variant="secondary"
         disabled={
           busy ||
-          !value.point ||
-          value.street.trim().length < 5 ||
-          value.city.trim().length < 2 ||
+          (!value.point && (value.street.trim().length < 5 || value.city.trim().length < 2)) ||
           !label.trim()
         }
         onClick={() => void save()}
@@ -169,41 +172,62 @@ export function AddressFields({
             <option value="">Новый адрес</option>
             {items.map((item) => (
               <option value={item.id} key={item.id}>
-                {item.label} · {item.street}
+                {item.label} · {item.street || "Точка на карте"}
               </option>
             ))}
           </Select>
         </Field>
       )}
-      <div className={styles.two}>
-        <Field label="Город или район">
-          <Input
-            required
-            minLength={2}
-            maxLength={100}
-            autoComplete="address-level2"
-            value={value.city}
-            onChange={(e) => {
-              if (!manage) setSelected("");
-              onChange({ ...value, city: e.target.value, point: null });
-            }}
-          />
-        </Field>
-        <Field label="Адрес доставки">
-          <Input
-            required
-            minLength={5}
-            maxLength={500}
-            autoComplete="street-address"
-            value={value.street}
-            onChange={(e) => {
-              if (!manage) setSelected("");
-              onChange({ ...value, street: e.target.value });
-            }}
-          />
-        </Field>
+      {!manual && (
+        <AddressMap value={value.point} onChange={(point) => onChange({ ...value, point })} />
+      )}
+      <Button
+        type="button"
+        variant="secondary"
+        className={styles.modeButton}
+        aria-expanded={manual}
+        aria-controls={manualId}
+        onClick={() => {
+          setManual(!manual);
+          setError("");
+          onChange(manual ? { city: "", street: "", point: null } : { ...value, point: null });
+        }}
+      >
+        {manual ? "Выбрать на карте" : "Указать вручную"}
+      </Button>
+      <div id={manualId} hidden={!manual} className={manual ? styles.two : undefined}>
+        {manual && (
+          <>
+            <Field label="Город или район">
+              <Input
+                required={requireStreet}
+                minLength={requireStreet ? 2 : undefined}
+                maxLength={100}
+                autoComplete="address-level2"
+                value={value.city}
+                onChange={(e) => {
+                  if (!manage) setSelected("");
+                  onChange({ ...value, city: e.target.value, point: null });
+                }}
+              />
+            </Field>
+            <Field label="Адрес доставки">
+              <Input
+                required={requireStreet}
+                minLength={requireStreet ? 5 : undefined}
+                maxLength={500}
+                autoComplete="street-address"
+                value={value.street}
+                onChange={(e) => {
+                  if (!manage) setSelected("");
+                  onChange({ ...value, street: e.target.value });
+                }}
+              />
+            </Field>
+          </>
+        )}
       </div>
-      <AddressMap value={value.point} onChange={(point) => onChange({ ...value, point })} />
+      {children}
       {manage && (
         <label className="checkbox">
           <input type="checkbox" checked={primary} onChange={(e) => setPrimary(e.target.checked)} />
@@ -233,6 +257,6 @@ export function AddressFields({
   );
 }
 export function AddressBook() {
-  const [value, setValue] = useState<AddressValue>({ city: "Душанбе", street: "", point: null });
+  const [value, setValue] = useState<AddressValue>({ city: "", street: "", point: null });
   return <AddressFields value={value} onChange={setValue} canSave manage />;
 }

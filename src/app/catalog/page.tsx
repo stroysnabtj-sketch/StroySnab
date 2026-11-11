@@ -10,7 +10,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { ProductCard } from "@/components/product-card";
 import { ProductReveal, CategoryReveal } from "@/components/reveal";
 import { CatalogPageSize } from "@/components/catalog-page-size";
-import { catalogPageSize } from "@/modules/catalog/types";
+import { catalogPageSize, parseCatalogAttributeRanges } from "@/modules/catalog/types";
 import { CatalogFiltersPanel } from "@/components/catalog-filters-panel";
 import { CatalogSortSelect } from "@/components/catalog-sort-select";
 import { ActiveFilterChips } from "@/components/active-filter-chips";
@@ -61,17 +61,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
     "attributeName",
     "attributeValue",
   ]);
-  const attributeRanges: Record<string, { min?: number; max?: number }> = {};
-  for (const [key, value] of Object.entries(params)) {
-    const match = key.match(/^range(Min|Max)\.(.+)$/);
-    if (!match) continue;
-    const raw = one(value);
-    if (!raw?.trim()) continue;
-    const number = Number(raw.replace(",", "."));
-    if (!Number.isFinite(number)) continue;
-    attributeRanges[match[2]] ??= {};
-    attributeRanges[match[2]][match[1] === "Min" ? "min" : "max"] = number;
-  }
+  const attributeRanges = parseCatalogAttributeRanges(params);
   const attributes = Object.fromEntries(
     Object.entries(params).filter(
       ([key, value]) => !known.has(key) && !/^range(Min|Max)\./.test(key) && value,

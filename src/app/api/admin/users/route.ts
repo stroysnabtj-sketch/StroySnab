@@ -1,4 +1,5 @@
 import { assertSameOrigin } from "@/server/security";
+import { parseJsonBody } from "@/server/validation";
 import { NextResponse } from "next/server";
 import { requireUser } from "@/modules/auth/session";
 import { createEmployee, listUsers, searchUsers } from "@/modules/auth/admin-service";
@@ -32,7 +33,11 @@ export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const actor = await requireUser("users:manage");
-    const result = await createEmployee(actor, await request.json(), requestIp(request));
+    const result = await createEmployee(
+      actor,
+      await parseJsonBody(request, 8192),
+      requestIp(request),
+    );
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
     return errorResponse(error);

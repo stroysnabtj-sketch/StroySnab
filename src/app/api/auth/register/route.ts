@@ -1,3 +1,6 @@
+import { assertSameOrigin } from "@/server/security";
+import { parseJsonBody } from "@/server/validation";
+import { registerSchema } from "@/modules/auth/schemas";
 import { NextResponse } from "next/server";
 import { errorResponse } from "@/server/api-error";
 import { requestIp } from "@/server/request";
@@ -9,10 +12,7 @@ import { adoptGuestCart } from "@/modules/cart/adopt-guest-cart";
 
 export async function POST(request: Request) {
   try {
-    if (
-      process.env.NODE_ENV === "production" &&
-      process.env.AUTH_LEGACY_PASSWORD_LOGIN !== "true"
-    ) {
+    if (process.env.NODE_ENV === "production") {
       return NextResponse.json(
         {
           error: {
@@ -23,9 +23,10 @@ export async function POST(request: Request) {
         { status: 410 },
       );
     }
+    assertSameOrigin(request);
     const ip = requestIp(request);
     await consumeRateLimit(`register:${ip}`, 10, 3600);
-    const input = await request.json();
+    const input = registerSchema.parse(await parseJsonBody(request, 4096));
     const user = await registerCustomer(input, ip);
     const session = await login(
       { identifier: user.phone, password: input.password },

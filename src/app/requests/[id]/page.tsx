@@ -21,7 +21,7 @@ export default async function Page({
     <>
       <SiteHeader />
       <main className={`shell ${s.page}`}>
-        <ProcurementDetail id={id} access={access} canSaveAddress={user?.role === "CUSTOMER"} />
+        <ProcurementDetail id={id} access={access} customer={user?.role === "CUSTOMER"} />
       </main>
       <SiteFooter />
     </>

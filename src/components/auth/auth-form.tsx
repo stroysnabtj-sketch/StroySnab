@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button, Checkbox, Field, Input } from "@/components/ui";
 import { t } from "@/i18n";
+import { safeAuthDestination } from "@/modules/auth/destination";
 import { Eye, EyeOff } from "lucide-react";
 import styles from "./auth-experience.module.css";
 
@@ -93,9 +94,9 @@ export function AuthForm({
         setTimeout(() => router.push("/auth/login"), 700);
         return;
       }
-      const destination = next.startsWith("/") && !next.startsWith("//") ? next : "/account";
+      const destination = safeAuthDestination(next);
       const target =
-        mode === "login" && result.role !== "CUSTOMER" && next === "/account"
+        mode === "login" && result.role !== "CUSTOMER" && destination === "/account"
           ? result.role.startsWith("SUPPLIER")
             ? "/seller"
             : "/admin"
@@ -265,7 +266,10 @@ export function AuthForm({
       </Button>
       {mode === "login" ? (
         <>
-          <Link className="auth-secondary-link" href="/auth/forgot">
+          <Link
+            className="auth-secondary-link"
+            href={`/auth/forgot?next=${encodeURIComponent(safeAuthDestination(next))}`}
+          >
             {t("auth.forgot")}
           </Link>
         </>

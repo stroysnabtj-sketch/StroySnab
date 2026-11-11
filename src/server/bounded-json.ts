@@ -12,7 +12,7 @@ export async function boundedJson(request: Request, maxBytes = 4096): Promise<un
       if (next.done) break;
       size += next.value.byteLength;
       if (size > maxBytes) {
-        await reader.cancel();
+        void reader.cancel().catch(() => {});
         throw new ApiError(413, "too_large", "Запрос слишком большой");
       }
       chunks.push(next.value);
@@ -22,7 +22,8 @@ export async function boundedJson(request: Request, maxBytes = 4096): Promise<un
   }
   const bytes = Buffer.concat(chunks);
   try {
-    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+    const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    return text.trim() ? JSON.parse(text) : {};
   } catch {
     throw new ApiError(400, "invalid_json", "Некорректный запрос");
   }

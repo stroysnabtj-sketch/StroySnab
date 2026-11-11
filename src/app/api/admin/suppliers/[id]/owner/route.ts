@@ -1,4 +1,5 @@
 import { assertSameOrigin } from "@/server/security";
+import { parseJsonBody } from "@/server/validation";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser } from "@/modules/auth/session";
@@ -9,7 +10,9 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   try {
     assertSameOrigin(request);
     const actor = await requireUser("suppliers:manage");
-    const { email } = z.object({ email: z.string().email() }).parse(await request.json());
+    const { email } = z
+      .object({ email: z.string().email() })
+      .parse(await parseJsonBody(request, 4096));
     return NextResponse.json(
       await assignSupplierOwner(actor, (await params).id, email, requestIp(request)),
     );

@@ -161,6 +161,17 @@ export async function getCart(userId?: string, guestToken?: string) {
     markupPercent: pricing.percent,
   };
 }
+
+export async function getCartCount(userId?: string, guestToken?: string): Promise<number> {
+  if (!userId && !guestToken) return 0;
+  const { db, cart } = await findCart(userId, guestToken);
+  if (!cart) return 0;
+  const [row] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(cartItems)
+    .where(eq(cartItems.cartId, cart.id));
+  return row.count;
+}
 export async function updateCartItem(input: {
   itemId: string;
   qty: string;

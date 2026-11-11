@@ -105,7 +105,7 @@ export async function getHomeCollections(): Promise<Record<HomeCollectionKind, P
     )
     .orderBy(asc(homeCollectionItems.position));
   const result: Record<HomeCollectionKind, PublicProduct[]> = { new: [], sale: [] };
-  const details = await Promise.all(rows.map((row) => getPublicProduct(row.slug)));
+  const details = await Promise.all(rows.map((row) => getPublicProduct(row.slug, false)));
   rows.forEach((row, index) => {
     const detail = details[index];
     const offer = detail?.offers[0];

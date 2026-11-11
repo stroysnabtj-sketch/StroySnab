@@ -16,14 +16,13 @@ export const log = {
     console.log(sanitizeLog(JSON.stringify({ level: "info", event, ...data })));
   },
   error(event: string, error: unknown) {
-    const errorString =
-      error instanceof Error ? `${error.name}: ${error.message}\n${error.stack ?? ""}` : String(error);
+    const type = error instanceof TypeError ? "TypeError" : error instanceof Error ? "Error" : "Unknown";
     console.error(
       sanitizeLog(
         JSON.stringify({
           level: "error",
           event,
-          error: errorString,
+          type,
         }),
       ),
     );

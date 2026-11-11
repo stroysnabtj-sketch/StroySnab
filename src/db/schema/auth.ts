@@ -19,7 +19,7 @@ const citext = customType<{ data: string }>({
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: citext("email").unique(),
-  phone: text("phone").notNull().unique(),
+  phone: text("phone").unique(),
   fullName: text("full_name"),
   phoneVerifiedAt: timestamp("phone_verified_at", { withTimezone: true }),
   emailVerifiedAt: timestamp("email_verified_at", { withTimezone: true }),
@@ -147,8 +147,6 @@ export const loginCodes = pgTable(
     codeHash: text("code_hash").notNull(),
     registration: jsonb("registration").$type<{
       fullName: string;
-      phone: string;
-      email: string | null;
       refCode?: string;
     }>(),
     attempts: integer("attempts").notNull().default(0),

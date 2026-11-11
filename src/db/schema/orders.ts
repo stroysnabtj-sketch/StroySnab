@@ -24,6 +24,7 @@ export const orders = pgTable(
     markupPercent: integer("markup_percent"),
     markupDirams: text("markup_dirams"),
     customerPhone: text("customer_phone").notNull(),
+    customerEmail: text("customer_email"),
     customerName: text("customer_name").notNull(),
     deliveryCity: text("delivery_city").notNull().default("Кушониён"),
     deliveryAddress: text("delivery_address").notNull(),

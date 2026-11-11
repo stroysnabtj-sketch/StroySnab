@@ -12,13 +12,13 @@ export function CustomerWorkspace({
   title: string;
   children: ReactNode;
   actions?: ReactNode;
-  identity?: string;
+  identity?: string | null;
 }) {
   return (
     <>
       <SiteHeader />
       <div className={`shell ${styles.workspace}`}>
-        <AccountNav identity={identity} />
+        <AccountNav identity={identity ?? undefined} />
         <main className={styles.workspaceContent} id="account-content">
           <header className={styles.heading}>
             <div>

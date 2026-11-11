@@ -111,7 +111,9 @@ export async function assignSupplierOwner(
     // Find previous owners for this supplier
     await tx.execute(sql`select pg_advisory_xact_lock(19401104)`);
     const [target] = await tx.select().from(users).where(eq(users.id, user.id)).for("update");
-    if (!target || target.deletedAt || target.status !== "ACTIVE")
+    if (!target || target.email?.toLowerCase() !== email.toLowerCase())
+      throw new ApiError(404, "not_found", "Пользователь с таким e-mail не найден");
+    if (target.deletedAt || target.status !== "ACTIVE")
       throw new ApiError(400, "inactive_owner", "Владелец должен быть активным пользователем");
     if (
       target.role === "SUPER_ADMIN" ||
@@ -131,6 +133,12 @@ export async function assignSupplierOwner(
       .where(eq(supplierUsers.userId, user.id));
     if (memberships.some((row) => row.supplierId !== supplierId))
       throw new ApiError(409, "already_bound", "Пользователь уже привязан к другому магазину");
+    if (!target.emailVerifiedAt)
+      throw new ApiError(
+        409,
+        "owner_email_unverified",
+        "Перед назначением владелец должен войти по коду из письма",
+      );
     const previousOwners = await tx
       .select({ userId: supplierUsers.userId })
       .from(supplierUsers)

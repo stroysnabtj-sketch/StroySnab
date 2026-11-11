@@ -46,6 +46,11 @@ export default async function OrderPage({
       <main className="shell">
         <OrderStatusDashboard
           order={customerOrderView(order)}
+          guestRegistrationHref={
+            !actor && !order.customerId
+              ? `/auth/register?next=${encodeURIComponent(`/orders/${order.id}`)}`
+              : undefined
+          }
           payment={{
             status: payment.status,
             paidDirams: payment.paidDirams,

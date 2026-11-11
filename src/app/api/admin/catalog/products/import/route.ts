@@ -3,13 +3,14 @@ import { NextResponse } from "next/server";
 import { requireUser } from "@/modules/auth/session";
 import { createProduct, updateProduct } from "@/modules/catalog/admin-service";
 import { parseProductFile, validateImportRows } from "@/modules/catalog/import-export";
+import { boundedForm } from "@/server/bounded-form";
 import { errorResponse } from "@/server/api-error";
 import { requestIp } from "@/server/request";
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const actor = await requireUser("catalog:manage");
-    const form = await request.formData();
+    const form = await boundedForm(request, 21 * 1024 * 1024);
     const file = form.get("file");
     if (!(file instanceof File))
       return NextResponse.json(

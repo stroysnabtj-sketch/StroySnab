@@ -13,6 +13,60 @@ import {
   enqueueQuoteReadyNotification,
 } from "@/modules/notifications/events";
 import { dispatchNotifications, retryNotification } from "@/modules/notifications/worker";
+import { getOrder } from "@/modules/orders/service";
+
+it("delivers a signed guest link on both channels without storing it in the outbox", async () => {
+  const db = await getDb();
+  vi.stubEnv("APP_URL", "https://shop.example");
+  vi.stubEnv("ORDER_GUEST_LINK_SECRET", "test-signing-secret-at-least-32-characters");
+  const [order] = await db
+    .insert(orders)
+    .values({
+      orderNumber: `GUEST-${randomUUID()}`,
+      customerName: "Guest",
+      customerPhone: "+992900111224",
+      customerEmail: "guest@example.test",
+      deliveryAddress: "Test",
+      guestAccessTokenHash: "cart-token-hash",
+    })
+    .returning();
+  try {
+    await db.transaction((tx) =>
+      enqueueOrderNotifications(tx, {
+        orderId: order.id,
+        event: "ORDER_CONFIRMED",
+        version: "1",
+      }),
+    );
+    const rows = await db
+      .select()
+      .from(notificationOutbox)
+      .where(eq(notificationOutbox.entityId, order.id));
+    expect(rows.map((row) => row.channel).sort()).toEqual(["email", "sms"]);
+    for (const row of rows) {
+      expect(row.body).not.toContain("https://");
+      const send = vi.fn(async () => ({ providerMessageId: randomUUID() }));
+      await dispatchNotifications(
+        db,
+        { send },
+        {
+          channel: row.channel as "sms" | "email",
+          onlyIds: [row.id],
+        },
+      );
+      expect(send).toHaveBeenCalledOnce();
+      const body = (send.mock.calls[0] as unknown as [{ body: string }])[0].body;
+      const token = new URL(body.split(" ").at(-1)!).hash.slice(1);
+      expect(await getOrder(order.id, { guestToken: token })).not.toBeNull();
+      expect(await getOrder(order.id, { guestToken: token.slice(0, -1) + "!" })).toBeNull();
+      expect(await getOrder(order.id, {})).toBeNull();
+    }
+  } finally {
+    vi.unstubAllEnvs();
+    await db.delete(notificationOutbox).where(eq(notificationOutbox.entityId, order.id));
+    await db.delete(orders).where(eq(orders.id, order.id));
+  }
+});
 
 it("queues atomically, deduplicates phones and keeps shops isolated without internal prices", async () => {
   const db = await getDb();

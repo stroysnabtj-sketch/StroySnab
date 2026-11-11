@@ -55,6 +55,23 @@ export type CatalogQuery = {
   pageSize?: number;
 };
 
+export function parseCatalogAttributeRanges(
+  params: Record<string, string | string[] | undefined>,
+): NonNullable<CatalogQuery["attributeRanges"]> {
+  const ranges: NonNullable<CatalogQuery["attributeRanges"]> = Object.create(null);
+  for (const [key, value] of Object.entries(params)) {
+    const match = key.match(/^range(Min|Max)\.(.+)$/);
+    if (!match || Object.hasOwn(Object.prototype, match[2])) continue;
+    const raw = Array.isArray(value) ? value[0] : value;
+    if (!raw?.trim()) continue;
+    const number = Number(raw.replace(",", "."));
+    if (!Number.isFinite(number)) continue;
+    ranges[match[2]] ??= {};
+    ranges[match[2]][match[1] === "Min" ? "min" : "max"] = number;
+  }
+  return ranges;
+}
+
 export interface FilterFacetOption {
   value: string;
   count: number;

@@ -1,4 +1,5 @@
 import { assertSameOrigin } from "@/server/security";
+import { parseJsonBody } from "@/server/validation";
 import { NextResponse } from "next/server";
 import { requireUser } from "@/modules/auth/session";
 import { createPricingRule, listPricingRules } from "@/modules/pricing/admin-service";
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
     assertSameOrigin(request);
     const actor = await requireUser("pricing:manage");
     return NextResponse.json(
-      await createPricingRule(actor, await request.json(), requestIp(request)),
+      await createPricingRule(actor, await parseJsonBody(request, 8192), requestIp(request)),
       { status: 201 },
     );
   } catch (error) {

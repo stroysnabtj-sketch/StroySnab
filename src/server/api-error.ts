@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { ZodError } from "zod";
+import { jsonResponse } from "./json";
 import { log } from "./logger";
 
 export class ApiError extends Error {
@@ -15,9 +15,9 @@ export class ApiError extends Error {
   }
 }
 
-export function errorResponse(error: unknown): NextResponse {
+export function errorResponse(error: unknown) {
   if (error instanceof ApiError) {
-    return NextResponse.json(
+    return jsonResponse(
       {
         error: {
           code: error.code,
@@ -37,7 +37,7 @@ export function errorResponse(error: unknown): NextResponse {
     for (const issue of error.issues) {
       fields[issue.path.join(".") || "root"] = issue.message;
     }
-    return NextResponse.json(
+    return jsonResponse(
       {
         error: {
           code: "validation_failed",
@@ -50,7 +50,7 @@ export function errorResponse(error: unknown): NextResponse {
   }
 
   log.error("request_failed", error);
-  return NextResponse.json(
+  return jsonResponse(
     {
       error: {
         code: "internal_error",

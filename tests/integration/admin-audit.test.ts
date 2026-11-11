@@ -125,6 +125,11 @@ it("demotes the previous owner's membership when replacing a shop owner", async 
   await db
     .insert(supplierUsers)
     .values({ supplierId: shop.id, userId: oldOwner.id, role: "OWNER" });
+  await expect(assignSupplierOwner(actor, shop.id, newOwner.email!)).rejects.toMatchObject({
+    code: "owner_email_unverified",
+  });
+  expect((await getSupplierForUser(oldOwner.id)).role).toBe("OWNER");
+  await db.update(users).set({ emailVerifiedAt: new Date() }).where(eq(users.id, newOwner.id));
   await assignSupplierOwner(actor, shop.id, newOwner.email!);
   expect((await getSupplierForUser(oldOwner.id)).role).toBe("STAFF");
   expect((await getSupplierForUser(newOwner.id)).role).toBe("OWNER");

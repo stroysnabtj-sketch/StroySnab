@@ -1,5 +1,6 @@
 import { optionalUser, requireUser } from "@/modules/auth/session";
 import { getProcurementRequest, updateProcurementStatus } from "@/modules/procurement/service";
+import { parseJsonBody } from "@/server/validation";
 import { assertSameOrigin } from "@/server/security";
 import { errorResponse } from "@/server/api-error";
 import { jsonResponse } from "@/server/json";
@@ -24,7 +25,7 @@ export async function PATCH(request: Request, { params }: Context) {
       await updateProcurementStatus(
         (await params).id,
         await requireUser("product_requests:manage"),
-        await request.json(),
+        await parseJsonBody(request, 8_192),
       ),
     );
   } catch (e) {

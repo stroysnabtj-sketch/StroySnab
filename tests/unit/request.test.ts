@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { requestIp, requestFingerprint } from "@/server/request";
 import { assertSameOrigin, checkPayloadSize } from "@/server/security";
 import { parseJsonBody } from "@/server/validation";
+import { ApiError, errorResponse } from "@/server/api-error";
 
 describe("request and security utils", () => {
   it("determines request IP safely", () => {
@@ -33,6 +34,29 @@ describe("request and security utils", () => {
 
     expect(fp1).toBe(fp2);
     expect(fp1).not.toBe(fpOtherUser);
+  });
+
+  it("accepts a single validated address from a configured X-Real-IP header", () => {
+    vi.stubEnv("TRUSTED_PROXY_HEADER", "x-real-ip");
+    vi.stubEnv("TRUSTED_PROXY", undefined);
+    try {
+      const request = (value: string) =>
+        new Request("https://shop.example/api/auth/login", { headers: { "x-real-ip": value } });
+      expect(requestIp(request("2001:db8::1"))).toBe("2001:db8::1");
+      expect(requestIp(request("spoofed"))).toBe("local");
+      expect(requestIp(request("192.0.2.1, 192.0.2.2"))).toBe("local");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("keeps private error responses out of caches while retaining retry headers", () => {
+    const response = errorResponse(
+      new ApiError(429, "rate_limited", "Повторите позже", undefined, { "Retry-After": "60" }),
+    );
+    expect(response.status).toBe(429);
+    expect(response.headers.get("retry-after")).toBe("60");
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
   });
 
   it("enforces same-origin policy on mutating requests", () => {
@@ -72,6 +96,18 @@ describe("request and security utils", () => {
       body: "{ invalid json",
     });
     await expect(parseJsonBody(badReq)).rejects.toThrow();
+  });
+
+  it("rejects an oversized JSON body even without an accurate Content-Length", async () => {
+    const headerCases: HeadersInit[] = [{}, { "content-length": "2" }];
+    for (const headers of headerCases) {
+      const request = new Request("http://localhost:3000/api/test", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ value: "x".repeat(100) }),
+      });
+      await expect(parseJsonBody(request, 32)).rejects.toMatchObject({ status: 413 });
+    }
   });
 });
 

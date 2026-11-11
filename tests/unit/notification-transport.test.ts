@@ -48,3 +48,26 @@ it("uses a stable idempotency key and requires explicit provider acceptance", as
   vi.stubGlobal("fetch", async () => Response.json({ delivered: true }));
   await expect(transport.send(message)).rejects.toThrow("provider_send_failed");
 });
+
+it("uses Payom's SMS payload and reads its accepted message ID", async () => {
+  const send = vi.fn<typeof fetch>(async () => Response.json({ id: "payom-1" }, { status: 201 }));
+  vi.stubGlobal("fetch", send);
+  const transport = configuredNotificationTransport({
+    ...env,
+    NOTIFICATIONS_SMS_PROVIDER: "payom",
+  })!;
+  expect(
+    await transport.send({
+      recipient: "+992900111224",
+      body: "Заказ принят",
+      idempotencyKey: "one",
+    }),
+  ).toEqual({ providerMessageId: "payom-1" });
+  expect(JSON.parse(send.mock.calls[0][1]?.body as string)).toEqual({
+    telephone: "+992900111224",
+    text: "Заказ принят",
+    senderName: "Store",
+    type: "SMS",
+  });
+  expect(transport.retrySafe).toBe(false);
+});

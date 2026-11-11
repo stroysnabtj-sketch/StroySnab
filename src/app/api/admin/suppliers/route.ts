@@ -1,4 +1,5 @@
 import { assertSameOrigin } from "@/server/security";
+import { parseJsonBody } from "@/server/validation";
 import { NextResponse } from "next/server";
 import { requireUser } from "@/modules/auth/session";
 import { createSupplier, listSuppliers } from "@/modules/suppliers/service";
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
     assertSameOrigin(request);
     const actor = await requireUser("suppliers:manage");
     return NextResponse.json(
-      await createSupplier(actor, await request.json(), requestIp(request)),
+      await createSupplier(actor, await parseJsonBody(request, 16384), requestIp(request)),
       { status: 201 },
     );
   } catch (error) {

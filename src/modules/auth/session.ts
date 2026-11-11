@@ -21,7 +21,7 @@ export function sessionExpiry(): Date {
 export type SessionUser = {
   id: string;
   email: string | null;
-  phone: string;
+  phone: string | null;
   role: Role;
   customerId?: string;
 };
@@ -79,6 +79,13 @@ export async function requireUser(permission?: Permission): Promise<SessionUser>
 
 export async function optionalUser(): Promise<SessionUser | null> {
   return getCurrentUser();
+}
+
+export async function requireCustomer(): Promise<SessionUser> {
+  const user = await requireUser();
+  if (user.role !== "CUSTOMER")
+    throw new ApiError(403, "forbidden", "Требуется аккаунт покупателя");
+  return user;
 }
 
 export async function assertNotDeleted(userId: string): Promise<void> {

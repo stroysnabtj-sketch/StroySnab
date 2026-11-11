@@ -1,3 +1,4 @@
+import { assertSameOrigin } from "@/server/security";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { z } from "zod";
@@ -7,6 +8,7 @@ import { parseJsonBody } from "@/server/validation";
 import { errorResponse } from "@/server/api-error";
 export async function POST(req: Request) {
   try {
+    assertSameOrigin(req);
     const body = z
       .object({ fulfillment: z.enum(["DELIVERY", "PICKUP"]) })
       .parse(await parseJsonBody(req));

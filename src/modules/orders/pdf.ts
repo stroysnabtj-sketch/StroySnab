@@ -240,8 +240,6 @@ export async function renderOrderPdf(order: InvoiceOrder) {
       width: boxWidth - 24,
       lineBreak: false,
     });
-  y += 60;
-  paragraph("Накладная не подтверждает поступление оплаты.", 8);
   const range = doc.bufferedPageRange();
   for (let i = range.start; i < range.start + range.count; i++) {
     doc.switchToPage(i);

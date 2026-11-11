@@ -87,4 +87,10 @@ it("keeps quote photos private until published and verifies file and request own
     null,
   );
   await expect(saveQuotation(other.id, actor, data)).rejects.toMatchObject({ status: 400 });
+  await expect(readQuotationImage(other.id, image.id, actor, null)).rejects.toMatchObject({
+    status: 404,
+  });
+  await expect(
+    readQuotationImage(request.id, image.id, null, other.accessToken!),
+  ).rejects.toMatchObject({ status: 404 });
 });

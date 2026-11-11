@@ -1,19 +1,21 @@
 import { createHash } from "node:crypto";
+import { isIP } from "node:net";
 
 export function requestIp(request: Request): string {
-  const trustedHeader = process.env.TRUSTED_PROXY_HEADER;
+  const trustedHeader = process.env.TRUSTED_PROXY_HEADER?.trim().toLowerCase();
   if (trustedHeader) {
     const val = request.headers.get(trustedHeader);
     if (val) {
-      const first = val.split(",")[0]?.trim();
-      if (first) return first;
+      const address = (trustedHeader === "x-forwarded-for" ? val.split(",")[0] : val).trim();
+      if (isIP(address)) return address;
     }
   }
 
   const remote = request.headers.get("x-real-ip");
   const trustedProxy = process.env.TRUSTED_PROXY;
-  if (trustedProxy && remote === trustedProxy) {
-    return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? remote;
+  if (remote && trustedProxy && remote === trustedProxy && isIP(remote)) {
+    const address = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+    return address && isIP(address) ? address : remote;
   }
 
   return "local";

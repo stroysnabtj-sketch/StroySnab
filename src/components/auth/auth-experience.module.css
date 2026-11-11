@@ -115,9 +115,40 @@
 }
 .form :global(.input) {
   min-height: 50px;
-  background: white;
+  background: #f8fafc;
+  border: 1px solid #cbd6e4;
+  color: #172b45;
   border-radius: 10px;
   font-size: 16px;
+}
+.phoneInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 50px;
+  border: 1px solid #cbd6e4;
+  border-radius: 10px;
+  padding: 0 13px;
+  background: #f8fafc;
+  color: #172b45;
+}
+.phoneInput input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  background: transparent;
+  color: #172b45;
+  outline: 0;
+  font-size: 16px;
+}
+.phoneInput input::placeholder {
+  color: #8994a3;
+  opacity: 1;
+}
+.phoneInput:focus-within {
+  border-color: #074089;
+  box-shadow: 0 0 0 3px #0740891f;
 }
 .form :global(.field-hint),
 .form :global(.field-error) {

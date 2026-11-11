@@ -6,11 +6,12 @@ import { parseProductFile } from "@/modules/catalog/import-export";
 import { bulkUpdateOffers } from "@/modules/suppliers/offer-service";
 import { errorResponse } from "@/server/api-error";
 import { requestIp } from "@/server/request";
+import { boundedForm } from "@/server/bounded-form";
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const actor = await requireUser("suppliers:manage");
-    const form = await request.formData();
+    const form = await boundedForm(request, 21 * 1024 * 1024);
     const file = form.get("file");
     if (!(file instanceof File))
       return NextResponse.json(

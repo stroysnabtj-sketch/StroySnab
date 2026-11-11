@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ProductDetailView } from "@/components/product-detail-view";
 import { getPublicProduct } from "@/modules/catalog/service";
+
+const loadProduct = cache((slug: string) => getPublicProduct(slug));
 
 export async function generateMetadata({
   params,
@@ -11,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const item = await getPublicProduct(slug);
+  const item = await loadProduct(slug);
   if (!item) return { title: "Товар не найден | Stroysnab.tj" };
 
   return {
@@ -32,7 +35,7 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const item = await getPublicProduct(slug);
+  const item = await loadProduct(slug);
   if (!item) notFound();
 
   const best = item.offers[0];

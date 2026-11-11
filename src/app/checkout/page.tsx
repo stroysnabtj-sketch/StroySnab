@@ -43,7 +43,8 @@ export default async function CheckoutPage() {
             currentUser={
               user?.role === "CUSTOMER"
                 ? {
-                    phone: user?.phone,
+                    phone: user.phone ?? undefined,
+                    email: user.email ?? undefined,
                     fullName: customer?.fullName,
                   }
                 : undefined
