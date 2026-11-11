@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 import uuid
 from datetime import datetime, timezone
+from urllib.parse import parse_qsl, unquote, urlsplit
 
 ARCHIVE = re.compile(r"^postgres/stroysnab-\d{8}T\d{6}Z-[a-f0-9]{8}\.dump$")
 
@@ -38,6 +39,22 @@ def digest_file(path):
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def source_environment(connection_url):
+    parsed = urlsplit(connection_url)
+    if parsed.scheme not in ("postgres", "postgresql") or not parsed.hostname or not parsed.path.strip("/"):
+        raise RuntimeError("Invalid source database configuration")
+    result = {key: value for key, value in os.environ.items() if not key.startswith("PG")}
+    result.update(PGHOST=parsed.hostname, PGPORT=str(parsed.port or 5432),
+                  PGDATABASE=unquote(parsed.path[1:]), PGUSER=unquote(parsed.username or "postgres"),
+                  PGPASSWORD=unquote(parsed.password or ""), PGCONNECT_TIMEOUT="30",
+                  PGOPTIONS="-c default_transaction_read_only=on")
+    allowed = {"sslmode": "PGSSLMODE", "sslrootcert": "PGSSLROOTCERT", "channel_binding": "PGCHANNELBINDING"}
+    for key, value in parse_qsl(parsed.query):
+        if key in allowed:
+            result[allowed[key]] = value
+    return result
 
 
 def verify_restore(archive, workdir):
@@ -108,7 +125,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix="stroysnab-backup-") as directory:
         workdir = Path(directory)
         archive = workdir / "database.dump"
-        dump_env = dict(os.environ, PGDATABASE=os.environ["DATABASE_URL"], PGCONNECT_TIMEOUT="30", PGOPTIONS="-c default_transaction_read_only=on")
+        dump_env = source_environment(os.environ["DATABASE_URL"])
         run(["pg_dump", "--format=custom", "--no-owner", "--no-acl", "--lock-wait-timeout=30000", "--file", str(archive)], env=dump_env)
         run(["pg_restore", "--list", str(archive)])
         print(json.dumps({"backup": "dump_created"}), flush=True)

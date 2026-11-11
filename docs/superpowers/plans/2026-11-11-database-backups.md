@@ -6,8 +6,8 @@
 
 **Schedule:** `0 22 * * *` UTC = 03:00 Asia/Dushanbe every day.
 
-- [ ] Implement isolated backup Docker image, Python runner, strict retention scope and error handling.
-- [ ] Test retention boundaries and failed upload/verification behavior.
-- [ ] Configure private bucket and dedicated cron service with reference credentials.
-- [ ] Run first backup, verify full restore and stored checksum, confirm cron configuration.
-- [ ] Document restore procedure and limits: this covers PostgreSQL, not product images; bucket and database share Railway provider.
+- [x] Implement isolated backup Docker image, Python runner, strict retention scope and error handling.
+- [x] Test retention boundaries and failed upload/verification behavior (5 passing tests).
+- [x] Configure private bucket and dedicated cron service with reference credentials.
+- [x] Run first backup, verify full restore of 38 tables and stored checksum, confirm cron configuration.
+- [x] Document restore procedure and limits: this covers PostgreSQL, not product images; bucket and database share Railway provider.

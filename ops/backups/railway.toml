@@ -1,8 +1,0 @@
-[build]
-builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
-
-[deploy]
-startCommand = "python3 /backup/backup.py"
-cronSchedule = "0 22 * * *"
-restartPolicyType = "NEVER"

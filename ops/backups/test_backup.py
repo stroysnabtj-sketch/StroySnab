@@ -10,6 +10,14 @@ spec.loader.exec_module(backup)
 
 
 class BackupTests(unittest.TestCase):
+    def test_connection_uri_is_split_into_private_libpq_environment(self):
+        env = backup.source_environment("postgresql://test:fake%40pass@postgres.internal:5433/app?sslmode=require")
+        self.assertEqual(env["PGDATABASE"], "app")
+        self.assertEqual(env["PGPASSWORD"], "fake@pass")
+        self.assertEqual(env["PGPORT"], "5433")
+        self.assertEqual(env["PGSSLMODE"], "require")
+        self.assertIn("default_transaction_read_only=on", env["PGOPTIONS"])
+
     def test_retention_only_removes_complete_owned_pairs(self):
         old = "postgres/stroysnab-20261110T220000Z-12345678.dump"
         newest = "postgres/stroysnab-20261111T220000Z-12345678.dump"
