@@ -81,6 +81,27 @@ describe("request and security utils", () => {
     expect(() => assertSameOrigin(fetchMetadataCrossSite)).toThrow();
   });
 
+  it("accepts the configured public domain behind an internal proxy and rejects spoofed hosts", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("APP_URL", "https://legacy-deployment.up.railway.app");
+    vi.stubEnv("SITE_URL", "https://www.stroysnab.tj");
+    try {
+      const request = (origin: string) =>
+        new Request("http://0.0.0.0:8080/api/auth/code/request", {
+          method: "POST",
+          headers: {
+            origin,
+            "sec-fetch-site": "same-origin",
+            "x-forwarded-host": "www.stroysnab.tj",
+          },
+        });
+      expect(() => assertSameOrigin(request("https://www.stroysnab.tj"))).not.toThrow();
+      expect(() => assertSameOrigin(request("https://evil.example"))).toThrow();
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   it("enforces payload size limit with 413", () => {
     const hugeReq = new Request("http://localhost:3000/api/orders", {
       method: "POST",
@@ -110,4 +131,3 @@ describe("request and security utils", () => {
     }
   });
 });
-

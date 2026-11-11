@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { ApiError } from "@/server/api-error";
 import { consumeRateLimit } from "@/server/rate-limit";
+import { configuredApplicationOrigins } from "@/modules/system/site-url";
 
 export const CONTACT_CAPTCHA_ACTION = "contact_code";
 
@@ -11,7 +12,8 @@ export async function verifyContactCaptcha(input: {
 }) {
   const secret = process.env.TURNSTILE_SECRET_KEY;
   const siteKey = process.env.TURNSTILE_SITE_KEY;
-  const required = input.purpose === "register" || input.purpose === "recover" || input.channel === "sms";
+  const required =
+    input.purpose === "register" || input.purpose === "recover" || input.channel === "sms";
   if (!required) return;
   if (!secret || !siteKey) {
     if (process.env.NODE_ENV !== "production" && !secret && !siteKey) return;
@@ -22,7 +24,9 @@ export async function verifyContactCaptcha(input: {
   if (typeof token !== "string" || !token || token.length > 2048) throw invalid();
   let result: { success?: boolean; action?: string; hostname?: string };
   try {
-    const host = new URL(process.env.APP_URL ?? "").hostname;
+    const allowedHosts = new Set(
+      [...configuredApplicationOrigins()].map((origin) => new URL(origin).hostname),
+    );
     const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
       method: "POST",
       body: new URLSearchParams({ secret, response: token }),
@@ -34,7 +38,7 @@ export async function verifyContactCaptcha(input: {
     if (
       result.success !== true ||
       result.action !== CONTACT_CAPTCHA_ACTION ||
-      result.hostname !== host
+      !allowedHosts.has(result.hostname ?? "")
     )
       throw invalid();
   } catch (error) {

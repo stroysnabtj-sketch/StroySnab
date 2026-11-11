@@ -7,6 +7,28 @@ import { hashToken } from "@/modules/auth/session";
 import { verifyContactCaptcha } from "@/modules/auth/turnstile";
 import { login } from "@/modules/auth/service";
 
+it("accepts a verified CAPTCHA on the public domain after moving from the Railway hostname", async () => {
+  vi.stubEnv("APP_URL", "https://legacy-deployment.up.railway.app");
+  vi.stubEnv("SITE_URL", "https://www.stroysnab.tj");
+  vi.stubEnv("TURNSTILE_SITE_KEY", "test-site");
+  vi.stubEnv("TURNSTILE_SECRET_KEY", "test-secret");
+  vi.stubGlobal("fetch", async () =>
+    Response.json({ success: true, action: "contact_code", hostname: "www.stroysnab.tj" }),
+  );
+  try {
+    await expect(
+      verifyContactCaptcha({
+        purpose: "register",
+        channel: "email",
+        captchaToken: crypto.randomUUID(),
+      }),
+    ).resolves.toBeUndefined();
+  } finally {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  }
+});
+
 it("rejects missing, mismatched and reused CAPTCHA before allowing paid codes", async () => {
   vi.stubEnv("APP_URL", "https://shop.example");
   vi.stubEnv("TURNSTILE_SITE_KEY", "test-site");

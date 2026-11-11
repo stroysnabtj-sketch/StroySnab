@@ -1,4 +1,5 @@
 import { ApiError } from "./api-error";
+import { configuredApplicationOrigins } from "@/modules/system/site-url";
 
 export function assertSameOrigin(request: Request): void {
   // Check Fetch Metadata
@@ -13,14 +14,7 @@ export function assertSameOrigin(request: Request): void {
     return;
   }
 
-  const allowedOrigins = new Set<string>();
-  if (process.env.APP_URL) {
-    try {
-      allowedOrigins.add(new URL(process.env.APP_URL).origin);
-    } catch {
-      // ignore malformed env URL
-    }
-  }
+  const allowedOrigins = configuredApplicationOrigins();
 
   try {
     const requestUrl = new URL(request.url);
@@ -56,4 +50,3 @@ export function checkPayloadSize(request: Request, maxBytes = 1024 * 1024): void
     }
   }
 }
-
