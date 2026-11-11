@@ -4,10 +4,7 @@ import Script from "next/script";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button, Checkbox, Field, Input } from "@/components/ui";
 import { Eye, EyeOff } from "lucide-react";
-import {
-  registrationPasswordError,
-  registrationPasswordHint,
-} from "@/modules/auth/registration-password";
+import { registrationPasswordError } from "@/modules/auth/registration-password";
 import { safeAuthDestination } from "@/modules/auth/destination";
 import styles from "./auth-experience.module.css";
 type Challenge = { challengeId: string; maskedRecipient: string; resendAfterSeconds: number };
@@ -279,20 +276,23 @@ export function ContactAuthForm({
                   <button
                     className={styles.reveal}
                     type="button"
-                    aria-label={showPasswords ? "Скрыть пароли" : "Показать пароли"}
+                    aria-label={showPasswords ? "Скрыть пароль" : "Показать пароль"}
                     aria-pressed={showPasswords}
                     onClick={() => setShowPasswords(!showPasswords)}
                   >
                     {showPasswords ? <EyeOff size={19} /> : <Eye size={19} />}
                   </button>
                 </div>
-                <span className="field-hint" id="registration-password-hint">
-                  {registrationPasswordHint}
-                </span>
+                <ul className={styles.passwordRequirements} id="registration-password-hint">
+                  <li>Не менее 8 символов</li>
+                  <li>Заглавная и строчная буквы</li>
+                  <li>Хотя бы одна цифра</li>
+                  <li>Специальный символ: ! @ # $</li>
+                </ul>
               </div>
               <Field label="Повторите пароль">
                 <Input
-                  type={showPasswords ? "text" : "password"}
+                  type="password"
                   autoComplete="new-password"
                   required
                   maxLength={72}

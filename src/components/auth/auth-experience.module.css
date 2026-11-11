@@ -333,6 +333,14 @@
   font-size: 13px;
   padding: 6px;
 }
+.passwordRequirements {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.7;
+  list-style: disc;
+}
 .otpControl {
   display: block;
   position: relative;
