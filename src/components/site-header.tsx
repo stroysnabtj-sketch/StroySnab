@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PanelsTopLeft, MapPin, Menu, ShoppingCart, UserRound, X, Store } from "lucide-react";
 import { HeaderSearch } from "@/components/header-search";
 import { useEffect, useState } from "react";
-export function SiteHeader() {
+export function SiteHeader({ className = "" }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const [session, setSession] = useState<{ role?: string; cartCount?: number }>({});
   useEffect(() => {
@@ -25,7 +25,7 @@ export function SiteHeader() {
   const staff = session.role && !shop && session.role !== "CUSTOMER" && session.role !== "GUEST";
   const accountHref = shop ? "/seller" : staff ? "/admin" : "/account";
   return (
-    <header className="site-header">
+    <header className={`site-header ${className}`}>
       <div className="header-utility">
         <div className="shell">
           <span>

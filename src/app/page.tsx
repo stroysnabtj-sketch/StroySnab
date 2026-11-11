@@ -13,6 +13,7 @@ import { listCatalog, listCategories } from "@/modules/catalog/service";
 import { getHomeCollections } from "@/modules/merchandising/service";
 
 import { CATEGORIES_TREE } from "@/modules/catalog/categories-data";
+import "./home-mobile.css";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -37,7 +38,7 @@ export default async function HomePage() {
   const featuredRoots = canonicalRoots.length === CATEGORIES_TREE.length ? canonicalRoots : roots;
   return (
     <>
-      <SiteHeader />
+      <SiteHeader className="home-site-header" />
       <main className="storefront-home">
         <div className="shell home-intro">
           <span>Строительство и ремонт</span>
@@ -47,11 +48,7 @@ export default async function HomePage() {
           <div className="store-hero">
             <div className="store-hero-copy">
               <h1>
-                Строите?
-                <br />
-                Начните
-                <br />
-                <em>с материалов.</em>
+                <span>Строите?</span> <span>Начните</span> <em>с материалов.</em>
               </h1>
               <p>
                 Подберите всё для стройки в каталоге
@@ -156,7 +153,6 @@ export default async function HomePage() {
           <section className="shell home-products-section">
             <div className="section-head">
               <div>
-                <span className="small-label">Можно заказать сейчас</span>
                 <h2>В наличии</h2>
               </div>
               <Link href="/catalog?inStock=1" className="section-more">
