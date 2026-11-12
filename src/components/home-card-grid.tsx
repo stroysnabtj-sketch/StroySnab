@@ -1,8 +1,10 @@
 "use client";
-import { Children, useId, useState, type ReactNode } from "react";
+import { Children, useEffect, useId, useState, type ReactNode } from "react";
 
 export function HomeCardGrid({ children, className }: { children: ReactNode; className: string }) {
   const [visible, setVisible] = useState(4);
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
   const id = useId();
   const cards = Children.toArray(children);
   return (
@@ -19,6 +21,7 @@ export function HomeCardGrid({ children, className }: { children: ReactNode; cla
           type="button"
           className="button button-secondary home-show-more"
           aria-controls={id}
+          disabled={!ready}
           onClick={() => setVisible((count) => count + 4)}
         >
           Показать ещё
