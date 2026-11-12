@@ -11,6 +11,9 @@ import { ProductCard } from "@/components/product-card";
 import { ProductReveal, CategoryReveal } from "@/components/reveal";
 import { listCatalog, listCategories } from "@/modules/catalog/service";
 import { getHomeCollections } from "@/modules/merchandising/service";
+import { getHomeContent } from "@/modules/merchandising/home-content-service";
+import { HomeCardGrid } from "@/components/home-card-grid";
+import { HomeAdvertising } from "@/components/home-advertising";
 
 import { CATEGORIES_TREE } from "@/modules/catalog/categories-data";
 import "./home-mobile.css";
@@ -24,6 +27,7 @@ const getHomeCatalog = unstable_cache(
       listCatalog({ inStock: true, pageSize: 8, diverse: true }),
       listCategories(),
       getHomeCollections(),
+      getHomeContent(),
     ]),
   ["storefront-home-v1"],
   { revalidate: 30 },
@@ -31,7 +35,7 @@ const getHomeCatalog = unstable_cache(
 
 export default async function HomePage() {
   await connection();
-  const [catalog, categories, collections] = await getHomeCatalog();
+  const [catalog, categories, collections, content] = await getHomeCatalog();
   const roots = categories.filter((category) => !category.parentId && category.isActive === "true");
   const canonicalRoots = CATEGORIES_TREE.map((node) =>
     roots.find((category) => category.slug === node.slug),
@@ -49,35 +53,47 @@ export default async function HomePage() {
           <div className="store-hero">
             <div className="store-hero-copy">
               <h1>
-                <span>Строите?</span> <span>Начните</span> <em>с материалов.</em>
+                {content.hero.title.split("\n").map((line, index) => (
+                  <span key={index}>{line}</span>
+                ))}
               </h1>
-              <p>
-                Подберите всё для стройки в каталоге
-                <br className="desktop-break" /> или отправьте список на расчёт.
-              </p>
+              <p>{content.hero.subtitle}</p>
               <div className="hero-banner-actions">
-                <Link href="/catalog" className="button button-primary hero-shop-button" aria-label="Каталог">
-                  <span className="button-label" data-label="Каталог">
-                    Каталог
+                <Link
+                  href={content.hero.primaryHref}
+                  className="button button-primary hero-shop-button"
+                  aria-label={content.hero.primaryLabel}
+                >
+                  <span className="button-label" data-label={content.hero.primaryLabel}>
+                    {content.hero.primaryLabel}
                   </span>
                   <ArrowRight size={18} />
                 </Link>
-                <Link href="/request" className="button hero-quote-button" aria-label="Получить КП">
-                  <span className="button-label" data-label="Получить КП">
-                    Получить КП
+                <Link
+                  href={content.hero.secondaryHref}
+                  className="button hero-quote-button"
+                  aria-label={content.hero.secondaryLabel}
+                >
+                  <span className="button-label" data-label={content.hero.secondaryLabel}>
+                    {content.hero.secondaryLabel}
                   </span>
                 </Link>
               </div>
             </div>
             <div className="store-hero-scene hero-photo-scene">
-              <Image
-                src="/images/editorial/construction-crane-v2.webp"
-                alt="Башенный кран и строящийся дом на фоне гор"
-                fill
-                priority
-                sizes="(max-width: 1440px) 100vw, 1400px"
-                className="hero-editorial-photo"
-              />
+              <picture>
+                {content.hero.mobileImage && (
+                  <source media="(max-width: 600px)" srcSet={content.hero.mobileImage} />
+                )}
+                <Image
+                  src={content.hero.image}
+                  alt=""
+                  fill
+                  priority
+                  sizes="(max-width: 1440px) 100vw, 1400px"
+                  className="hero-editorial-photo"
+                />
+              </picture>
             </div>
           </div>
         </section>
@@ -88,7 +104,7 @@ export default async function HomePage() {
               Все разделы <ArrowRight size={17} />
             </Link>
           </div>
-          <div className="home-categories-grid">
+          <HomeCardGrid className="home-categories-grid">
             {featuredRoots.slice(0, 12).map((category, index) => (
               <CategoryReveal key={category.id} index={index} columns={4}>
                 <CategoryTile
@@ -98,8 +114,9 @@ export default async function HomePage() {
                 />
               </CategoryReveal>
             ))}
-          </div>
+          </HomeCardGrid>
         </section>
+        <HomeAdvertising ads={content.ads} />
         {(["sale", "new"] as const).map(
           (kind) =>
             collections[kind].length > 0 && (
@@ -114,13 +131,13 @@ export default async function HomePage() {
                     В каталог <ArrowRight size={17} />
                   </Link>
                 </div>
-                <div className="product-grid product-grid-4">
+                <HomeCardGrid className="product-grid product-grid-4">
                   {collections[kind].map((product, index) => (
                     <ProductReveal key={product.id} index={index} columns={4}>
                       <ProductCard product={product} />
                     </ProductReveal>
                   ))}
-                </div>
+                </HomeCardGrid>
               </section>
             ),
         )}
@@ -134,13 +151,13 @@ export default async function HomePage() {
                 Все товары <ArrowRight size={17} />
               </Link>
             </div>
-            <div className="product-grid product-grid-4">
+            <HomeCardGrid className="product-grid product-grid-4">
               {catalog.items.map((product, index) => (
                 <ProductReveal key={product.id} index={index} columns={4}>
                   <ProductCard product={product} />
                 </ProductReveal>
               ))}
-            </div>
+            </HomeCardGrid>
           </section>
         )}
         <section className="shell home-service-section">

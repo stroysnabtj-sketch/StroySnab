@@ -2,6 +2,56 @@
   display: grid;
   gap: 24px;
 }
+.editor {
+  display: grid;
+  gap: 24px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.formGrid > div {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.adEditor {
+  display: grid;
+  gap: 16px;
+  border-top: 1px solid #dce5ef;
+  padding-block: 20px;
+}
+.preview {
+  position: relative;
+  width: min(100%, 360px);
+  height: 180px;
+  background: #eff4fa;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.preview img {
+  object-fit: contain;
+}
+.imageField {
+  display: grid;
+  gap: 12px;
+}
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+.checkbox input {
+  width: 20px;
+  height: 20px;
+  accent-color: #074089;
+}
 .tabs {
   display: flex;
   gap: 8px;
@@ -60,6 +110,9 @@
   margin: 0;
 }
 @media (max-width: 600px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
   .card {
     padding: 16px;
   }

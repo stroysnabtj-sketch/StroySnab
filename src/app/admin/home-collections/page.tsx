@@ -1,5 +1,6 @@
 import { Workspace } from "@/components/workspace";
 import { AdminHomeCollectionsPanel } from "@/components/admin-home-collections-panel";
+import { AdminHomeContentPanel } from "@/components/admin-home-content-panel";
 import { requirePagePermission } from "@/modules/auth/page";
 import styles from "@/components/workspace-design.module.css";
 
@@ -10,11 +11,13 @@ export default async function AdminHomeCollectionsPage() {
     <Workspace kind="admin">
       <header className={styles.pageHeading}>
         <div>
-          <h1>Подборки главной</h1>
-          <p>Выберите до 12 товаров и настройте порядок в каждой подборке.</p>
+          <h1>Главная страница</h1>
         </div>
       </header>
       <AdminHomeCollectionsPanel />
+      <div style={{ marginTop: 28 }}>
+        <AdminHomeContentPanel />
+      </div>
     </Workspace>
   );
 }

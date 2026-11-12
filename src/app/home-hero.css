@@ -41,6 +41,7 @@
   padding: 44px 48px;
 }
 .storefront-home .store-hero h1 {
+  overflow-wrap: anywhere;
   margin: 0 0 18px;
   font-size: clamp(44px, 4.4vw, 62px);
   line-height: 1.06;
