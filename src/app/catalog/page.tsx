@@ -1,6 +1,5 @@
 import { CategoryTile } from "@/components/category-tile";
 import { CATEGORIES_TREE } from "@/modules/catalog/categories-data";
-import { countNoun } from "@/modules/system/plural";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { LEGACY_CATEGORY_REDIRECTS } from "@/modules/catalog/legacy-taxonomy";
@@ -105,32 +104,6 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
       {current && <span aria-current="page"> / {current.nameRu}</span>}
     </nav>
   );
-  const searchForm = (
-    <form className="catalog-search-form" action="/catalog">
-      <label className="field-label" htmlFor="catalog-search">
-        Поиск в каталоге
-      </label>
-      <input
-        id="catalog-search"
-        className="input"
-        name="q"
-        defaultValue={query.q}
-        placeholder="Название или артикул"
-      />
-      {Object.entries(params)
-        .filter(([key]) => !["q", "page"].includes(key))
-        .flatMap(([key, value]) =>
-          (Array.isArray(value) ? value : value ? [value] : []).map((item, index) => (
-            <input key={`${key}-${index}`} type="hidden" name={key} value={item} />
-          )),
-        )}
-      <button className="button button-primary" type="submit">
-        <span className="button-label" data-label="Найти">
-          Найти
-        </span>
-      </button>
-    </form>
-  );
   const roots = categories.filter((category) => !category.parentId);
   const referenceRoots = CATEGORIES_TREE.map((root) =>
     roots.find((category) => category.slug === root.slug),
@@ -155,15 +128,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
         <SiteHeader />
         <main className="shell catalog-browse-page">
           {breadcrumb}
-          <header className="catalog-results-head">
-            <div>
-              <h1>{current?.nameRu ?? "Каталог"}</h1>
-              <p>
-                {countNoun(children.length, "раздел", "раздела", "разделов")} · выберите категорию
-              </p>
-            </div>
-            {searchForm}
-          </header>
+          <h1 className="sr-only">{current?.nameRu ?? "Каталог"}</h1>
           <section className="catalog-category-grid" aria-label="Категории каталога">
             {children.map((category, index) => (
               <CategoryReveal key={category.id} index={index} columns={4}>

@@ -27,6 +27,8 @@ export function AddressFields({
   children?: ReactNode;
 }) {
   const [items, setItems] = useState<SavedAddress[]>([]),
+    [locating, setLocating] = useState(false),
+    [lookupFailed, setLookupFailed] = useState(false),
     [manual, setManual] = useState(false),
     [selected, setSelected] = useState(""),
     [label, setLabel] = useState("Адрес"),
@@ -67,6 +69,41 @@ export function AddressFields({
       active = false;
     };
   }, [canSave]);
+  const latitude = value.point?.lat;
+  const longitude = value.point?.lng;
+  useEffect(() => {
+    if (manual || latitude === undefined || longitude === undefined || current.current.street)
+      return;
+    const controller = new AbortController();
+    const point = { lat: latitude, lng: longitude };
+    const timer = setTimeout(() => {
+      setLocating(true);
+      setLookupFailed(false);
+      void api<{ city: string; street: string }>(
+        `/api/public/address/reverse?lat=${point.lat}&lng=${point.lng}`,
+        { signal: controller.signal },
+      )
+        .then((address) => {
+          if (
+            !controller.signal.aborted &&
+            current.current.point?.lat === point.lat &&
+            current.current.point?.lng === point.lng
+          ) {
+            change.current({ ...current.current, city: address.city, street: address.street });
+          }
+        })
+        .catch(() => {
+          if (!controller.signal.aborted) setLookupFailed(true);
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setLocating(false);
+        });
+    }, 700);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [latitude, longitude, manual]);
   function choose(id: string) {
     setSelected(id);
     setMessage("");
@@ -179,7 +216,22 @@ export function AddressFields({
         </Field>
       )}
       {!manual && (
-        <AddressMap value={value.point} onChange={(point) => onChange({ ...value, point })} />
+        <AddressMap
+          value={value.point}
+          onChange={(point) => {
+            if (!manage) setSelected("");
+            onChange({ city: "", street: "", point });
+          }}
+        />
+      )}
+      {!manual && value.point && (
+        <p role="status" className={styles.message}>
+          {locating
+            ? "Определяем адрес…"
+            : lookupFailed
+              ? "Точка выбрана. Адрес можно указать вручную."
+              : [value.city, value.street].filter(Boolean).join(", ") || "Точка выбрана"}
+        </p>
       )}
       <Button
         type="button"
@@ -190,7 +242,7 @@ export function AddressFields({
         onClick={() => {
           setManual(!manual);
           setError("");
-          onChange(manual ? { city: "", street: "", point: null } : { ...value, point: null });
+          onChange({ ...value, point: manual ? value.point : null });
         }}
       >
         {manual ? "Выбрать на карте" : "Указать вручную"}
@@ -204,6 +256,7 @@ export function AddressFields({
                 minLength={requireStreet ? 2 : undefined}
                 maxLength={100}
                 autoComplete="address-level2"
+                placeholder="Душанбе"
                 value={value.city}
                 onChange={(e) => {
                   if (!manage) setSelected("");
@@ -217,6 +270,7 @@ export function AddressFields({
                 minLength={requireStreet ? 5 : undefined}
                 maxLength={500}
                 autoComplete="street-address"
+                placeholder="Улица, дом или ориентир"
                 value={value.street}
                 onChange={(e) => {
                   if (!manage) setSelected("");

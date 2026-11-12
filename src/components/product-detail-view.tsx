@@ -54,6 +54,7 @@ export function ProductDetailView({
   offers,
   relatedProducts,
 }: Props) {
+  const [activeTab, setActiveTab] = useState("description");
   const [offerIndex, setOfferIndex] = useState(0);
   const [qty, setQty] = useState(offers[0]?.minOrderQty ?? "1");
   const [activeImage, setActiveImage] = useState(0);
@@ -164,16 +165,6 @@ export function ProductDetailView({
           </div>
           <h1 className="product-info-title">{product.nameRu}</h1>
           <p className="product-reference">{category.nameRu}</p>
-          {attributes.length > 0 && (
-            <dl className="product-key-specs">
-              {attributes.slice(0, 4).map((a) => (
-                <div key={a.name}>
-                  <dt>{a.name}</dt>
-                  <dd>{a.value}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
           {offer ? (
             <div className="product-buy">
               <div className="product-price">
@@ -184,12 +175,14 @@ export function ProductDetailView({
                 <span className="status-indicator" />
                 {inStock ? `В наличии · ${offer.stockQty} ${product.unit}` : "Нет в наличии"}
               </div>
-              <div className="product-seller-line">
-                <Store size={16} />
-                <span>
-                  Продавец <strong>{offer.supplierName}</strong>
-                </span>
-              </div>
+              {offers.length === 1 && (
+                <div className="product-seller-line">
+                  <Store size={16} />
+                  <span>
+                    Продавец <strong>{offer.supplierName}</strong>
+                  </span>
+                </div>
+              )}
               {offers.length > 1 && (
                 <fieldset className={styles.offerList}>
                   <legend>Выберите магазин</legend>
@@ -231,15 +224,6 @@ export function ProductDetailView({
                   <strong>{formatTJS(lineTotal)}</strong>
                 </div>
               )}
-              <Link
-                href={`/catalog/request?product=${encodeURIComponent(product.nameRu)}`}
-                className={`button button-primary ${styles.quoteAction}`}
-              >
-                <FileText size={18} />
-                <span className="button-label" data-label="Получить коммерческое предложение">
-                  Получить коммерческое предложение
-                </span>
-              </Link>
               <div className="product-actions-row" data-in-stock={inStock}>
                 <div className="quantity-stepper">
                   <button
@@ -304,6 +288,15 @@ export function ProductDetailView({
                   {pending ? "Добавляем…" : added ? "Добавлено" : "В корзину"}
                 </Button>
               </div>
+              <Link
+                href={`/catalog/request?product=${encodeURIComponent(product.nameRu)}`}
+                className={`button button-secondary ${styles.quoteAction}`}
+              >
+                <FileText size={18} />
+                <span className="button-label" data-label="Получить КП">
+                  Получить КП
+                </span>
+              </Link>
               {qty && !validAmount && (
                 <p className={styles.quantityHint} role="status">
                   Укажите от {min} до {offer.stockQty} {product.unit}, не более трёх знаков после
@@ -358,12 +351,47 @@ export function ProductDetailView({
         </div>
       </article>
       <div className={styles.informationCard}>
-        <nav className={styles.productTabs} aria-label="Информация о товаре">
-          <a href="#description">Описание</a>
-          <a href="#characteristics">Характеристики</a>
-        </nav>
+        <div className={styles.productTabs} role="tablist" aria-label="Информация о товаре">
+          {[
+            ["description", "Описание"],
+            ["characteristics", "Характеристики"],
+          ].map(([id, label], index) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              id={`tab-${id}`}
+              aria-controls={id}
+              aria-selected={activeTab === id}
+              tabIndex={activeTab === id ? 0 : -1}
+              onClick={() => setActiveTab(id)}
+              onKeyDown={(event) => {
+                if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+                event.preventDefault();
+                const next =
+                  event.key === "Home"
+                    ? "description"
+                    : event.key === "End"
+                      ? "characteristics"
+                      : index === 0
+                        ? "characteristics"
+                        : "description";
+                setActiveTab(next);
+                document.getElementById(`tab-${next}`)?.focus();
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         <div className="product-sections">
-          <section id="description">
+          <section
+            id="description"
+            role="tabpanel"
+            aria-labelledby="tab-description"
+            hidden={activeTab !== "description"}
+            tabIndex={0}
+          >
             <h2>Описание</h2>
             <p className="product-full-description">
               {product.descriptionRu || "Описание не добавлено."}
@@ -375,7 +403,13 @@ export function ProductDetailView({
               Уточнить характеристики <ArrowRight size={16} />
             </Link>
           </section>
-          <section id="characteristics">
+          <section
+            id="characteristics"
+            role="tabpanel"
+            aria-labelledby="tab-characteristics"
+            hidden={activeTab !== "characteristics"}
+            tabIndex={0}
+          >
             <h2>Характеристики</h2>
             <dl className="specification-list">
               <div>
@@ -386,12 +420,23 @@ export function ProductDetailView({
                 <dt>Единица измерения</dt>
                 <dd>{product.unit}</dd>
               </div>
-              {attributes.map((a) => (
-                <div key={a.name}>
-                  <dt>{a.name}</dt>
-                  <dd>{a.value}</dd>
-                </div>
-              ))}
+              {attributes
+                .filter(
+                  (a) =>
+                    ![
+                      "Бренд",
+                      "Единица",
+                      "Единица измерения",
+                      "Назначение",
+                      "Страна поставки",
+                    ].includes(a.name),
+                )
+                .map((a) => (
+                  <div key={a.name}>
+                    <dt>{a.name}</dt>
+                    <dd>{a.value}</dd>
+                  </div>
+                ))}
             </dl>
           </section>
         </div>

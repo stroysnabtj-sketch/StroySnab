@@ -357,9 +357,9 @@ export async function getPublicProduct(slug: string, includeRelated = true) {
   });
 
   const relatedProducts = includeRelated
-    ? (await listCatalog({ category: row.category.slug, pageSize: 5 })).items
+    ? (await listCatalog({ category: row.category.slug, pageSize: 13 })).items
         .filter((product) => product.id !== row.product.id)
-        .slice(0, 4)
+        .slice(0, 12)
     : [];
 
   return {

@@ -270,15 +270,20 @@
   border-bottom: 1px solid #dfe5ed;
   padding: 0 12px;
 }
-.productTabs a {
+.productTabs button {
   display: block;
-  padding: 19px 22px;
+  padding: 16px 20px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
   font-size: 14px;
   font-weight: 600;
   color: var(--brand);
   border-bottom: 2px solid transparent;
 }
-.productTabs a:hover {
+.productTabs button[aria-selected="true"],
+.productTabs button:hover {
   border-color: var(--brand);
   background: #f1f5fc;
 }
@@ -363,12 +368,147 @@
   .productTabs {
     padding: 0;
   }
-  .productTabs a {
+  .productTabs button {
     padding: 16px;
     font-size: 13px;
   }
   .product :global(.specification-list) > div {
     gap: 12px;
     padding: 13px 10px;
+  }
+}
+
+.product :global(.product-sections) section[hidden] {
+  display: none;
+}
+.product :global(.product-price) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+}
+.product :global(.product-buy) {
+  padding: 20px;
+}
+.product :global(.product-price) strong {
+  font-size: clamp(25px, 2.4vw, 32px);
+}
+.offerList {
+  margin: 16px 0;
+  gap: 6px;
+}
+.offerOption {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  padding: 11px;
+}
+.offerOption > span {
+  min-width: 0;
+}
+.offerOption b {
+  white-space: nowrap;
+  font-size: 13px;
+}
+.lineTotal {
+  margin: 14px 0;
+}
+.product :global(.product-actions-row) {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.product :global(.buy-btn) {
+  min-width: 0;
+  width: 100%;
+}
+.quoteAction {
+  min-height: 42px;
+  padding: 10px 14px;
+}
+.product :global(.product-delivery-note) {
+  margin-top: 16px;
+  padding-top: 14px;
+}
+@media (max-width: 760px) {
+  .product :global(.product-gallery-section) {
+    padding: 12px;
+  }
+  .product :global(.product-gallery-main) {
+    aspect-ratio: 4 / 3 !important;
+  }
+  .product :global(.product-info-title) {
+    font-size: 23px;
+    margin: 12px 0 8px;
+  }
+  .product :global(.product-reference) {
+    margin-bottom: 16px;
+  }
+  .product :global(.product-buy) {
+    padding: 14px;
+  }
+  .product :global(.product-info) {
+    padding: 16px 12px;
+  }
+  .product :global(.quantity-stepper) {
+    min-width: 104px;
+  }
+  .product :global(.quantity-stepper) input {
+    width: 40px;
+  }
+  .product :global(.quantity-unit) {
+    display: none;
+  }
+  .product :global(.product-actions-row) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .offerOption {
+    gap: 7px;
+  }
+  .offerOption small {
+    font-size: 11px;
+  }
+  .offerOption b {
+    grid-column: 2;
+    font-size: 14px;
+  }
+  .product :global(.product-sections) {
+    padding: 18px 14px;
+  }
+  .product :global(.related-products-section .product-grid) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+.offerList {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+.product :global(.product-info) {
+  display: block;
+}
+@media (max-width: 760px) {
+  .product :global(.product-info-title) {
+    font-size: 23px !important;
+    line-height: 1.2 !important;
+  }
+  .product :global(.related-products-section .product-card-body) {
+    padding: 12px;
+  }
+  .product :global(.related-products-section .product-card-price-row) {
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+  .product :global(.related-products-section .product-card-price) {
+    font-size: clamp(16px, 4.5vw, 22px);
+    letter-spacing: -0.045em;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .product :global(.related-products-section .card-offer-count) {
+    display: none;
   }
 }

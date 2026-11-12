@@ -45,10 +45,6 @@ export default async function HomePage() {
     <>
       <SiteHeader className="home-site-header" />
       <main className="storefront-home">
-        <div className="shell home-intro">
-          <span>Строительство и ремонт</span>
-          <span>Таджикистан</span>
-        </div>
         <section className="shell home-hero-wrap">
           <div className="store-hero">
             <div className="store-hero-copy">

@@ -47,7 +47,7 @@ export function CheckoutView({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [customerName, setName] = useState(currentUser?.fullName ?? "");
-  const [customerPhone, setPhone] = useState(currentUser?.phone || "+992");
+  const [customerPhone, setPhone] = useState(currentUser?.phone || "");
   const [customerEmail, setEmail] = useState(currentUser?.email ?? "");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
@@ -162,9 +162,7 @@ export function CheckoutView({
       <div className="checkout-grid">
         <div className="checkout-main">
           <section className="checkout-section">
-            <h2 className={styles.sectionTitle}>
-              <span>01</span> Получение заказа
-            </h2>
+            <h2 className={styles.sectionTitle}>Получение заказа</h2>
             <fieldset className={styles.choices}>
               <legend className="sr-only">Способ получения</legend>
               {(
@@ -211,9 +209,7 @@ export function CheckoutView({
             )}
           </section>
           <section className="checkout-section">
-            <h2 className={styles.sectionTitle}>
-              <span>02</span> Контакты получателя
-            </h2>
+            <h2 className={styles.sectionTitle}>Контакты получателя</h2>
             <div className={styles.twoFields}>
               <label className="field">
                 Имя
@@ -230,15 +226,34 @@ export function CheckoutView({
               </label>
               <label className="field">
                 Телефон
-                <input
-                  className="input"
-                  type="tel"
-                  required
-                  pattern="\+?[0-9 ()-]{9,24}"
-                  autoComplete="tel"
-                  value={customerPhone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
+                <span className={styles.phoneInput}>
+                  <span aria-hidden="true">+992</span>
+                  <input
+                    type="tel"
+                    aria-label="Телефон"
+                    required
+                    inputMode="numeric"
+                    pattern="[0-9]{3} [0-9]{2} [0-9]{2} [0-9]{2}"
+                    autoComplete="tel-national"
+                    placeholder="000 00 00 00"
+                    value={customerPhone
+                      .replace(/^\+?992/, "")
+                      .replace(/\D/g, "")
+                      .slice(0, 9)
+                      .replace(/^(\d{3})(\d{0,2})(\d{0,2})(\d{0,2}).*$/, (_, a, b, c, d) =>
+                        [a, b, c, d].filter(Boolean).join(" "),
+                      )}
+                    onChange={(e) => {
+                      let digits = e.target.value.replace(/\D/g, "");
+                      if (
+                        e.target.value.startsWith("+992") ||
+                        (digits.length === 12 && digits.startsWith("992"))
+                      )
+                        digits = digits.slice(3);
+                      setPhone(digits ? `+992${digits.slice(0, 9)}` : "");
+                    }}
+                  />
+                </span>
               </label>
               <label className="field">
                 E-mail (необязательно)
@@ -247,6 +262,7 @@ export function CheckoutView({
                   type="email"
                   maxLength={254}
                   autoComplete="email"
+                  placeholder="name@example.com"
                   value={customerEmail}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -267,9 +283,7 @@ export function CheckoutView({
             </details>
           )}
           <section className="checkout-section">
-            <h2 className={styles.sectionTitle}>
-              <span>{fulfillment === "DELIVERY" ? "04" : "03"}</span> Оплата
-            </h2>
+            <h2 className={styles.sectionTitle}>Оплата</h2>
             <fieldset className={styles.choices}>
               <legend className="sr-only">Способ оплаты</legend>
               {(

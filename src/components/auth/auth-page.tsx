@@ -34,9 +34,6 @@ export function AuthPage({
       <SiteHeader />
       <main className={`shell ${styles.layout}`}>
         <section className={styles.card}>
-          <Link href="/" className={styles.authBrand}>
-            <span>S</span> STROYSNAB<small>.TJ</small>
-          </Link>
           <h1>{t(titleKey)}</h1>
           {!passwordLogin && (mode === "login" || mode === "register" || mode === "forgot") ? (
             <ContactAuthForm

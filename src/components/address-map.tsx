@@ -26,7 +26,7 @@ export function AddressMap({
     void import("leaflet")
       .then((L) => {
         if (disposed || !host.current) return;
-        const instance = L.map(host.current, { scrollWheelZoom: false, zoomControl: true }).setView(
+        const instance = L.map(host.current, { scrollWheelZoom: true, zoomControl: true }).setView(
           point.current ? [point.current.lat, point.current.lng] : [38.5598, 68.787],
           point.current ? 16 : 12,
         );

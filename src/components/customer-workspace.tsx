@@ -22,7 +22,6 @@ export function CustomerWorkspace({
         <main className={styles.workspaceContent} id="account-content">
           <header className={styles.heading}>
             <div>
-              <span className={styles.eyebrow}>Личный кабинет</span>
               <h1>{title}</h1>
             </div>
             {actions}

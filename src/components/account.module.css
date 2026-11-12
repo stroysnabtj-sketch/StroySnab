@@ -929,3 +929,59 @@
     justify-content: space-between;
   }
 }
+
+.workspace .heading {
+  min-height: 44px;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+.workspace .heading h1 {
+  margin: 0;
+  font-size: 28px;
+}
+.workspace .heading > .button {
+  min-height: 42px;
+  padding: 10px 18px;
+  font-size: 13px;
+}
+.workspace .empty {
+  padding: 24px 16px;
+}
+.workspace .empty h3 {
+  font-size: 16px;
+  font-weight: 500;
+}
+.workspace .empty > svg {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 10px;
+}
+.workspace .empty .button {
+  min-height: 40px;
+  padding: 10px 16px;
+  font-size: 13px;
+}
+.workspace .panel {
+  padding: 20px;
+}
+.workspace .panel h2 {
+  font-size: 18px;
+  margin: 0;
+}
+.workspace .sectionHead {
+  margin-bottom: 16px;
+}
+@media (max-width: 700px) {
+  .workspace .heading {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .workspace .heading h1 {
+    font-size: 25px;
+  }
+  .workspace .heading > .button {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+}

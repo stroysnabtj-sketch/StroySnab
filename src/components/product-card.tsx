@@ -7,9 +7,6 @@ import { formatTJS } from "@/modules/system/money";
 import type { PublicProduct } from "@/modules/catalog/types";
 export function ProductCard({ product }: { product: PublicProduct }) {
   const inStock = Number(product.stockQty) >= Number(product.minOrderQty);
-  const details = product.keyAttributes?.filter(
-    (attribute) => !["Строительство и ремонт", "Таджикистан"].includes(attribute.value),
-  );
   const image =
     (product as PublicProduct & { imageUrl?: string | null }).imageUrl || product.imageKey;
   return (
@@ -49,12 +46,6 @@ export function ProductCard({ product }: { product: PublicProduct }) {
         <Link href={`/product/${product.slug}`} className="product-card-title-link">
           <h3 className="product-card-title">{product.name}</h3>
         </Link>
-        <p className="card-key-specs" aria-hidden={!details?.length || undefined}>
-          {details
-            ?.slice(0, 2)
-            .map((a) => a.value)
-            .join(" · ")}
-        </p>
         <div className="price-container">
           <div className="product-card-price-row">
             <strong className="product-card-price">{formatTJS(product.priceDirams)}</strong>
