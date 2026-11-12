@@ -1,3 +1,4 @@
+import { publicProductText } from "@/modules/catalog/public-text";
 import { and, eq, ilike, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/db";
@@ -87,7 +88,9 @@ export async function prepareQuotationCandidates(
         const candidates = rows.map((row) => ({
           ...row,
           basePriceDirams: row.basePriceDirams.toString(),
-          exact: normalize(row.productName) === normalize(line.name) || row.sku === line.name,
+          exact:
+            normalize(publicProductText(row.productName)) ===
+              normalize(publicProductText(line.name)) || row.sku === line.name,
           unitMatches: normalize(row.unit) === normalize(line.unit),
           enoughStock:
             Number(row.stockQty) - Number(row.reservedQty) >= Number(line.qty.replace(",", ".")),

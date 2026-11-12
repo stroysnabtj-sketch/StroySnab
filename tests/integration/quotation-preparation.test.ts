@@ -1,3 +1,4 @@
+import { publicProductText } from "@/modules/catalog/public-text";
 import { expect, it } from "vitest";
 import { getDb } from "@/db";
 import { users, supplierOffers } from "@/db/schema";
@@ -30,9 +31,11 @@ it("requires staff permission and returns catalog facts without publishing a quo
   const result = await prepareQuotationCandidates(r.id, actor, lines);
   expect(result.mode).toBe("LOCAL_CATALOG");
   expect(result.aiConnected).toBe(false);
-  expect(result.lines[0].candidates.some((c) => c.productName === product.name && c.exact)).toBe(
-    true,
-  );
+  expect(
+    result.lines[0].candidates.some(
+      (c) => publicProductText(c.productName) === product.name && c.exact,
+    ),
+  ).toBe(true);
   expect(result.lines[1].candidates).toHaveLength(0);
   for (const c of result.lines[0].candidates) {
     const [o] = await db.select().from(supplierOffers).where(eq(supplierOffers.id, c.offerId));
