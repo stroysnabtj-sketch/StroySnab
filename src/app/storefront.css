@@ -3563,3 +3563,20 @@ input[type="checkbox"]:disabled { opacity:.45; cursor:not-allowed; }
 .filter-checkbox-option input:focus-visible + .checkbox-custom { outline:3px solid #b6cceb; outline-offset:3px; }
 input[type="file"]::file-selector-button { border:0; border-radius:7px; padding:10px 13px; margin-right:12px; background:#eaf1fb; color:#074089; cursor:pointer; font:inherit; font-weight:600; }
 .field>span:has(>button[role="combobox"]) { width:100%; }
+
+/* Compact product-card purchase area. */
+.product-card .product-card-body .product-card-title-link { height: auto; min-height: 42px; }
+.product-card .product-card-body .price-container { margin-top: 0; padding: 10px 0 0; min-height: 0; }
+.product-card .product-card-body .product-card-status { margin: 8px 0; }
+.product-card .product-card-action-bar .button { min-height: 44px; height: 44px; border-radius: 10px; box-shadow: none; }
+.product-card .product-card-action-bar .button:hover { box-shadow: none; }
+@media (max-width: 600px) {
+ .product-card .product-card-body .product-card-title-link { min-height: 36px; }
+ .product-card .product-card-body .price-container { padding-top: 8px; }
+ .product-card .product-card-body .product-card-status { margin: 7px 0; }
+}
+.product-card .product-card-body .product-card-status { padding: 0; }
+@media (max-width: 600px) {
+ .product-card .product-card-body .product-card-unit { font-size: 9px; line-height: 12px; }
+ .product-card .product-card-body .product-card-price-row { gap: 2px 3px; }
+}

@@ -126,12 +126,8 @@ export function ProductDetailView({
                 priority
               />
             ) : (
-              <>
-                <ProductArt variant={art} className="gallery-main-svg" large />
-                <span className="photo-example-label">Типовое изображение</span>
-              </>
+              <ProductArt variant={art} className="gallery-main-svg" large />
             )}
-            <span className="gallery-sku">Арт. {product.sku}</span>
           </div>
           {images.length > 1 && (
             <div className="product-gallery-thumbs">
@@ -229,7 +225,6 @@ export function ProductDetailView({
                     <Plus size={16} />
                   </button>
                 </div>
-                <span className="quantity-unit">{product.unit}</span>
                 <Button
                   variant="primary"
                   className="buy-btn"

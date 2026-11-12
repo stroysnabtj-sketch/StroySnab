@@ -240,8 +240,8 @@
     margin-bottom: 5px;
   }
   .storefront-home .product-card-title-link {
-    height: 51px;
-    min-height: 51px;
+    height: auto;
+    min-height: 34px;
   }
   .storefront-home .product-card .product-card-title {
     font-size: 12px;
