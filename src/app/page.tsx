@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
 import { connection } from "next/server";
-import { ArrowRight, ClipboardList, Package, Truck, ChevronRight } from "lucide-react";
+import { ArrowRight, Package, Truck } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CategoryTile } from "@/components/category-tile";
@@ -14,6 +14,7 @@ import { getHomeCollections } from "@/modules/merchandising/service";
 
 import { CATEGORIES_TREE } from "@/modules/catalog/categories-data";
 import "./home-mobile.css";
+import "./home-hero.css";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -54,21 +55,17 @@ export default async function HomePage() {
                 Подберите всё для стройки в каталоге
                 <br className="desktop-break" /> или отправьте список на расчёт.
               </p>
-              <Link href="/catalog" className="button button-primary hero-shop-button">
-                <span className="button-label" data-label="Выбрать материалы">
-                  Выбрать материалы
-                </span>
-                <ArrowRight size={18} />
-              </Link>
-              <div className="hero-quick-links">
-                <Link href="/catalog?q=цемент">
-                  Цемент <ChevronRight size={13} />
+              <div className="hero-banner-actions">
+                <Link href="/catalog" className="button button-primary hero-shop-button" aria-label="Каталог">
+                  <span className="button-label" data-label="Каталог">
+                    Каталог
+                  </span>
+                  <ArrowRight size={18} />
                 </Link>
-                <Link href="/catalog?q=кирпич">
-                  Кирпич <ChevronRight size={13} />
-                </Link>
-                <Link href="/catalog?q=арматура">
-                  Арматура <ChevronRight size={13} />
+                <Link href="/request" className="button hero-quote-button" aria-label="Получить КП">
+                  <span className="button-label" data-label="Получить КП">
+                    Получить КП
+                  </span>
                 </Link>
               </div>
             </div>
@@ -78,33 +75,11 @@ export default async function HomePage() {
                 alt="Башенный кран и строящийся дом на фоне гор"
                 fill
                 priority
-                sizes="(max-width: 600px) 100vw, (max-width: 900px) 75vw, 55vw"
+                sizes="(max-width: 1440px) 100vw, 1400px"
                 className="hero-editorial-photo"
               />
             </div>
           </div>
-          <Link href="/request" className="home-request-card">
-            <div className="request-photo">
-              <Image
-                src="/images/editorial/workshop-yellow-v1.webp"
-                alt="Замер деревянной доски на рабочем столе"
-                fill
-                sizes="(max-width: 600px) 360px, (max-width: 900px) 320px, 280px"
-                className="request-editorial-photo"
-              />
-              <span className="request-icon">
-                <ClipboardList size={24} />
-              </span>
-            </div>
-            <div className="request-copy">
-              <span className="small-label">Закупка по списку</span>
-              <h2>Рассчитаем ваш список</h2>
-              <p>Добавьте материалы или приложите файл. Получите коммерческое предложение.</p>
-            </div>
-            <span className="request-card-link">
-              Оставить заявку <ArrowRight size={18} />
-            </span>
-          </Link>
         </section>
         <section className="shell home-categories-section">
           <div className="section-head">
