@@ -9,8 +9,8 @@ export default async function AdminSuppliersPage() {
     <Workspace kind="admin">
       <header className={styles.pageHeading}>
         <div>
-          <h1>Магазины</h1>
-          <p>Подключение магазинов, владельцы и доступ сотрудников.</p>
+          <h1>Поставщики</h1>
+          <p>Контакты поставщиков и источники закупки товаров.</p>
         </div>
       </header>
       <AdminSuppliersPanel />

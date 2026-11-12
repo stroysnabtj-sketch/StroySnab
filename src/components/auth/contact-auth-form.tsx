@@ -146,12 +146,7 @@ export function ContactAuthForm({
       const result = await response.json();
       if (!response.ok) throw new Error(result.error?.message || "Не удалось войти");
       const safe = safeAuthDestination(next);
-      window.location.href =
-        safe === "/account" && result.role !== "CUSTOMER"
-          ? result.role.startsWith("SUPPLIER")
-            ? "/seller"
-            : "/admin"
-          : safe;
+      window.location.href = safe === "/account" && result.role !== "CUSTOMER" ? "/admin" : safe;
     } catch (e) {
       setError((e as Error).message);
     } finally {

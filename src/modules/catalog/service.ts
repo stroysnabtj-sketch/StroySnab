@@ -1,3 +1,4 @@
+import { publicProductText, publicProductBrand } from "@/modules/catalog/public-text";
 import { attributeNumber } from "./attribute-values";
 import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { getDb } from "@/db";
@@ -104,18 +105,22 @@ export async function listCatalog(query: CatalogQuery) {
   );
   const canonicalKey = (key: string) =>
     fieldDefinitions.find((field) => field.key === key || field.label === key)?.key ?? key;
-  const attrs = rawAttributes.map((attribute) => {
-    const field = fieldDefinitions.find(
-      (field) => field.key === attribute.name || field.label === attribute.name,
-    );
-    const numeric =
-      field?.type === "range" ? attributeNumber(attribute.value, field.unit) : undefined;
-    return {
-      ...attribute,
-      name: field?.key ?? attribute.name,
-      value: numeric === undefined ? attribute.value : String(numeric),
-    };
-  });
+  const attrs = rawAttributes
+    .filter(
+      (a) => !["Бренд", "brand", "Производитель"].includes(a.name) || publicProductBrand(a.value),
+    )
+    .map((attribute) => {
+      const field = fieldDefinitions.find(
+        (field) => field.key === attribute.name || field.label === attribute.name,
+      );
+      const numeric =
+        field?.type === "range" ? attributeNumber(attribute.value, field.unit) : undefined;
+      return {
+        ...attribute,
+        name: field?.key ?? attribute.name,
+        value: numeric === undefined ? attribute.value : String(numeric),
+      };
+    });
   const ranges = Object.fromEntries(
     Object.entries(query.attributeRanges ?? {}).map(([key, bounds]) => [canonicalKey(key), bounds]),
   );
@@ -140,18 +145,18 @@ export async function listCatalog(query: CatalogQuery) {
         id: product.id,
         sku: product.sku,
         slug: product.slug,
-        name: product.nameRu,
-        description: product.descriptionRu,
+        name: publicProductText(product.nameRu),
+        description: product.descriptionRu ? publicProductText(product.descriptionRu) : null,
         categoryId: category.id,
         categorySlug: category.slug,
         categoryName: category.nameRu,
-        brand: product.brand,
+        brand: publicProductBrand(product.brand),
         unit: product.unit,
         priceDirams: best.customerPriceDirams.toString(),
         minOrderQty: best.minOrderQty,
         stockQty: Math.max(0, Number(best.stockQty) - Number(best.reservedQty)).toString(),
         offerId: best.id,
-        offerCount: offers.length,
+        offerCount: 1,
         leadTimeDays: best.leadTimeDays,
         keyAttributes: attrs
           .filter((a) => a.productId === product.id)
@@ -162,7 +167,9 @@ export async function listCatalog(query: CatalogQuery) {
       },
     ];
   });
-  const brands = query.brands?.filter(Boolean) ?? (query.brand ? [query.brand] : []);
+  const brands = (query.brands?.filter(Boolean) ?? (query.brand ? [query.brand] : [])).filter(
+    (brand) => publicProductBrand(brand),
+  );
   const selected = Object.fromEntries(
     Object.entries(query.attributes ?? {}).map(([key, value]) => [
       canonicalKey(key),
@@ -322,8 +329,6 @@ export async function getPublicProduct(slug: string, includeRelated = true) {
     db
       .select({
         offer: supplierOffers,
-        supplierName: suppliers.name,
-        supplierPhone: suppliers.phone,
       })
       .from(supplierOffers)
       .innerJoin(suppliers, eq(supplierOffers.supplierId, suppliers.id))
@@ -363,19 +368,31 @@ export async function getPublicProduct(slug: string, includeRelated = true) {
     : [];
 
   return {
-    ...row,
-    attributes: attributes.map((attribute) => ({
-      ...attribute,
-      ...displayAttribute(row.category.slug, attribute),
-    })),
+    product: {
+      id: row.product.id,
+      sku: row.product.sku,
+      slug: row.product.slug,
+      nameRu: publicProductText(row.product.nameRu),
+      descriptionRu: row.product.descriptionRu
+        ? publicProductText(row.product.descriptionRu)
+        : null,
+      brand: publicProductBrand(row.product.brand),
+      unit: row.product.unit,
+    },
+    category: row.category,
+    attributes: attributes
+      .filter(
+        (a) => !["Бренд", "brand", "Производитель"].includes(a.name) || publicProductBrand(a.value),
+      )
+      .map((attribute) => ({
+        ...attribute,
+        ...displayAttribute(row.category.slug, attribute),
+      })),
     images,
     relatedProducts,
-    offers: offers.map((offer) => {
-      const sup = offerRows.find((r) => r.offer.id === offer.id);
+    offers: offers.slice(0, 1).map((offer) => {
       return {
         id: offer.id,
-        supplierName: sup?.supplierName ?? "Поставщик",
-        supplierPhone: sup?.supplierPhone,
         priceDirams: offer.customerPriceDirams.toString(),
         stockQty: Math.max(0, Number(offer.stockQty) - Number(offer.reservedQty)).toString(),
         minOrderQty: offer.minOrderQty,
@@ -388,7 +405,7 @@ export async function getPublicProduct(slug: string, includeRelated = true) {
 export async function searchSuggestions(q: string) {
   if (q.trim().length < 2) return [];
   const db = await getDb();
-  return db
+  const items = await db
     .select({ name: products.nameRu, slug: products.slug })
     .from(products)
     .where(
@@ -400,6 +417,7 @@ export async function searchSuggestions(q: string) {
     )
     .orderBy(desc(sql`similarity(${products.nameRu}, ${q})`))
     .limit(7);
+  return items.map((item) => ({ ...item, name: publicProductText(item.name) }));
 }
 
 export async function listCategories(options: { includeInactive?: boolean } = {}) {

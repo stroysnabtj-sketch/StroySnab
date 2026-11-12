@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { eq, inArray } from "drizzle-orm";
 import { expect, it, vi } from "vitest";
 import { getDb } from "@/db";
-import { orders, orderItems, suppliers } from "@/db/schema";
+import { orders, orderItems, suppliers, users } from "@/db/schema";
 import {
   notificationOutbox,
   notificationAttempts,
@@ -68,7 +68,7 @@ it("delivers a signed guest link on both channels without storing it in the outb
   }
 });
 
-it("queues atomically, deduplicates phones and keeps shops isolated without internal prices", async () => {
+it("queues atomically for our admins and customer without notifying suppliers", async () => {
   const db = await getDb();
   const [a, b] = await db
     .insert(suppliers)
@@ -119,12 +119,25 @@ it("queues atomically, deduplicates phones and keeps shops isolated without inte
     .select()
     .from(notificationOutbox)
     .where(eq(notificationOutbox.entityId, order.id));
-  expect(rows).toHaveLength(3);
-  expect(rows.map((r) => r.recipient).sort()).toEqual(
-    [a.phone, b.phone, order.customerPhone].sort(),
+  expect(rows.filter((r) => r.audience === "customer")).toHaveLength(1);
+  expect(rows.filter((r) => r.audience === "customer")[0].body).toBe(
+    `Заказ ${order.orderNumber}: принят.`,
   );
-  expect(rows.map((row) => row.body)).toEqual(Array(3).fill(`Заказ ${order.orderNumber}: принят.`));
-  expect(rows.find((r) => r.recipient === a.phone)?.body).not.toContain(b.name);
+  expect(rows.some((r) => r.audience === "shop" || [a.phone, b.phone].includes(r.recipient))).toBe(
+    false,
+  );
+  const admins = await db.select().from(users);
+  const adminRows = rows.filter((r) => r.audience === "admin");
+  expect(adminRows.length).toBeGreaterThan(0);
+  expect(
+    adminRows.every((r) =>
+      admins.some(
+        (u) =>
+          ["SUPER_ADMIN", "ADMIN", "SALES_MANAGER"].includes(u.role) &&
+          [u.phone, u.email].includes(r.recipient),
+      ),
+    ),
+  ).toBe(true);
   await db.transaction((tx) =>
     enqueueOrderNotifications(tx, {
       orderId: order.id,
@@ -138,7 +151,7 @@ it("queues atomically, deduplicates phones and keeps shops isolated without inte
     (await db.select().from(notificationOutbox).where(eq(notificationOutbox.entityId, order.id)))
       .filter((r) => r.event === "SHOP_STATUS_CHANGED")
       .map((r) => r.recipient),
-  ).toEqual([a.phone]);
+  ).toEqual([]);
   await db.delete(notificationOutbox).where(eq(notificationOutbox.entityId, order.id));
   await db.delete(orders).where(eq(orders.id, order.id));
   await db.delete(suppliers).where(inArray(suppliers.id, [a.id, b.id]));

@@ -1,3 +1,4 @@
+import { publicProductText } from "@/modules/catalog/public-text";
 import { lineBase } from "@/modules/pricing/order-markup";
 import sharp from "sharp";
 import { readQuotationImage } from "./images";
@@ -120,7 +121,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
   for (const [index, item] of q.lines.entries()) {
     const values = [
       String(index + 1),
-      item.name,
+      publicProductText(item.name),
       item.qty,
       item.unit,
       `${lineBase(BigInt(item.priceDirams), item.qty) !== BigInt(item.subtotalDirams) ? "≈ " : ""}${formatTJS(item.priceDirams).replace(" TJS", "")}`,
@@ -181,7 +182,11 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
     paragraph(q.conditions);
   }
   const photos = q.lines.flatMap((line, index) =>
-    (line.imageIds ?? []).map((imageId) => ({ imageId, index, name: line.name })),
+    (line.imageIds ?? []).map((imageId) => ({
+      imageId,
+      index,
+      name: publicProductText(line.name),
+    })),
   );
   if (photos.length) {
     if (y + 220 > bottom) page();

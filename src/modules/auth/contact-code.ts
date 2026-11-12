@@ -75,6 +75,8 @@ export async function requestContactCode(
       )
       .limit(1);
     if (registration && user) throw duplicateContact();
+    if (user?.role.startsWith("SUPPLIER_"))
+      throw new ApiError(403, "account_unavailable", "Вход в этот аккаунт недоступен");
     await tx
       .update(loginCodes)
       .set({ usedAt: new Date() })
@@ -189,6 +191,7 @@ export async function verifyContactCode(input: unknown, ip: string, userAgent: s
     if (
       !user ||
       user.status !== "ACTIVE" ||
+      user.role.startsWith("SUPPLIER_") ||
       user.deletedAt ||
       (challenge.channel === "email"
         ? user.email?.toLowerCase() !== challenge.identifier

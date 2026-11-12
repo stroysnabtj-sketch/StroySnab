@@ -19,7 +19,9 @@ export async function generateMetadata({
 
   return {
     title: `${item.product.nameRu} — купить в Душанбе | Stroysnab.tj`,
-    description: item.product.descriptionRu ?? `Купить ${item.product.nameRu} с доставкой по Таджикистану по лучшей цене на маркетплейсе Stroysnab.tj.`,
+    description:
+      item.product.descriptionRu ??
+      `Купить ${item.product.nameRu} с доставкой по Таджикистану по лучшей цене в магазине Stroysnab.tj.`,
     alternates: { canonical: `/product/${slug}` },
     openGraph: {
       title: item.product.nameRu,
@@ -29,11 +31,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const item = await loadProduct(slug);
   if (!item) notFound();
@@ -48,13 +46,10 @@ export default async function ProductPage({
     brand: item.product.brand ? { "@type": "Brand", name: item.product.brand } : undefined,
     description: item.product.descriptionRu,
     offers: {
-      "@type": "AggregateOffer",
+      "@type": "Offer",
+      seller: { "@type": "Organization", name: "StroySnab", url: "https://www.stroysnab.tj" },
       priceCurrency: "TJS",
-      lowPrice: best ? (Number(best.priceDirams) / 100).toFixed(2) : "0.00",
-      highPrice: item.offers.at(-1)
-        ? (Number(item.offers.at(-1)!.priceDirams) / 100).toFixed(2)
-        : "0.00",
-      offerCount: item.offers.length,
+      price: best ? (Number(best.priceDirams) / 100).toFixed(2) : "0.00",
       availability:
         best && Number(best.stockQty) > 0
           ? "https://schema.org/InStock"

@@ -6,14 +6,13 @@ import { ArrowUpRight, ChevronRight, Menu, X, UserRound } from "lucide-react";
 import { LogoutButton } from "@/components/auth/logout-button";
 import styles from "./workspace-design.module.css";
 export function WorkspaceFrame({
-  kind,
   role,
   identity,
   navigation,
   menu,
   children,
 }: {
-  kind: "admin" | "seller";
+  kind: "admin";
   role: string;
   identity: string;
   navigation: { href: string; label: string }[];
@@ -38,7 +37,7 @@ export function WorkspaceFrame({
     }
   }, [open]);
   const brand = (
-    <Link href={kind === "admin" ? "/admin" : "/seller"} className={styles.brand}>
+    <Link href={"/admin"} className={styles.brand}>
       <span>S</span>
       <strong>
         STROYSNAB<small>.TJ</small>
@@ -49,9 +48,7 @@ export function WorkspaceFrame({
     <div className={`workspace ${styles.workspace}`}>
       <aside className={`workspace-side ${styles.sidebar}`}>
         {brand}
-        <div className={styles.sideCaption}>
-          {kind === "admin" ? "Управление платформой" : "Кабинет магазина"}
-        </div>
+        <div className={styles.sideCaption}>{"Управление StroySnab"}</div>
         {menu}
         <div className={styles.sideBottom}>
           <span className={styles.roleDot} />
@@ -74,9 +71,7 @@ export function WorkspaceFrame({
             >
               <Menu size={22} />
             </button>
-            <Link href={kind === "admin" ? "/admin" : "/seller"}>
-              {kind === "admin" ? "Платформа" : "Мой магазин"}
-            </Link>
+            <Link href={"/admin"}>{"StroySnab"}</Link>
             <ChevronRight size={14} />
             <span>{current?.label ?? "Обзор"}</span>
           </div>

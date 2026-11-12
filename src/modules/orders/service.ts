@@ -240,7 +240,7 @@ export async function createOrder(input: OrderInput) {
         deliveryCity: body.deliveryCity,
         deliveryAddress:
           body.fulfillment === "PICKUP"
-            ? "Самовывоз: место выдачи согласуется с магазином"
+            ? "Самовывоз: место выдачи согласуется с менеджером"
             : body.deliveryAddress,
         deliveryNotes: body.deliveryNotes,
         deliveryLat:
@@ -355,7 +355,7 @@ async function loadOrderDetails(
       id: "created",
       status: "NEW",
       title: "Заказ оформлен",
-      description: "Заказ принят системой и направлен на подтверждение магазином",
+      description: "Заказ принят и передан менеджеру StroySnab",
       timestamp: order.createdAt,
     },
   ];
@@ -457,7 +457,7 @@ export async function changeOrderStatus(
         throw new ApiError(
           409,
           "goods_already_handed_over",
-          "Нельзя отменить заказ: магазин уже передал товары. Сначала согласуйте возврат",
+          "Нельзя отменить заказ: товары уже переданы. Сначала согласуйте возврат",
         );
     }
     if (

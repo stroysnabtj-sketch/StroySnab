@@ -109,7 +109,7 @@ it("routes shop orders, snapshots base prices and applies 7/5/3 percent to the w
       status: "CANCELLED",
       expectedStatus: "CONFIRMED",
     }),
-  ).rejects.toThrow(/передал/);
+  ).rejects.toThrow(/передан/);
   expect((await db.select().from(orders).where(eq(orders.id, sharedId)))[0].status).toBe(
     "CONFIRMED",
   );

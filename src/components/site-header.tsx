@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { PanelsTopLeft, MapPin, Menu, ShoppingCart, UserRound, X, Store } from "lucide-react";
+import { PanelsTopLeft, MapPin, Menu, ShoppingCart, UserRound, X } from "lucide-react";
 import { HeaderSearch } from "@/components/header-search";
 import { useEffect, useState } from "react";
 export function SiteHeader({ className = "" }: { className?: string }) {
@@ -21,9 +21,12 @@ export function SiteHeader({ className = "" }: { className?: string }) {
       window.removeEventListener("cartUpdated", refresh);
     };
   }, []);
-  const shop = session.role?.startsWith("SUPPLIER_");
-  const staff = session.role && !shop && session.role !== "CUSTOMER" && session.role !== "GUEST";
-  const accountHref = shop ? "/seller" : staff ? "/admin" : "/account";
+  const staff =
+    session.role &&
+    !session.role.startsWith("SUPPLIER_") &&
+    session.role !== "CUSTOMER" &&
+    session.role !== "GUEST";
+  const accountHref = staff ? "/admin" : "/account";
   return (
     <header className={`site-header ${className}`}>
       <div className="header-utility">
@@ -34,9 +37,6 @@ export function SiteHeader({ className = "" }: { className?: string }) {
           <nav aria-label="Информация">
             <Link href="/delivery">Доставка и оплата</Link>
             <Link href="/contacts">Контакты</Link>
-            <Link href="/seller">
-              <Store size={13} /> Магазинам
-            </Link>
           </nav>
         </div>
       </div>
@@ -54,7 +54,7 @@ export function SiteHeader({ className = "" }: { className?: string }) {
         <div className="header-actions">
           <Link className="header-action" href={accountHref}>
             <UserRound size={21} />
-            <span>{shop ? "Магазин" : staff ? "Управление" : "Кабинет"}</span>
+            <span>{staff ? "Управление" : "Кабинет"}</span>
           </Link>
           <Link className="header-action" href="/cart">
             <span className="cart-icon-wrap" data-cart-target>
@@ -82,7 +82,7 @@ export function SiteHeader({ className = "" }: { className?: string }) {
             Каталог
           </Link>
           <Link href={accountHref} onClick={() => setOpen(false)}>
-            {shop ? "Панель магазина" : staff ? "Управление" : "Личный кабинет"}
+            {staff ? "Управление" : "Личный кабинет"}
           </Link>
           <Link href="/catalog/request">Заявка на товар</Link>
           <Link href="/delivery">Доставка и оплата</Link>

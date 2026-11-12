@@ -1,4 +1,3 @@
-import { countNoun } from "@/modules/system/plural";
 import Link from "next/link";
 import Image from "next/image";
 import { ProductArt, getArtVariant } from "@/components/product-art";
@@ -55,9 +54,6 @@ export function ProductCard({ product }: { product: PublicProduct }) {
         <div className="product-card-status" data-stock={inStock}>
           <span className="status-indicator" />
           <span>{inStock ? "В наличии" : "Под заказ"}</span>
-          <span className="card-offer-count">
-            {countNoun(product.offerCount, "магазин", "магазина", "магазинов")}
-          </span>
         </div>
         <div className="product-card-action-bar">
           {inStock ? (

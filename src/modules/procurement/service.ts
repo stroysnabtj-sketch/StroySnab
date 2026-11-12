@@ -1,3 +1,4 @@
+import { publicProductText } from "@/modules/catalog/public-text";
 import {
   enqueueOrderNotifications,
   enqueueQuoteReadyNotification,
@@ -165,7 +166,7 @@ export async function getProcurementRequest(
               : {
                   id: l.id,
                   imageIds: l.imageIds ?? [],
-                  name: l.name,
+                  name: publicProductText(l.name),
                   qty: l.qty,
                   unit: l.unit,
                   priceDirams: l.priceDirams,

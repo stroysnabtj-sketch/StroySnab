@@ -11,7 +11,6 @@ import {
   ShoppingCart,
   Truck,
   Package,
-  Store,
   FileText,
 } from "lucide-react";
 import { ProductArt, getArtVariant } from "@/components/product-art";
@@ -23,8 +22,6 @@ import { flyToCart } from "./cart-flight";
 import styles from "./product-detail.module.css";
 interface OfferItem {
   id: string;
-  supplierName: string;
-  supplierPhone?: string | null;
   priceDirams: string;
   stockQty: string;
   minOrderQty: string;
@@ -55,14 +52,13 @@ export function ProductDetailView({
   relatedProducts,
 }: Props) {
   const [activeTab, setActiveTab] = useState("description");
-  const [offerIndex, setOfferIndex] = useState(0);
   const [qty, setQty] = useState(offers[0]?.minOrderQty ?? "1");
   const [activeImage, setActiveImage] = useState(0);
   const [pending, setPending] = useState(false);
   const submitting = useRef(false);
   const [added, setAdded] = useState(false);
   const [error, setError] = useState("");
-  const offer = offers[offerIndex];
+  const offer = offers[0];
   const available = offer ? Number(offer.stockQty) : 0;
   const min = Number(offer?.minOrderQty ?? 1);
   const amount = Number(qty);
@@ -175,47 +171,6 @@ export function ProductDetailView({
                 <span className="status-indicator" />
                 {inStock ? `В наличии · ${offer.stockQty} ${product.unit}` : "Нет в наличии"}
               </div>
-              {offers.length === 1 && (
-                <div className="product-seller-line">
-                  <Store size={16} />
-                  <span>
-                    Продавец <strong>{offer.supplierName}</strong>
-                  </span>
-                </div>
-              )}
-              {offers.length > 1 && (
-                <fieldset className={styles.offerList}>
-                  <legend>Выберите магазин</legend>
-                  {offers.map((item, index) => (
-                    <label
-                      key={item.id}
-                      className={styles.offerOption}
-                      data-selected={offerIndex === index}
-                    >
-                      <input
-                        type="radio"
-                        name="product-offer"
-                        value={item.id}
-                        checked={offerIndex === index}
-                        onChange={() => {
-                          setOfferIndex(index);
-                          changeQuantity(item.minOrderQty);
-                        }}
-                      />
-                      <span>
-                        <strong>{item.supplierName}</strong>
-                        <small>
-                          {Number(item.stockQty) >= Number(item.minOrderQty)
-                            ? `${item.stockQty} ${product.unit} в наличии`
-                            : "Нет в наличии"}{" "}
-                          · мин. {item.minOrderQty} {product.unit}
-                        </small>
-                      </span>
-                      <b>{formatTJS(item.priceDirams)}</b>
-                    </label>
-                  ))}
-                </fieldset>
-              )}
               {lineTotal !== null && (
                 <div className={styles.lineTotal}>
                   <span>

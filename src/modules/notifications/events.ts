@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
-import { and, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import type { DbTransaction } from "@/db";
-import { orderItems, orders, suppliers, supplierOffers, supplierUsers, users } from "@/db/schema";
+import { orders, users } from "@/db/schema";
 import { notificationOutbox } from "@/db/schema/notifications";
 
 export type OrderNotificationEvent =
@@ -20,16 +20,6 @@ const labels: Record<OrderNotificationEvent, string> = {
   ORDER_CANCELLED: "отменён",
   PAYMENT_CONFIRMED: "платёж получен",
   SHOP_STATUS_CHANGED: "статус вашей части заказа изменён",
-};
-const shopLabels: Record<string, string> = {
-  NEW: "новый",
-  CONFIRMED: "подтверждён",
-  ACCEPTED: "принят магазином",
-  HANDED_OVER: "передан",
-  READY: "готов к выдаче",
-  DISPATCHED: "отправлен",
-  DELIVERED: "доставлен",
-  CANCELLED: "отменён",
 };
 
 function phone(value: string) {
@@ -60,7 +50,7 @@ async function enqueue(
     event: string;
     version: string;
     recipient: string | null;
-    audience: "customer" | "shop";
+    audience: "customer" | "admin";
     supplierId?: string;
     body: string;
     channel?: "sms" | "email";
@@ -113,54 +103,30 @@ export async function enqueueOrderNotifications(
     if (order.customerEmail)
       await enqueue(tx, { ...message, recipient: order.customerEmail, channel: "email" });
   }
-  // Payment information is customer-only. Shops receive no totals, item lists or customer credentials.
-  if (input.event === "PAYMENT_CONFIRMED") return;
-  if (input.event === "SHOP_STATUS_CHANGED" && !input.supplierId)
-    throw new Error("Shop event requires supplierId");
-  const supplierId = sql<
-    string | null
-  >`coalesce(${orderItems.supplierId}, ${supplierOffers.supplierId})`;
-  const lines = await tx
-    .selectDistinct({ supplierId })
-    .from(orderItems)
-    .leftJoin(supplierOffers, eq(orderItems.offerId, supplierOffers.id))
+  if (input.event !== "ORDER_CREATED") return;
+  const admins = await tx
+    .select({ phone: users.phone, email: users.email })
+    .from(users)
     .where(
       and(
-        eq(orderItems.orderId, order.id),
-        input.supplierId ? eq(supplierId, input.supplierId) : undefined,
-      ),
-    );
-  const ids = lines.flatMap((line) => (line.supplierId ? [line.supplierId] : []));
-  if (!ids.length) return;
-  const contacts = await tx
-    .select({ supplierId: suppliers.id, phone: suppliers.phone })
-    .from(suppliers)
-    .where(inArray(suppliers.id, ids));
-  const team = await tx
-    .select({ supplierId: supplierUsers.supplierId, phone: users.phone })
-    .from(supplierUsers)
-    .innerJoin(users, eq(users.id, supplierUsers.userId))
-    .where(
-      and(
-        inArray(supplierUsers.supplierId, ids),
+        inArray(users.role, ["SUPER_ADMIN", "ADMIN", "SALES_MANAGER"]),
         eq(users.status, "ACTIVE"),
         isNull(users.deletedAt),
-        eq(supplierUsers.role, "OWNER"),
       ),
     );
-  for (const contact of [...contacts, ...team])
-    await enqueue(tx, {
+  for (const admin of admins) {
+    const message = {
       entityId: order.id,
       event: input.event,
       version: input.version,
-      recipient: contact.phone,
-      audience: "shop",
-      supplierId: contact.supplierId,
+      audience: "admin" as const,
       body:
-        input.event === "SHOP_STATUS_CHANGED"
-          ? `Заказ ${safeLabel(order.orderNumber)}: ваша часть — ${shopLabels[input.shopStatus ?? ""] ?? "статус изменён"}.`
-          : body + secureLink(`/seller/orders/${order.id}`),
-    });
+        `Получен новый заказ №${safeLabel(order.orderNumber)}.` +
+        secureLink(`/admin/orders/${order.id}`),
+    };
+    await enqueue(tx, { ...message, recipient: admin.phone });
+    await enqueue(tx, { ...message, recipient: admin.email, channel: "email" });
+  }
 }
 
 /** Call only when a version is published, using the request's stored contact. */

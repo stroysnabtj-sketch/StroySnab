@@ -43,6 +43,7 @@ type Product = {
   createdBySupplierId: string | null;
   rejectReason?: string | null;
   offerCount: number;
+  supplierNames: string[];
 };
 const blank = {
   sku: "",
@@ -379,7 +380,9 @@ export function AdminCatalogPanel() {
           Найдено товаров: {total}
         </p>
       )}
-      <DataTable headers={["Товар", "Категория", "Бренд", "Предложения", "Статус", "Действия"]}>
+      <DataTable
+        headers={["Товар", "Категория", "Бренд", "Поставщики", "Предложения", "Статус", "Действия"]}
+      >
         {items.map((product) => (
           <tr key={product.id}>
             <td>
@@ -389,6 +392,11 @@ export function AdminCatalogPanel() {
             </td>
             <td>{product.categoryName}</td>
             <td>{product.brand}</td>
+            <td>
+              <Link href={`/admin/offers?q=${encodeURIComponent(product.sku)}`}>
+                {product.supplierNames?.join(", ") || "Не назначен"}
+              </Link>
+            </td>
             <td>{product.offerCount}</td>
             <td>
               <Badge

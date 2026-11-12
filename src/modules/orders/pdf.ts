@@ -1,10 +1,10 @@
+import { publicProductText } from "@/modules/catalog/public-text";
 import { lineBase } from "@/modules/pricing/order-markup";
 import PDFDocument from "pdfkit";
 import path from "node:path";
 import { ApiError } from "@/server/api-error";
 import type { SessionUser } from "@/modules/auth/session";
 import { getOrder, getManagedOrder, type FullOrder } from "./service";
-import { getShopOrder } from "@/modules/suppliers/shop-service";
 import { hasPermission } from "@/modules/rbac/permissions";
 import { formatTJS } from "@/modules/system/money";
 
@@ -24,7 +24,6 @@ export type InvoiceOrder = Pick<
   >[];
   totalDirams: string;
   deliveryTotalDirams: string | null;
-  shopOnly?: boolean;
 };
 
 export async function loadInvoiceOrder(
@@ -32,15 +31,7 @@ export async function loadInvoiceOrder(
   actor: SessionUser | null,
   token: string | null,
 ): Promise<InvoiceOrder> {
-  if (actor && (actor.role === "SUPPLIER_OWNER" || actor.role === "SUPPLIER_STAFF")) {
-    const order = await getShopOrder(actor, id);
-    return {
-      ...order,
-      totalDirams: order.retailTotalDirams,
-      deliveryTotalDirams: null,
-      shopOnly: true,
-    };
-  }
+  if (actor?.role.startsWith("SUPPLIER_")) throw new ApiError(403, "forbidden", "Доступ закрыт");
   const order =
     actor && hasPermission(actor.role, "orders:read")
       ? await getManagedOrder(actor, id)
@@ -150,7 +141,6 @@ export async function renderOrderPdf(order: InvoiceOrder) {
   paragraph(
     `${order.vehicleType === "PICKUP" ? "Самовывоз" : "Адрес доставки"}: ${[order.deliveryCity, order.deliveryAddress].filter(Boolean).join(", ")}`,
   );
-  if (order.shopOnly) paragraph("Позиции вашего магазина", 9, true);
   y += 18;
   const sizes = [25, 190, 45, 40, 109, width - 409];
   const headers = ["№", "МАТЕРИАЛ", "КОЛ-ВО", "ЕД.", "ЦЕНА / TJS", "СУММА / TJS"];
@@ -169,7 +159,7 @@ export async function renderOrderPdf(order: InvoiceOrder) {
   for (const [index, item] of order.items.entries()) {
     const values = [
       String(index + 1),
-      item.productName,
+      publicProductText(item.productName),
       item.qty,
       item.unit,
       `${lineBase(BigInt(item.priceDirams), item.qty) !== BigInt(item.subtotalDirams) ? "≈ " : ""}${formatTJS(item.priceDirams).replace(" TJS", "")}`,

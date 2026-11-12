@@ -3,7 +3,7 @@ import { validateProductCategory } from "./product-attribute-validation";
 import { and, asc, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "@/db";
-import { categories, productAttributes, products, supplierOffers } from "@/db/schema";
+import { categories, productAttributes, products, supplierOffers, suppliers } from "@/db/schema";
 import type { SessionUser } from "@/modules/auth/session";
 import { writeAudit } from "@/modules/audit/service";
 import { ApiError } from "@/server/api-error";
@@ -53,6 +53,9 @@ export async function adminListProducts(q?: string) {
       descriptionRu: products.descriptionRu,
       createdBySupplierId: products.createdBySupplierId,
       updatedAt: products.updatedAt,
+      supplierNames: sql<
+        string[]
+      >`coalesce((select jsonb_agg(distinct ${suppliers.name}) from ${suppliers} where ${suppliers.id}=${products.createdBySupplierId} or exists (select 1 from ${supplierOffers} where ${supplierOffers.supplierId}=${suppliers.id} and ${supplierOffers.productId}=${products.id})), '[]'::jsonb)`,
       offerCount: sql<number>`(select count(*)::int from ${supplierOffers} where ${supplierOffers.productId} = ${products.id})`,
     })
     .from(products)
@@ -101,6 +104,9 @@ export async function searchAdminProducts(query: {
         rejectReason: products.rejectReason,
         descriptionRu: products.descriptionRu,
         createdBySupplierId: products.createdBySupplierId,
+        supplierNames: sql<
+          string[]
+        >`coalesce((select jsonb_agg(distinct ${suppliers.name}) from ${suppliers} where ${suppliers.id}=${products.createdBySupplierId} or exists (select 1 from ${supplierOffers} where ${supplierOffers.supplierId}=${suppliers.id} and ${supplierOffers.productId}=${products.id})), '[]'::jsonb)`,
         offerCount: sql<number>`(select count(*)::int from ${supplierOffers} where ${supplierOffers.productId}=${products.id})`,
       })
       .from(products)

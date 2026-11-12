@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { and, eq, gte, inArray, isNull, lt, lte, or, sql } from "drizzle-orm";
+import { and, eq, gte, inArray, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import type { AppDatabase, DbExecutor } from "@/db";
 import { orders } from "@/db/schema";
 import { guestOrderLink } from "@/modules/orders/guest-link";
@@ -34,6 +34,7 @@ export async function dispatchNotifications(
     const claim = await db.transaction(async (tx) => {
       const due = and(
         eq(notificationOutbox.channel, channel),
+        ne(notificationOutbox.audience, "shop"),
         options.createdSince ? gte(notificationOutbox.createdAt, options.createdSince) : undefined,
         eq(notificationOutbox.state, "queued"),
         lte(notificationOutbox.availableAt, now),

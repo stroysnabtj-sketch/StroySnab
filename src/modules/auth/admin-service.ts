@@ -27,7 +27,10 @@ export async function listUsers(
   pagination?: { page: number; pageSize: number },
 ) {
   const db = await getDb();
-  const filters: ReturnType<typeof or>[] = [isNull(users.deletedAt)];
+  const filters: ReturnType<typeof or>[] = [
+    isNull(users.deletedAt),
+    sql`${users.role} not in ('SUPPLIER_OWNER', 'SUPPLIER_STAFF')`,
+  ];
   if (query.q) {
     filters.push(
       or(
@@ -68,7 +71,10 @@ export async function searchUsers(query: {
   const db = await getDb(),
     page = Number.isSafeInteger(query.page) ? Math.max(1, Math.min(100000, query.page!)) : 1,
     pageSize = 24;
-  const filters: ReturnType<typeof or>[] = [isNull(users.deletedAt)];
+  const filters: ReturnType<typeof or>[] = [
+    isNull(users.deletedAt),
+    sql`${users.role} not in ('SUPPLIER_OWNER', 'SUPPLIER_STAFF')`,
+  ];
   if (query.q)
     filters.push(
       or(
@@ -94,11 +100,7 @@ export async function searchUsers(query: {
 export async function createEmployee(actor: SessionUser, input: unknown, ip: string) {
   const data = createSchema.parse(input);
   if (["GUEST", "SUPPLIER_OWNER", "SUPPLIER_STAFF"].includes(data.role))
-    throw new ApiError(
-      400,
-      "invalid_employee_role",
-      "Доступ магазина назначается через раздел магазинов",
-    );
+    throw new ApiError(400, "invalid_employee_role", "Роли поставщиков больше не используются");
   if (["ADMIN", "SUPER_ADMIN"].includes(data.role) && !hasPermission(actor.role, "admins:manage")) {
     throw new ApiError(403, "forbidden", "Только суперадминистратор назначает администраторов");
   }
@@ -136,11 +138,7 @@ export async function createEmployee(actor: SessionUser, input: unknown, ip: str
 export async function updateUser(actor: SessionUser, userId: string, input: unknown, ip: string) {
   const data = patchSchema.parse(input);
   if (data.role && ["GUEST", "SUPPLIER_OWNER", "SUPPLIER_STAFF"].includes(data.role))
-    throw new ApiError(
-      400,
-      "invalid_employee_role",
-      "Доступ магазина назначается через раздел магазинов",
-    );
+    throw new ApiError(400, "invalid_employee_role", "Роли поставщиков больше не используются");
   if (
     data.role &&
     ["ADMIN", "SUPER_ADMIN"].includes(data.role) &&

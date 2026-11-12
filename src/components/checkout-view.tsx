@@ -168,7 +168,7 @@ export function CheckoutView({
               {(
                 [
                   ["DELIVERY", "Доставка", "На ваш адрес или строительный объект"],
-                  ["PICKUP", "Самовывоз", "Со склада магазина после подтверждения"],
+                  ["PICKUP", "Самовывоз", "Со склада после подтверждения"],
                 ] as const
               ).map(([value, title, detail]) => (
                 <label className={styles.choice} data-selected={fulfillment === value} key={value}>
@@ -203,8 +203,8 @@ export function CheckoutView({
               </AddressFields>
             ) : (
               <p className={styles.notice}>
-                <MapPin size={18} /> Магазин сообщит адрес склада и время выдачи после подтверждения
-                заказа.
+                <MapPin size={18} /> Менеджер сообщит адрес склада и время выдачи после
+                подтверждения заказа.
               </p>
             )}
           </section>

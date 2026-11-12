@@ -1,3 +1,4 @@
+import { publicProductText } from "@/modules/catalog/public-text";
 import type { FullOrder } from "./service";
 export function customerOrderView(order: FullOrder) {
   return {
@@ -29,13 +30,12 @@ export function customerOrderView(order: FullOrder) {
     history: order.history,
     items: order.items.map((item) => ({
       id: item.id,
-      productName: item.productName,
+      productName: publicProductText(item.productName),
       sku: item.sku,
       unit: item.unit,
       qty: item.qty,
       priceDirams: item.priceDirams,
       subtotalDirams: item.subtotalDirams,
-      supplierName: item.supplierName,
     })),
   };
 }

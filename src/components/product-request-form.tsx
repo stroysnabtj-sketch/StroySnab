@@ -6,10 +6,21 @@ import { Button, Field, Input, Select, Textarea } from "@/components/ui";
 const UNITS = ["шт.", "м", "м²", "м³", "кг", "т", "упак.", "другое"] as const;
 
 function getDushanbeDateStr(d: Date): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dushanbe", year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Dushanbe",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(d);
 }
 
-type Props = { productName: string; contactName: string; contactPhone: string; contactEmail: string; authenticated: boolean };
+type Props = {
+  productName: string;
+  contactName: string;
+  contactPhone: string;
+  contactEmail: string;
+  authenticated: boolean;
+};
 
 export function ProductRequestForm(props: Props) {
   const todayStr = getDushanbeDateStr(new Date());
@@ -73,7 +84,9 @@ export function ProductRequestForm(props: Props) {
         // Focus first errored field
         const firstKey = Object.keys(fieldErrors)[0];
         if (firstKey) {
-          const el = document.querySelector<HTMLElement>(`[name="${firstKey}"], [data-field="${firstKey}"] input, [data-field="${firstKey}"] select, [data-field="${firstKey}"] textarea`);
+          const el = document.querySelector<HTMLElement>(
+            `[name="${firstKey}"], [data-field="${firstKey}"] input, [data-field="${firstKey}"] select, [data-field="${firstKey}"] textarea`,
+          );
           el?.focus();
         }
         return;
@@ -92,16 +105,20 @@ export function ProductRequestForm(props: Props) {
       <div className="request-success">
         <span className="eyebrow">Заявка принята</span>
         <h2>{success.number}</h2>
-        <p>
-          Мы ответим в ближайшее время. Менеджер проверит наличие у поставщиков и
-          свяжется с вами.
-        </p>
+        <p>Мы ответим в ближайшее время. Менеджер проверит наличие и свяжется с вами.</p>
         <div className="hero-actions">
           <Button
             variant="secondary"
             onClick={() => {
               setSuccess(null);
-              setForm({ ...form, productName: "", description: "", quantity: "", unit: "", customUnit: "" });
+              setForm({
+                ...form,
+                productName: "",
+                description: "",
+                quantity: "",
+                unit: "",
+                customUnit: "",
+              });
             }}
           >
             Создать ещё заявку
@@ -119,8 +136,16 @@ export function ProductRequestForm(props: Props) {
 
   return (
     <form className="stack-form request-form" onSubmit={submit} noValidate>
-      {errors.root ? <div className="form-alert" role="alert">{errors.root}</div> : null}
-      {message && !errors.root ? <div className="form-alert" role="alert">{message}</div> : null}
+      {errors.root ? (
+        <div className="form-alert" role="alert">
+          {errors.root}
+        </div>
+      ) : null}
+      {message && !errors.root ? (
+        <div className="form-alert" role="alert">
+          {message}
+        </div>
+      ) : null}
 
       <Field label="Название товара *" error={errors.productName}>
         <Input
@@ -246,12 +271,7 @@ export function ProductRequestForm(props: Props) {
 
       <p className="form-legal">
         Отправляя заявку, вы соглашаетесь с{" "}
-        <Link
-          className="inline-link"
-          href="/terms"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <Link className="inline-link" href="/terms" target="_blank" rel="noopener noreferrer">
           пользовательским соглашением
         </Link>{" "}
         и обработкой контактных данных.

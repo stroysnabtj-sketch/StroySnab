@@ -29,8 +29,8 @@ describe("role matrix", () => {
     expect(hasPermission("ADMIN", "admins:manage")).toBe(false);
     expect(hasPermission("CUSTOMER", "users:manage")).toBe(false);
   });
-  it("keeps supplier permissions isolated", () => {
-    expect(hasPermission("SUPPLIER_OWNER", "seller:team")).toBe(true);
+  it("disables all legacy supplier permissions", () => {
+    expect(hasPermission("SUPPLIER_OWNER", "seller:team")).toBe(false);
     expect(hasPermission("SUPPLIER_STAFF", "seller:team")).toBe(false);
     expect(hasPermission("SUPPLIER_OWNER", "pricing:manage")).toBe(false);
   });

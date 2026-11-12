@@ -22,7 +22,7 @@ export async function Workspace({
   children,
   newRequestsCount,
 }: {
-  kind: "admin" | "seller";
+  kind: "admin";
   children: React.ReactNode;
   newRequestsCount?: number;
 }) {
@@ -61,7 +61,7 @@ export async function Workspace({
       permission: "catalog:manage",
       icon: FolderTree,
     },
-    { href: "/admin/suppliers", label: "Магазины", permission: "suppliers:manage", icon: Store },
+    { href: "/admin/suppliers", label: "Поставщики", permission: "suppliers:manage", icon: Store },
     { href: "/admin/offers", label: "Предложения", permission: "suppliers:manage", icon: Tags },
     {
       href: "/admin/pricing",
@@ -78,21 +78,10 @@ export async function Workspace({
     { href: "/admin/users", label: "Пользователи", permission: "users:manage", icon: Users },
     { href: "/admin/audit", label: "Журнал действий", permission: "audit:read", icon: History },
   ];
-  const sellerLinks = [
-    { href: "/seller", label: "Обзор", icon: LayoutDashboard },
-    { href: "/seller/products", label: "Товары и остатки", icon: Package },
-    { href: "/seller/orders", label: "Заказы", icon: ShoppingBag },
-    ...(user?.role === "SUPPLIER_OWNER"
-      ? [{ href: "/seller/team", label: "Команда", icon: Users }]
-      : []),
-  ];
-  const links =
-    kind === "admin"
-      ? adminLinks.filter((l) => user && hasPermission(user.role, l.permission))
-      : sellerLinks;
+  const links = adminLinks.filter((l) => user && hasPermission(user.role, l.permission));
   const role = user ? ROLE_LABELS[user.role] : "Сотрудник";
   const menu = (
-    <nav aria-label={kind === "admin" ? "Управление платформой" : "Управление магазином"}>
+    <nav aria-label={"Управление магазином"}>
       {links.map((link) => (
         <WorkspaceNavLink key={link.href} href={link.href}>
           <link.icon size={18} />

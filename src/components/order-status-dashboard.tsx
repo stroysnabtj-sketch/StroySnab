@@ -145,7 +145,7 @@ export function OrderStatusDashboard({
     DISPATCHED: {
       title: isPickup ? "Заказ готов к получению" : "Заказ передан в доставку",
       detail: isPickup
-        ? "Перед выездом уточните адрес склада и условия выдачи у магазина."
+        ? "Перед выездом уточните адрес склада и условия выдачи у менеджера."
         : "Если водитель назначен, его контакты указаны в блоке транспорта. Точное время прибытия уточняйте по телефону.",
     },
     DELIVERED: {
@@ -294,7 +294,7 @@ export function OrderStatusDashboard({
             <div>
               <strong>Заказ отменён</strong>
               <p style={{ margin: "4px 0 0" }}>
-                Если отмена произошла по ошибке, свяжитесь с магазином перед оформлением нового
+                Если отмена произошла по ошибке, свяжитесь с менеджером перед оформлением нового
                 заказа.
               </p>
             </div>
@@ -313,7 +313,7 @@ export function OrderStatusDashboard({
                 {isPickup ? "Способ получения: Самовывоз" : "Транспорт и доставка"}
               </h2>
               <span className={styles.cardBadge}>
-                {isPickup ? "Склад поставщика" : "Грузовая логистика"}
+                {isPickup ? "Самовывоз" : "Грузовая логистика"}
               </span>
             </div>
 
@@ -407,10 +407,10 @@ export function OrderStatusDashboard({
                 <div className={`${styles.infoTile} ${styles.pickupLocation}`}>
                   <span className={styles.infoTileLabel}>Пункт выдачи</span>
                   <span className={styles.infoTileValue}>
-                    {order.deliveryCity}, адрес склада согласовывается с магазином
+                    {order.deliveryCity}, адрес склада согласовывается с менеджером
                   </span>
                   <span className={styles.infoTileSub}>
-                    После комплектации заказа менеджер магазина свяжется с вами и сообщит точный
+                    После комплектации заказа менеджер StroySnab свяжется с вами и сообщит точный
                     адрес склада и время выдачи.
                   </span>
                 </div>
@@ -424,7 +424,7 @@ export function OrderStatusDashboard({
                 </div>
                 <div className={styles.infoTile}>
                   <span className={styles.infoTileLabel}>Погрузка</span>
-                  <span className={styles.infoTileValue}>Уточняется с магазином</span>
+                  <span className={styles.infoTileValue}>Уточняется с менеджером</span>
                 </div>
               </div>
             ) : null}
@@ -446,9 +446,7 @@ export function OrderStatusDashboard({
                 </div>
                 <div className={styles.routePointBody}>
                   <span className={styles.routePointLabel}>Откуда</span>
-                  <span className={styles.routePointAddress}>
-                    Склады поставщиков платформы Stroysnab.tj
-                  </span>
+                  <span className={styles.routePointAddress}>Склад StroySnab</span>
                 </div>
               </div>
 
@@ -502,7 +500,6 @@ export function OrderStatusDashboard({
                 <thead>
                   <tr>
                     <th>Материал</th>
-                    <th>Магазин</th>
                     <th>Кол-во</th>
                     <th>Цена</th>
                     <th style={{ textAlign: "right" }}>Сумма</th>
@@ -514,11 +511,6 @@ export function OrderStatusDashboard({
                       <td data-label="Материал">
                         <p className={styles.itemTitle}>{item.productName}</p>
                         <span className={styles.itemSku}>Арт: {item.sku}</span>
-                      </td>
-                      <td data-label="Магазин">
-                        <span className={styles.itemSupplier}>
-                          {item.supplierName ?? "Партнёр Stroysnab.tj"}
-                        </span>
                       </td>
                       <td data-label="Количество">
                         {item.qty} {item.unit}

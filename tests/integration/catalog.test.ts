@@ -22,7 +22,10 @@ describe("public catalog and pricing", () => {
     expect(result.items[0].name).toContain("Цемент");
     const product = await getPublicProduct(result.items[0].slug);
     expect(product).toBeTruthy();
-    expect(product!.offers.length).toBeGreaterThan(0);
+    expect(product!.offers).toHaveLength(1);
+    expect(product!.offers[0]).not.toHaveProperty("supplierName");
+    expect(product!.offers[0]).not.toHaveProperty("supplierPhone");
+    expect(product!.product).not.toHaveProperty("createdBySupplierId");
     expect(product!.offers[0]).not.toHaveProperty("supplierPriceDirams");
     expect(product!.offers[0]).not.toHaveProperty("markup");
     expect(JSON.stringify(product!.offers[0])).not.toContain("margin");

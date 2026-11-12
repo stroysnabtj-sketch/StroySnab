@@ -51,7 +51,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 
   if (!row) return null;
 
-  if (row.status !== "ACTIVE" || row.deletedAt) {
+  if (row.status !== "ACTIVE" || row.deletedAt || row.role.startsWith("SUPPLIER_")) {
     await db
       .delete(sessions)
       .where(eq(sessions.tokenHash, tokenHash))

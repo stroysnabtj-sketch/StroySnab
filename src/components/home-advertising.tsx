@@ -32,7 +32,7 @@ export async function HomeAdvertising({ ads }: { ads: HomeContent["ads"] }) {
   const visible = placements.filter((item) => item !== null);
   if (!visible.length) return null;
   return (
-    <section className="shell home-advertising" aria-label="Предложения магазинов">
+    <section className="shell home-advertising" aria-label="Специальные предложения">
       {visible.map(({ ad, detail, image }) => (
         <Link href={ad.href} className="home-ad-card" key={ad.id}>
           <div className="home-ad-copy">

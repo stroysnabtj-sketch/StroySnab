@@ -97,9 +97,7 @@ export function AuthForm({
       const destination = safeAuthDestination(next);
       const target =
         mode === "login" && result.role !== "CUSTOMER" && destination === "/account"
-          ? result.role.startsWith("SUPPLIER")
-            ? "/seller"
-            : "/admin"
+          ? "/admin"
           : destination;
       window.location.href = target;
     } catch {

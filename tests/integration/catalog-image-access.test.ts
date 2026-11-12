@@ -21,7 +21,7 @@ vi.mock("@/server/storage", () => ({
   newImageKey: () => `products/${crypto.randomUUID()}.webp`,
 }));
 
-it("serves only visible photos publicly and limits private previews to the relevant shop or staff", async () => {
+it("serves only visible photos publicly and limits private previews to our staff", async () => {
   const db = await getDb();
   const sellers = await db
     .select({
@@ -70,8 +70,7 @@ it("serves only visible photos publicly and limits private previews to the relev
     vi.mocked(optionalUser).mockResolvedValue(owner as SessionUser);
     expect((await request()).status).toBe(404);
     const preview = await request(true);
-    expect(preview.status).toBe(200);
-    expect(preview.headers.get("cache-control")).toBe("private, no-store");
+    expect(preview.status).toBe(404);
     vi.mocked(optionalUser).mockResolvedValue({ ...other, role: "CONTENT_MANAGER" });
     expect((await request(true)).status).toBe(200);
     await db.update(products).set({ status: "PUBLISHED" }).where(eq(products.id, product.id));
@@ -101,7 +100,7 @@ it("serves only visible photos publicly and limits private previews to the relev
           params: Promise.resolve({ id: image.fileId }),
         })
       ).status,
-    ).toBe(200);
+    ).toBe(404);
   } finally {
     if (uploadedFileIds.length) await db.delete(files).where(inArray(files.id, uploadedFileIds));
     await db.delete(files).where(eq(files.id, file.id));

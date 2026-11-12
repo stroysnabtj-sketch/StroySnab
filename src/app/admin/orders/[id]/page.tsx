@@ -23,7 +23,6 @@ import {
   deliveryDateLabel,
   type DeliveryTimeSlot,
 } from "@/modules/delivery/preferences";
-import { SHOP_ORDER_STATUS_LABELS } from "@/modules/suppliers/order-status";
 import styles from "@/components/workspace-design.module.css";
 export const dynamic = "force-dynamic";
 export default async function AdminOrderPage({ params }: { params: Promise<{ id: string }> }) {
@@ -44,7 +43,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
   for (const item of order.items) {
     const key = item.supplierId ?? item.supplierName ?? item.id;
     const group = shopGroups.get(key) ?? {
-      name: item.supplierName ?? "Магазин не указан",
+      name: item.supplierName ?? "Поставщик не указан",
       status: item.shopStatus,
       sum: 0n,
       known: true,
@@ -129,15 +128,14 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
           </section>
           <section className={styles.panel}>
             <div className={styles.panelHead}>
-              <h2>Магазины и комплектация</h2>
+              <h2>Закупка у поставщиков</h2>
             </div>
-            <DataTable headers={["Магазин", "Готовность", "Сумма магазина"]}>
+            <DataTable headers={["Поставщик", "Закупочная сумма"]}>
               {[...shopGroups].map(([key, shop]) => (
                 <tr key={key}>
                   <td>
                     <strong>{shop.name}</strong>
                   </td>
-                  <td>{SHOP_ORDER_STATUS_LABELS[shop.status] ?? shop.status}</td>
                   <td>{shop.known ? formatTJS(shop.sum) : "Не сохранена"}</td>
                 </tr>
               ))}
@@ -271,7 +269,7 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
             </div>
             <dl className={styles.details}>
               <dt>Транспорт</dt>
-              <dd>{pickup ? "Со склада магазина" : (vehicle?.title ?? "Уточняется")}</dd>
+              <dd>{pickup ? "Со склада" : (vehicle?.title ?? "Уточняется")}</dd>
               <dt>Желаемая дата</dt>
               <dd>
                 {order.preferredDeliveryDate

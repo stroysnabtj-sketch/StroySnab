@@ -79,7 +79,7 @@ function OfferRow({ offer, onSaved }: { offer: Offer; onSaved: () => Promise<voi
           <span className="mono muted">{offer.sku}</span>
         </div>
       </td>
-      <td data-label="Магазин">
+      <td data-label="Поставщик">
         <div>{offer.supplierName}</div>
       </td>
       <td data-label="Цена, TJS">
@@ -282,7 +282,7 @@ export function AdminOffersPanel() {
       <details className="import-bar">
         <summary>Загрузить цены и остатки из файла</summary>
         <p className="muted">
-          Выберите магазин в фильтре. Поддерживаются CSV и XLSX: sku, supplierPriceTjs, stockQty,
+          Выберите поставщика в фильтре. Поддерживаются CSV и XLSX: sku, supplierPriceTjs, stockQty,
           minOrderQty, leadTimeDays, isActive.
         </p>
         <Input
@@ -317,7 +317,14 @@ export function AdminOffersPanel() {
         onRetry={() => void resource.reload()}
       />
       <DataTable
-        headers={["Товар", "Магазин", "Цена магазина, TJS", "Остаток", "Срок, дней", "Действие"]}
+        headers={[
+          "Товар",
+          "Поставщик",
+          "Закупочная цена, TJS",
+          "Остаток",
+          "Срок, дней",
+          "Действие",
+        ]}
       >
         {items.map((offer) => (
           <OfferRow key={offer.id} offer={offer} onSaved={resource.reload} />
@@ -330,7 +337,7 @@ export function AdminOffersPanel() {
       />
       <Modal open={open} title="Новое предложение" onClose={() => !busy && setOpen(false)}>
         <form className="stack-form" onSubmit={create}>
-          <Field label="Магазин">
+          <Field label="Поставщик">
             <Select
               required
               value={form.supplierId}
@@ -370,7 +377,7 @@ export function AdminOffersPanel() {
             </Select>
           </Field>
           <div className="form-grid">
-            <Field label="Цена магазина, TJS">
+            <Field label="Закупочная цена, TJS">
               <Input
                 required
                 inputMode="decimal"

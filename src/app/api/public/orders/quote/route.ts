@@ -1,3 +1,4 @@
+import { publicProductText } from "@/modules/catalog/public-text";
 import { assertSameOrigin } from "@/server/security";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
       totalDirams: quote.totalDirams,
       items: quote.items.map((item) => ({
         offerId: item.offerId,
-        productName: item.productName,
+        productName: publicProductText(item.productName),
         sku: item.sku,
         unit: item.unit,
         qty: item.qty,

@@ -111,7 +111,12 @@ export async function login(input: unknown, ip: string, userAgent: string, super
     )
     .limit(1);
 
-  if (!user || user.status !== "ACTIVE" || (superAdminOnly && user.role !== "SUPER_ADMIN")) {
+  if (
+    !user ||
+    user.role.startsWith("SUPPLIER_") ||
+    user.status !== "ACTIVE" ||
+    (superAdminOnly && user.role !== "SUPER_ADMIN")
+  ) {
     throw new ApiError(401, "invalid_credentials", "Неверный логин или пароль");
   }
   if (user.lockedUntil && user.lockedUntil > new Date()) {
@@ -141,6 +146,7 @@ export async function login(input: unknown, ip: string, userAgent: string, super
     if (
       !current ||
       current.status !== "ACTIVE" ||
+      current.role.startsWith("SUPPLIER_") ||
       (superAdminOnly && current.role !== "SUPER_ADMIN") ||
       current.deletedAt ||
       current.passwordHash !== user.passwordHash

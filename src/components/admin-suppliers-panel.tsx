@@ -34,10 +34,7 @@ export function AdminSuppliersPanel() {
     [form, setForm] = useState(blank),
     [pending, setPending] = useState(""),
     [error, setError] = useState(""),
-    [message, setMessage] = useState(""),
-    [invite, setInvite] = useState(""),
-    [owner, setOwner] = useState<Supplier | null>(null),
-    [ownerEmail, setOwnerEmail] = useState("");
+    [message, setMessage] = useState("");
   const items = (resource.data?.items ?? []).filter(
     (item) =>
       (!filter || item.status === filter) &&
@@ -72,7 +69,7 @@ export function AdminSuppliersPanel() {
         }),
       });
       setOpen(false);
-      setMessage(editing ? "Данные магазина сохранены" : "Поставщик создан");
+      setMessage(editing ? "Данные поставщика сохранены" : "Поставщик создан");
       await resource.reload();
     });
   }
@@ -86,7 +83,7 @@ export function AdminSuppliersPanel() {
               setQ(e.target.value);
               setPage(1);
             }}
-            aria-label="Поиск магазинов"
+            aria-label="Поиск поставщиков"
             placeholder="Название, телефон или e-mail"
           />
           <Select
@@ -95,7 +92,7 @@ export function AdminSuppliersPanel() {
               setFilter(e.target.value);
               setPage(1);
             }}
-            aria-label="Статус магазина"
+            aria-label="Статус поставщика"
           >
             <option value="">Все статусы</option>
             {Object.entries(SHOP_STATUS_LABELS).map(([value, label]) => (
@@ -121,7 +118,7 @@ export function AdminSuppliersPanel() {
           {message}
         </p>
       )}
-      {error && !open && !owner && (
+      {error && !open && (
         <p className="form-alert" role="alert">
           {error}
         </p>
@@ -131,9 +128,9 @@ export function AdminSuppliersPanel() {
         error={resource.error}
         empty={!items.length}
         onRetry={() => void resource.reload()}
-        emptyText="Магазины по выбранным условиям не найдены."
+        emptyText="Поставщики по выбранным условиям не найдены."
       />
-      <DataTable headers={["Магазин", "Контакты", "Предложения", "Команда", "Статус", "Действия"]}>
+      <DataTable headers={["Поставщик", "Контакты", "Товары", "Статус", "Действия"]}>
         {items.slice((page - 1) * 20, page * 20).map((item) => (
           <tr key={item.id}>
             <td>
@@ -147,7 +144,6 @@ export function AdminSuppliersPanel() {
               {item.email}
             </td>
             <td>{item.offerCount}</td>
-            <td>{item.userCount}</td>
             <td>
               <Select
                 value={item.status}
@@ -160,7 +156,7 @@ export function AdminSuppliersPanel() {
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ status: e.target.value }),
                     });
-                    setMessage("Статус магазина обновлён");
+                    setMessage("Статус поставщика обновлён");
                     await resource.reload();
                   })
                 }
@@ -186,32 +182,6 @@ export function AdminSuppliersPanel() {
                 >
                   Изменить
                 </Button>
-                <Button
-                  variant="ghost"
-                  disabled={!!pending}
-                  onClick={() =>
-                    void run(item.id, async () => {
-                      const data = await adminRequest<{ url: string }>(
-                        `/api/admin/suppliers/${item.id}/invitations`,
-                        { method: "POST" },
-                      );
-                      setInvite(data.url);
-                    })
-                  }
-                >
-                  Пригласить
-                </Button>
-                <Button
-                  variant="ghost"
-                  disabled={!!pending}
-                  onClick={() => {
-                    setOwner(item);
-                    setOwnerEmail("");
-                    setError("");
-                  }}
-                >
-                  Владелец
-                </Button>
               </div>
             </td>
           </tr>
@@ -220,11 +190,11 @@ export function AdminSuppliersPanel() {
       <Pagination page={page} pages={Math.ceil(items.length / 20)} onPage={setPage} />
       <Modal
         open={open}
-        title={editing ? "Изменить магазин" : "Новый поставщик"}
+        title={editing ? "Изменить поставщика" : "Новый поставщик"}
         onClose={() => !pending && setOpen(false)}
       >
         <form className="stack-form" onSubmit={save}>
-          <Field label="Название магазина">
+          <Field label="Название поставщика">
             <Input
               required
               minLength={2}
@@ -277,63 +247,6 @@ export function AdminSuppliersPanel() {
           )}
           <Button type="submit" loading={pending === "save"}>
             {editing ? "Сохранить изменения" : "Создать"}
-          </Button>
-        </form>
-      </Modal>
-      <Modal open={!!invite} title="Приглашение сотрудника" onClose={() => setInvite("")}>
-        <div className="stack-form">
-          <p>
-            Ссылка действует 7 дней и используется один раз. Передайте её будущему сотруднику
-            магазина.
-          </p>
-          <Field label="Ссылка приглашения">
-            <Input readOnly value={invite} onFocus={(e) => e.target.select()} />
-          </Field>
-          <Button variant="secondary" onClick={() => setInvite("")}>
-            Готово
-          </Button>
-        </div>
-      </Modal>
-      <Modal
-        open={!!owner}
-        title={`Владелец: ${owner?.name ?? ""}`}
-        onClose={() => !pending && setOwner(null)}
-      >
-        <form
-          className="stack-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void run("owner", async () => {
-              await adminRequest(`/api/admin/suppliers/${owner!.id}/owner`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: ownerEmail }),
-              });
-              setOwner(null);
-              setMessage("Владелец назначен");
-              await resource.reload();
-            });
-          }}
-        >
-          <p>
-            Новый владелец получит управление магазином и командой. Предыдущий владелец останется
-            сотрудником.
-          </p>
-          <Field label="E-mail существующего пользователя">
-            <Input
-              type="email"
-              required
-              value={ownerEmail}
-              onChange={(e) => setOwnerEmail(e.target.value)}
-            />
-          </Field>
-          {error && (
-            <p className="form-alert" role="alert">
-              {error}
-            </p>
-          )}
-          <Button type="submit" loading={pending === "owner"}>
-            Назначить владельца
           </Button>
         </form>
       </Modal>

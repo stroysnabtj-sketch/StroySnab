@@ -1,3 +1,4 @@
+import { publicProductText } from "@/modules/catalog/public-text";
 import { sql } from "drizzle-orm";
 import { visibleCategoryIds } from "@/modules/catalog/category-visibility";
 import { createHash, randomBytes } from "node:crypto";
@@ -140,7 +141,7 @@ export async function getCart(userId?: string, guestToken?: string) {
     return {
       id: row.item.id,
       offerId: row.offer.id,
-      productName: row.product.nameRu,
+      productName: publicProductText(row.product.nameRu),
       slug: row.product.slug,
       sku: row.product.sku,
       unit: row.product.unit,

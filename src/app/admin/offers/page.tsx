@@ -9,7 +9,7 @@ export default async function AdminOffersPage() {
     <Workspace kind="admin">
       <header className={styles.pageHeading}>
         <div>
-          <h1>Предложения магазинов</h1>
+          <h1>Закупки у поставщиков</h1>
           <p>Цены, остатки, резерв и сроки поставки.</p>
         </div>
       </header>
