@@ -19,5 +19,7 @@ COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/assets ./assets
 COPY --from=builder /app/notification-worker.cjs ./notification-worker.cjs
+# Next traces web imports only; the standalone worker also loads the database adapter entrypoint.
+COPY --from=builder /app/node_modules/@electric-sql/pglite ./node_modules/@electric-sql/pglite
 EXPOSE 3000
 CMD ["node", "server.js"]
