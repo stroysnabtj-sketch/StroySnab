@@ -4,53 +4,6 @@
 }
 
 @media (max-width: 600px) {
-  .home-site-header .header-inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    height: auto;
-    min-height: 0;
-    padding-block: 10px 12px;
-    gap: 10px;
-  }
-  .home-site-header .brand {
-    font-size: 17px;
-    gap: 8px;
-  }
-  .home-site-header .header-actions {
-    gap: 2px;
-    margin-left: 0;
-  }
-  .home-site-header .header-action,
-  .home-site-header .menu-button {
-    display: grid;
-    place-items: center;
-    min-width: 44px;
-    width: 44px;
-    min-height: 44px;
-    height: 44px;
-  }
-  .home-site-header .header-search-wrap {
-    display: block;
-    grid-column: 1 / -1;
-    grid-row: 2;
-    width: 100%;
-    min-width: 0;
-  }
-  .home-site-header .header-search {
-    display: flex;
-    height: 46px;
-    border-radius: 12px;
-    background: #f3f6fa;
-  }
-  .home-site-header .header-search input {
-    min-width: 0;
-    font-size: 16px;
-    padding-inline: 13px;
-  }
-  .home-site-header .header-search button {
-    width: 44px;
-    height: 44px;
-  }
   .storefront-home .home-intro {
     padding-block: 12px 10px;
     font-size: 10px;

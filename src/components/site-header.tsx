@@ -1,10 +1,30 @@
 "use client";
 import Link from "next/link";
-import { PanelsTopLeft, MapPin, Menu, ShoppingCart, UserRound, X } from "lucide-react";
+import { PanelsTopLeft, MapPin, Menu, Search, ShoppingCart, UserRound, X } from "lucide-react";
 import { HeaderSearch } from "@/components/header-search";
 import { useEffect, useState } from "react";
 export function SiteHeader({ className = "" }: { className?: string }) {
   const [open, setOpen] = useState(false);
+  const [compact, setCompact] = useState(false);
+  const [searchPinned, setSearchPinned] = useState(false);
+  useEffect(() => {
+    if (searchPinned)
+      document
+        .querySelector<HTMLInputElement>(".site-header .header-search input")
+        ?.focus({ preventScroll: true });
+  }, [searchPinned]);
+  useEffect(() => {
+    const update = () => {
+      if (searchPinned && window.scrollY >= 32) return;
+      if (window.scrollY < 32) setSearchPinned(false);
+      if (document.activeElement?.closest(".header-search-wrap")) return;
+      if (window.scrollY > 160) setCompact(true);
+      else if (window.scrollY < 32) setCompact(false);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, [searchPinned]);
   const [session, setSession] = useState<{ role?: string; cartCount?: number }>({});
   useEffect(() => {
     const controller = new AbortController();
@@ -28,7 +48,7 @@ export function SiteHeader({ className = "" }: { className?: string }) {
     session.role !== "GUEST";
   const accountHref = staff ? "/admin" : "/account";
   return (
-    <header className={`site-header ${className}`}>
+    <header className={`site-header ${compact ? "header-compact" : ""} ${className}`}>
       <div className="header-utility">
         <div className="shell">
           <span>
@@ -52,6 +72,18 @@ export function SiteHeader({ className = "" }: { className?: string }) {
         </Link>
         <HeaderSearch />
         <div className="header-actions">
+          {compact && (
+            <button
+              className="header-search-toggle"
+              aria-label="Открыть поиск"
+              onClick={() => {
+                setSearchPinned(true);
+                setCompact(false);
+              }}
+            >
+              <Search size={20} />
+            </button>
+          )}
           <Link className="header-action" href={accountHref}>
             <UserRound size={21} />
             <span>{staff ? "Управление" : "Кабинет"}</span>

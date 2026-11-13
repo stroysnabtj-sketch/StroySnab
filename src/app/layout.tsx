@@ -5,6 +5,7 @@ import { publicSiteOrigin } from "@/modules/system/site-url";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 import "./storefront.css";
+import "./mobile-header.css";
 
 const body = Manrope({ subsets: ["latin", "cyrillic"], variable: "--font-body", display: "swap" });
 const mono = IBM_Plex_Mono({

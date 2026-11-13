@@ -1,0 +1,60 @@
+/* Compact mobile navigation; desktop layout stays unchanged. */
+.header-search-toggle {
+  display: none;
+}
+@media (max-width: 760px) {
+  .site-header .header-inner {
+    height: auto;
+    min-height: 0;
+    padding-block: 4px 6px;
+    gap: 4px 8px;
+  }
+  .site-header .brand {
+    font-size: 16px;
+    gap: 7px;
+  }
+  .site-header .brand-mark {
+    width: 28px;
+    height: 30px;
+    font-size: 21px;
+  }
+  .site-header .header-actions {
+    gap: 0;
+    margin-left: 0;
+  }
+  .site-header .header-action,
+  .site-header .menu-button,
+  .site-header .header-search-toggle {
+    display: grid;
+    place-items: center;
+    min-width: 36px;
+    width: 36px;
+    min-height: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+  }
+  .site-header .header-search-wrap {
+    display: block;
+  }
+  .site-header .header-search {
+    height: 40px;
+    border-radius: 10px;
+  }
+  .site-header .header-search input {
+    font-size: 16px;
+    padding-inline: 12px;
+  }
+  .site-header .header-search button {
+    width: 40px;
+    height: 38px;
+  }
+  .site-header.header-compact .header-search-wrap {
+    display: none;
+  }
+  .site-header.header-compact .header-inner {
+    padding-block: 4px;
+  }
+}
