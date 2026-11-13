@@ -335,11 +335,11 @@
 }
 .passwordRequirements {
   margin: 10px 0 0;
-  padding-left: 18px;
+  padding-left: 0;
   color: #64748b;
   font-size: 13px;
   line-height: 1.7;
-  list-style: disc;
+  list-style: none;
 }
 .otpControl {
   display: block;
@@ -395,5 +395,51 @@
   .otpCells > span {
     height: 48px;
     font-size: 22px;
+  }
+}
+
+.passwordRequirements li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 180ms ease-out;
+}
+.requirementIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #bac6d6;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition:
+    background-color 180ms ease-out,
+    border-color 180ms ease-out;
+}
+.requirementIcon svg {
+  opacity: 0;
+  transform: scale(0.7);
+  transition:
+    opacity 180ms ease-out,
+    transform 180ms ease-out;
+}
+.requirementMet {
+  color: #16845c;
+}
+.requirementMet .requirementIcon {
+  background: #16845c;
+  border-color: #16845c;
+  color: white;
+}
+.requirementMet .requirementIcon svg {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .passwordRequirements li,
+  .requirementIcon,
+  .requirementIcon svg {
+    transition: none;
   }
 }

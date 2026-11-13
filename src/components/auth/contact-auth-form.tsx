@@ -3,8 +3,11 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button, Checkbox, Field, Input } from "@/components/ui";
-import { Eye, EyeOff } from "lucide-react";
-import { registrationPasswordError } from "@/modules/auth/registration-password";
+import { Eye, EyeOff, Check } from "lucide-react";
+import {
+  registrationPasswordError,
+  passwordRequirements,
+} from "@/modules/auth/registration-password";
 import { safeAuthDestination } from "@/modules/auth/destination";
 import styles from "./auth-experience.module.css";
 type Challenge = { challengeId: string; maskedRecipient: string; resendAfterSeconds: number };
@@ -279,10 +282,19 @@ export function ContactAuthForm({
                   </button>
                 </div>
                 <ul className={styles.passwordRequirements} id="registration-password-hint">
-                  <li>Не менее 8 символов</li>
-                  <li>Заглавная и строчная буквы</li>
-                  <li>Хотя бы одна цифра</li>
-                  <li>Специальный символ: ! @ # $</li>
+                  {passwordRequirements(password).map((rule) => (
+                    <li key={rule.key} className={rule.met ? styles.requirementMet : undefined}>
+                      <span className={styles.requirementIcon} aria-hidden="true">
+                        <Check size={12} strokeWidth={3} />
+                      </span>
+                      <span>
+                        {rule.label}
+                        <span className="sr-only">
+                          {rule.met ? " — выполнено" : " — не выполнено"}
+                        </span>
+                      </span>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <Field label="Повторите пароль">

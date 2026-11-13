@@ -1,3 +1,4 @@
+import { publicSiteOrigin } from "@/modules/system/site-url";
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 const lifetimeSeconds = 30 * 86400;
@@ -15,7 +16,7 @@ export function guestOrderLink(id: string, accessHash: string, createdAt: Date) 
   const proof = signature(id, accessHash, expires);
   if (!proof || expires <= Date.now() / 1000) return null;
   try {
-    const base = new URL(process.env.APP_URL ?? "");
+    const base = new URL(publicSiteOrigin());
     if (base.protocol !== "https:" || base.username || base.password) return null;
     return new URL(`/orders/${id}/open#${expires}.${proof}`, base.origin).href;
   } catch {

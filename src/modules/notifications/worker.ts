@@ -1,3 +1,4 @@
+import { publicSiteOrigin } from "@/modules/system/site-url";
 import { randomUUID } from "node:crypto";
 import { and, eq, gte, inArray, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import type { AppDatabase, DbExecutor } from "@/db";
@@ -124,7 +125,9 @@ export async function dispatchNotifications(
     if (!claim) break;
     let providerMessageId: string | undefined;
     try {
-      let body = claim.body;
+      let body = claim.body.replace(/https?:\/\/[^\s]+/g, "").trim();
+      if (channel === "email" && claim.audience === "admin" && claim.event === "ORDER_CREATED")
+        body += ` ${new URL(`/admin/orders/${claim.entityId}`, publicSiteOrigin()).href}`;
       const [order] = /^(ORDER_|PAYMENT_CONFIRMED$)/.test(claim.event)
         ? await db
             .select({
@@ -136,11 +139,17 @@ export async function dispatchNotifications(
             .from(orders)
             .where(eq(orders.id, claim.entityId))
         : [];
-      if (claim.audience === "customer" && /^(ORDER_|PAYMENT_CONFIRMED$)/.test(claim.event)) {
+      if (
+        channel === "email" &&
+        claim.audience === "customer" &&
+        /^(ORDER_|PAYMENT_CONFIRMED$)/.test(claim.event)
+      ) {
         if (order?.accessHash && !order.customerId) {
           const link = guestOrderLink(claim.entityId, order.accessHash, claim.createdAt);
           if (!link) throw new Error("guest_link_unavailable");
           body += ` ${link}`;
+        } else if (order?.customerId) {
+          body += ` ${new URL(`/orders/${claim.entityId}`, publicSiteOrigin()).href}`;
         }
       }
       const result = await transport.send({

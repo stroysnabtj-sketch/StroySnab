@@ -15,9 +15,10 @@ import {
 import { dispatchNotifications, retryNotification } from "@/modules/notifications/worker";
 import { getOrder } from "@/modules/orders/service";
 
-it("delivers a signed guest link on both channels without storing it in the outbox", async () => {
+it("keeps SMS link-free and sends canonical protected guest links only by email", async () => {
   const db = await getDb();
-  vi.stubEnv("APP_URL", "https://shop.example");
+  vi.stubEnv("APP_URL", "https://old.example");
+  vi.stubEnv("SITE_URL", "https://www.stroysnab.tj");
   vi.stubEnv("ORDER_GUEST_LINK_SECRET", "test-signing-secret-at-least-32-characters");
   const [order] = await db
     .insert(orders)
@@ -56,6 +57,11 @@ it("delivers a signed guest link on both channels without storing it in the outb
       );
       expect(send).toHaveBeenCalledOnce();
       const body = (send.mock.calls[0] as unknown as [{ body: string }])[0].body;
+      if (row.channel === "sms") {
+        expect(body).not.toContain("https://");
+        continue;
+      }
+      expect(new URL(body.split(" ").at(-1)!).origin).toBe("https://www.stroysnab.tj");
       const token = new URL(body.split(" ").at(-1)!).hash.slice(1);
       expect(await getOrder(order.id, { guestToken: token })).not.toBeNull();
       expect(await getOrder(order.id, { guestToken: token.slice(0, -1) + "!" })).toBeNull();
@@ -315,7 +321,7 @@ it("enforces a global daily budget across workers and marks expired final attemp
   await db.delete(notificationDispatchBudget);
 });
 
-it("adds only a configured secure account link to the published quote notification", async () => {
+it("keeps published quotation SMS free of links", async () => {
   const db = await getDb();
   const requestId = randomUUID();
   vi.stubEnv("APP_URL", "https://store.example.test/ignored?token=secret");
@@ -334,7 +340,7 @@ it("adds only a configured secure account link to the published quote notificati
       .select()
       .from(notificationOutbox)
       .where(eq(notificationOutbox.entityId, requestId));
-    expect(row.body).toContain(`https://store.example.test/requests/${requestId}`);
+    expect(row.body).not.toMatch(/https?:\/\//);
     expect(row.body).not.toContain("secret");
   } finally {
     vi.unstubAllEnvs();

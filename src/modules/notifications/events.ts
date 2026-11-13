@@ -1,3 +1,5 @@
+import { publicSiteOrigin } from "@/modules/system/site-url";
+import { sql } from "drizzle-orm";
 import { createHash } from "node:crypto";
 import { and, eq, inArray, isNull } from "drizzle-orm";
 import type { DbTransaction } from "@/db";
@@ -39,8 +41,7 @@ function safeLabel(value: string) {
 
 function secureLink(path: string) {
   try {
-    if (!process.env.APP_URL) return "";
-    const base = new URL(process.env.APP_URL);
+    const base = new URL(publicSiteOrigin());
     if (base.protocol !== "https:" || base.username || base.password) return "";
     return ` ${new URL(path, base.origin).href}`;
   } catch {
@@ -74,6 +75,7 @@ async function enqueue(
     .insert(notificationOutbox)
     .values({ ...input, recipient, eventKey, channel })
     .onConflictDoNothing({ target: notificationOutbox.eventKey });
+  await tx.execute(sql`select pg_notify('stroysnab_notifications', '')`);
 }
 
 /** Must run inside the transaction which writes the order/payment/status change. */
@@ -102,11 +104,16 @@ export async function enqueueOrderNotifications(
       event: input.event,
       version: input.version,
       audience: "customer" as const,
-      body: body + (order.customerId ? secureLink(`/orders/${order.id}`) : ""),
+      body,
     };
     await enqueue(tx, { ...message, recipient: order.customerPhone });
     if (order.customerEmail)
-      await enqueue(tx, { ...message, recipient: order.customerEmail, channel: "email" });
+      await enqueue(tx, {
+        ...message,
+        body: body + (order.customerId ? secureLink(`/orders/${order.id}`) : ""),
+        recipient: order.customerEmail,
+        channel: "email",
+      });
   }
   if (input.event !== "ORDER_CREATED") return;
   const admins = await tx
@@ -125,12 +132,15 @@ export async function enqueueOrderNotifications(
       event: input.event,
       version: input.version,
       audience: "admin" as const,
-      body:
-        `Получен новый заказ №${safeLabel(order.orderNumber)}.` +
-        secureLink(`/admin/orders/${order.id}`),
+      body: `Получен новый заказ №${safeLabel(order.orderNumber)}.`,
     };
     await enqueue(tx, { ...message, recipient: admin.phone });
-    await enqueue(tx, { ...message, recipient: admin.email, channel: "email" });
+    await enqueue(tx, {
+      ...message,
+      body: message.body + secureLink(`/admin/orders/${order.id}`),
+      recipient: admin.email,
+      channel: "email",
+    });
   }
 }
 
@@ -152,6 +162,6 @@ export async function enqueueQuoteReadyNotification(
     version: `${input.quoteId}:${input.version}`,
     recipient: input.customerPhone,
     audience: "customer",
-    body: `КП ${safeLabel(input.quoteNumber)} готово. Откройте вашу заявку для просмотра.${input.customerUserId ? secureLink(`/requests/${input.requestId}`) : ""}`,
+    body: `КП ${safeLabel(input.quoteNumber)} готово.`,
   });
 }
