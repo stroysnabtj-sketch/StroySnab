@@ -12,6 +12,7 @@ export const sendContactCode: CodeDelivery = async (message) => {
   const payom = message.channel === "sms" && process.env.AUTH_SMS_PROVIDER === "payom";
   const resend = message.channel === "email" && process.env.AUTH_EMAIL_PROVIDER === "resend";
   const senderName = process.env.AUTH_SMS_SENDER ?? process.env.NOTIFICATIONS_SMS_SENDER;
+  const templateId = process.env.AUTH_SMS_TEMPLATE_ID?.trim();
   const from = process.env.NOTIFICATIONS_EMAIL_FROM;
   const endpoint = resend ? "https://api.resend.com/emails" : process.env[`${prefix}_SEND_URL`];
   const token =
@@ -21,7 +22,7 @@ export const sendContactCode: CodeDelivery = async (message) => {
       : resend
         ? process.env.NOTIFICATIONS_RESEND_API_KEY
         : undefined);
-  if (!endpoint || !token || (payom && !senderName) || (resend && !from))
+  if (!endpoint || !token || (payom && (!senderName || !templateId)) || (resend && !from))
     throw new ApiError(
       503,
       "code_delivery_unavailable",
@@ -52,7 +53,7 @@ export const sendContactCode: CodeDelivery = async (message) => {
         payom
           ? {
               telephone: message.recipient,
-              text: `Код StroySnab: ${message.code}`,
+              templateMessage: { templateId, variables: { code: message.code } },
               senderName,
               type: "SMS",
             }
@@ -76,9 +77,13 @@ export const sendContactCode: CodeDelivery = async (message) => {
     });
     if (!response.ok) throw new Error("delivery rejected");
     const result = await response.json();
+    const payomMessageId = typeof result === "string" ? result : result?.id;
     if (
       payom
-        ? response.status !== 201 || typeof result.id !== "string" || !result.id
+        ? response.status !== 201 ||
+          typeof payomMessageId !== "string" ||
+          !payomMessageId.trim() ||
+          payomMessageId.length > 200
         : resend
           ? typeof result.id !== "string" || !result.id
           : result.accepted !== true
