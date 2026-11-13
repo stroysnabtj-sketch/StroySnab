@@ -23,6 +23,7 @@ export async function GET(request: Request) {
       .select({
         id: notificationOutbox.id,
         event: notificationOutbox.event,
+        channel: notificationOutbox.channel,
         entityId: notificationOutbox.entityId,
         state: notificationOutbox.state,
         recipient: notificationOutbox.recipient,
@@ -61,15 +62,13 @@ export async function POST(request: Request) {
           "notification_not_failed",
           "Повтор доступен только для сообщений с ошибкой",
         );
-      await tx
-        .insert(auditLog)
-        .values({
-          actorUserId: actor.id,
-          actorRole: actor.role,
-          action: "notification.retry",
-          entity: "notification",
-          entityId: id,
-        });
+      await tx.insert(auditLog).values({
+        actorUserId: actor.id,
+        actorRole: actor.role,
+        action: "notification.retry",
+        entity: "notification",
+        entityId: id,
+      });
       return retried;
     });
     return jsonResponse(result);

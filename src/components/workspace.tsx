@@ -36,7 +36,7 @@ export async function Workspace({
     { href: "/admin", label: "Обзор", permission: "catalog:read", icon: LayoutDashboard },
     {
       href: "/admin/notifications",
-      label: "SMS-уведомления",
+      label: "Уведомления",
       permission: "orders:manage",
       icon: Bell,
     },

@@ -6,6 +6,9 @@ export const partial = "StroySnab";
 export default defineRailway(() => {
   const StroySnab = service("StroySnab", {
     env: {
+      NOTIFICATIONS_SMS_ENABLED: "true",
+      NOTIFICATIONS_SMS_ORDER_TEMPLATE_ID: "66c03e11-d52b-403b-905a-7761080d3d7c",
+      NOTIFICATIONS_SMS_ADMIN_TEMPLATE_ID: "cfb6a23b-08b5-47f6-ac43-30cb1d455aee",
       APP_URL: preserve(),
       AUTH_ADMIN_PASSWORD_LOGIN: preserve(),
       AUTH_EMAIL_PROVIDER: preserve(),

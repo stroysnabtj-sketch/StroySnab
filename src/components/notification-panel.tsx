@@ -12,7 +12,7 @@ import {
 import { formatDateTime } from "@/i18n";
 const states: Record<string, string> = {
   queued: "В очереди",
-  accepted: "Принято поставщиком",
+  accepted: "Принято сервисом",
   delivered: "Доставлено",
   failed: "Ошибка",
 };
@@ -29,6 +29,7 @@ const events: Record<string, string> = {
 type Row = {
   id: string;
   event: string;
+  channel: string;
   state: string;
   recipient: string;
   attemptCount: number;
@@ -91,10 +92,11 @@ export function NotificationPanel({ connected }: { connected: boolean }) {
         onRetry={() => void resource.reload()}
       />
       {!!resource.data?.notifications.length && (
-        <DataTable headers={["Событие", "Получатель", "Время", "Статус", "Попытки", ""]}>
+        <DataTable headers={["Событие", "Канал", "Получатель", "Время", "Статус", "Попытки", ""]}>
           {resource.data.notifications.map((row) => (
             <tr key={row.id}>
               <td>{events[row.event] ?? row.event}</td>
+              <td>{row.channel === "email" ? "Почта" : "SMS"}</td>
               <td>{row.recipient}</td>
               <td>{formatDateTime(row.createdAt)}</td>
               <td>

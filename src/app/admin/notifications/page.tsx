@@ -9,7 +9,7 @@ export default async function Page() {
   return (
     <Workspace kind="admin">
       <header className={styles.pageHeading}>
-        <h1>SMS-уведомления</h1>
+        <h1>Уведомления</h1>
       </header>
       <NotificationPanel connected={!!configuredNotificationTransport()} />
     </Workspace>
