@@ -1160,3 +1160,9 @@
     font-size: 14px;
   }
 }
+
+.pricingFields {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 20px;
+}

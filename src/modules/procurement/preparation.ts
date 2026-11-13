@@ -53,6 +53,7 @@ export async function prepareQuotationCandidates(
             productName: products.nameRu,
             sku: products.sku,
             unit: products.unit,
+            markupPercent: products.markupPercent,
             supplierName: suppliers.name,
             basePriceDirams: supplierOffers.supplierPriceDirams,
             stockQty: supplierOffers.stockQty,

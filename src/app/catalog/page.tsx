@@ -18,7 +18,7 @@ import { listCatalog, listCategories } from "@/modules/catalog/service";
 import { toDirams } from "@/modules/system/money";
 export const metadata: Metadata = {
   title: "Каталог строительных материалов | Stroysnab.tj",
-  description: "Строительные материалы: цены, характеристики и предложения магазинов.",
+  description: "Строительные материалы: цены, характеристики и наличие.",
   alternates: { canonical: "/catalog" },
 };
 type Params = Record<string, string | string[] | undefined>;

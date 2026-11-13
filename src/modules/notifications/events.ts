@@ -21,6 +21,11 @@ const labels: Record<OrderNotificationEvent, string> = {
   PAYMENT_CONFIRMED: "платёж получен",
   SHOP_STATUS_CHANGED: "статус вашей части заказа изменён",
 };
+export function notificationStatusLabel(event: string, pickup: boolean) {
+  if (pickup && event === "ORDER_DISPATCHED") return "готов к выдаче";
+  if (pickup && event === "ORDER_DELIVERED") return "выдан";
+  return labels[event as OrderNotificationEvent];
+}
 
 function phone(value: string) {
   const digits = value.replace(/[^0-9]/g, "");

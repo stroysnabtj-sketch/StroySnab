@@ -135,6 +135,18 @@ def main():
                     "sha256": digest_file(archive), "restored_tables": tables, "format": "pg_dump-custom", "verified_restore": True}
         removed = publish(s3, os.environ["BACKUP_S3_BUCKET"], archive, key, manifest, keep)
         print(json.dumps({"backup": "verified", **manifest, "expired_objects_removed": removed}), flush=True)
+    if os.environ.get("FILE_BACKUP_ENABLED") == "true":
+        from file_backup import snapshot_files
+        source_keys = ("SOURCE_S3_ENDPOINT", "SOURCE_S3_BUCKET", "SOURCE_S3_ACCESS_KEY_ID", "SOURCE_S3_SECRET_ACCESS_KEY")
+        if any(not os.environ.get(key) for key in source_keys):
+            raise RuntimeError("Missing file backup configuration")
+        if (os.environ["SOURCE_S3_ENDPOINT"].rstrip('/'), os.environ["SOURCE_S3_BUCKET"]) == (os.environ["BACKUP_S3_ENDPOINT"].rstrip('/'), os.environ["BACKUP_S3_BUCKET"]):
+            raise RuntimeError("Source and backup bucket must differ")
+        source = boto3.client("s3", endpoint_url=os.environ["SOURCE_S3_ENDPOINT"],
+            region_name=os.environ.get("SOURCE_S3_REGION", "auto"),
+            aws_access_key_id=os.environ["SOURCE_S3_ACCESS_KEY_ID"], aws_secret_access_key=os.environ["SOURCE_S3_SECRET_ACCESS_KEY"],
+            config=Config(signature_version="s3v4", retries={"max_attempts": 3}))
+        print(json.dumps({"file_backup": snapshot_files(source, os.environ["SOURCE_S3_BUCKET"], s3, os.environ["BACKUP_S3_BUCKET"])}), flush=True)
 
 
 if __name__ == "__main__":

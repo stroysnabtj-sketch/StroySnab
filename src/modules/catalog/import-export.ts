@@ -13,6 +13,7 @@ const headers = [
   "unit",
   "status",
   "descriptionRu",
+  "markupPercent",
 ] as const;
 type Row = Record<string, string>;
 const maxRows = 5000;
@@ -90,6 +91,7 @@ export async function exportProducts(format: string, template = false) {
         categorySlug: cats.find((cat) => cat.id === item.categoryId)?.slug ?? "",
         brand: item.brand ?? "",
         unit: item.unit,
+        markupPercent: item.markupPercent,
         status: item.status,
         descriptionRu: item.descriptionRu ?? "",
       }));
@@ -225,7 +227,9 @@ export async function parseProductFile(file: File): Promise<Row[]> {
 export async function validateImportRows(rows: Row[]) {
   const db = await getDb();
   const cats = await db.select().from(categories);
-  const existing = await db.select({ id: products.id, sku: products.sku }).from(products);
+  const existing = await db
+    .select({ id: products.id, sku: products.sku, markupPercent: products.markupPercent })
+    .from(products);
   return rows.map((row, index) => {
     const category = cats.find((cat) => cat.slug === row.categorySlug);
     const parsed = productInput.safeParse({
@@ -235,6 +239,8 @@ export async function validateImportRows(rows: Row[]) {
       categoryId: category?.id,
       brand: row.brand || null,
       unit: row.unit,
+      markupPercent:
+        row.markupPercent || existing.find((item) => item.sku === row.sku)?.markupPercent || "7",
       status: row.status || "DRAFT",
       descriptionRu: row.descriptionRu || null,
       attributes: [],

@@ -44,7 +44,7 @@ export default async function AuditPage({
       <header className={styles.pageHeading}>
         <div>
           <h1>Журнал действий</h1>
-          <p>Последние 100 событий: изменения каталога, доступов, магазинов и заказов.</p>
+          <p>Последние 100 событий: изменения каталога, доступов, поставщиков и заказов.</p>
         </div>
       </header>
       <form className={styles.filterForm}>

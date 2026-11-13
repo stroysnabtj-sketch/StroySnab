@@ -7,6 +7,7 @@ type Offer = {
   id: string;
   productName: string;
   unit: string;
+  markupPercent: string;
   supplierName: string;
   supplierPriceDirams: string;
   stockQty: string;
@@ -96,6 +97,7 @@ export function OfferPicker({
                   offerId: o.id,
                   name: o.productName,
                   unit: o.unit,
+                  markupPercent: o.markupPercent,
                   price: fromDirams(o.supplierPriceDirams),
                 });
                 setSelected(o.supplierName);

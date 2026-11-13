@@ -10,7 +10,7 @@ export default async function AdminPricingPage() {
       <header className={styles.pageHeading}>
         <div>
           <h1>Ценообразование</h1>
-          <p>Наценка платформы и предварительный расчёт суммы заказа.</p>
+          <p>Индивидуальные наценки и расчёт цены продажи.</p>
         </div>
       </header>
       <AdminPricingPanel />

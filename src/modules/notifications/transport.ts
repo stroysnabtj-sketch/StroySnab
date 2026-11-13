@@ -1,9 +1,14 @@
 export type SmsTransport = {
   retrySafe?: boolean;
+  supportedEvents?: string[];
   send(message: {
     recipient: string;
     body: string;
     idempotencyKey: string;
+    event?: string;
+    audience?: string;
+    orderNumber?: string;
+    statusLabel?: string;
   }): Promise<{ providerMessageId: string }>;
 };
 
@@ -28,9 +33,31 @@ export function configuredNotificationTransport(
   const token = env.NOTIFICATIONS_SMS_SEND_TOKEN;
   const sender = env.NOTIFICATIONS_SMS_SENDER;
   const payom = env.NOTIFICATIONS_SMS_PROVIDER === "payom";
+  const orderTemplate = env.NOTIFICATIONS_SMS_ORDER_TEMPLATE_ID;
+  const adminTemplate = env.NOTIFICATIONS_SMS_ADMIN_TEMPLATE_ID;
+  if (payom && (!orderTemplate || !adminTemplate)) return null;
   return {
     retrySafe: !payom,
+    ...(payom
+      ? {
+          supportedEvents: [
+            "ORDER_CREATED",
+            "ORDER_CONFIRMED",
+            "ORDER_DISPATCHED",
+            "ORDER_DELIVERED",
+            "ORDER_CANCELLED",
+            "PAYMENT_CONFIRMED",
+          ],
+        }
+      : {}),
     async send(message) {
+      const admin = message.audience === "admin" && message.event === "ORDER_CREATED";
+      if (
+        payom &&
+        (!message.orderNumber ||
+          (!admin && (!message.statusLabel || message.audience !== "customer")))
+      )
+        throw new Error("unsupported_notification_template");
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
@@ -40,7 +67,17 @@ export function configuredNotificationTransport(
         },
         body: JSON.stringify(
           payom
-            ? { telephone: message.recipient, text: message.body, senderName: sender, type: "SMS" }
+            ? {
+                telephone: message.recipient,
+                templateMessage: {
+                  templateId: admin ? adminTemplate : orderTemplate,
+                  variables: admin
+                    ? { order: message.orderNumber }
+                    : { order: message.orderNumber, status: message.statusLabel },
+                },
+                senderName: sender,
+                type: "SMS",
+              }
             : {
                 sender,
                 recipient: message.recipient,
@@ -55,14 +92,10 @@ export function configuredNotificationTransport(
       if (!response.ok) throw new Error("provider_send_failed");
       const result = await response.json();
       if (payom) {
-        if (
-          response.status !== 201 ||
-          typeof result.id !== "string" ||
-          !result.id ||
-          result.id.length > 200
-        )
+        const id = typeof result === "string" ? result : result?.id;
+        if (response.status !== 201 || typeof id !== "string" || !id.trim() || id.length > 200)
           throw new Error("provider_send_failed");
-        return { providerMessageId: result.id };
+        return { providerMessageId: id };
       }
       if (
         result.accepted !== true ||

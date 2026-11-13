@@ -1,3 +1,4 @@
+import { productLinePrice, summarizeProductPrices } from "@/modules/pricing/product-price";
 import { publicProductText } from "@/modules/catalog/public-text";
 import { sql } from "drizzle-orm";
 import { visibleCategoryIds } from "@/modules/catalog/category-visibility";
@@ -6,7 +7,7 @@ import { and, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { carts, cartItems, customers, products, supplierOffers, suppliers } from "@/db/schema";
 import { optionalUser } from "@/modules/auth/session";
-import { calculateOrderMarkup, lineBase, quantityMillis } from "@/modules/pricing/order-markup";
+import { quantityMillis } from "@/modules/pricing/order-markup";
 import { ApiError } from "@/server/api-error";
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
@@ -127,17 +128,12 @@ export async function getCart(userId?: string, guestToken?: string) {
     .innerJoin(supplierOffers, eq(cartItems.offerId, supplierOffers.id))
     .innerJoin(products, eq(supplierOffers.productId, products.id))
     .where(eq(cartItems.cartId, cart.id));
-  const pricing = calculateOrderMarkup(
-    rows.reduce((sum, row) => sum + lineBase(row.offer.supplierPriceDirams, row.item.qty), 0n),
+  const linePrices = rows.map((row) =>
+    productLinePrice(row.offer.supplierPriceDirams, row.item.qty, row.product.markupPercent),
   );
-  let allocated = 0n;
+  const pricing = summarizeProductPrices(linePrices);
   const items = rows.map((row, index) => {
-    const base = lineBase(row.offer.supplierPriceDirams, row.item.qty);
-    const markup =
-      index === rows.length - 1
-        ? pricing.markupDirams - allocated
-        : (base * BigInt(pricing.percent)) / 100n;
-    allocated += markup;
+    const price = linePrices[index];
     return {
       id: row.item.id,
       offerId: row.offer.id,
@@ -147,11 +143,8 @@ export async function getCart(userId?: string, guestToken?: string) {
       unit: row.product.unit,
       qty: row.item.qty,
       minOrderQty: row.offer.minOrderQty,
-      priceDirams: (
-        row.offer.supplierPriceDirams +
-        (row.offer.supplierPriceDirams * BigInt(pricing.percent)) / 100n
-      ).toString(),
-      subtotalDirams: (base + markup).toString(),
+      priceDirams: price.priceDirams.toString(),
+      subtotalDirams: price.subtotalDirams.toString(),
       stockQty: (Number(row.offer.stockQty) - Number(row.offer.reservedQty)).toString(),
     };
   });

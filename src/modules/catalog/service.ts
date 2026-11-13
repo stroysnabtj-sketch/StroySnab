@@ -1,3 +1,4 @@
+import { productPrice } from "@/modules/pricing/product-price";
 import { publicProductText, publicProductBrand } from "@/modules/catalog/public-text";
 import { attributeNumber } from "./attribute-values";
 import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
@@ -35,10 +36,13 @@ function displayAttribute(slug: string, attribute: { name: string; value: string
   };
 }
 
-function retailOffers<T extends { supplierPriceDirams: bigint }>(offers: T[]) {
+function retailOffers<T extends { supplierPriceDirams: bigint }>(
+  offers: T[],
+  percent: (offer: T) => string,
+) {
   return offers
     .filter((o) => o.supplierPriceDirams > 0n)
-    .map((o) => ({ ...o, customerPriceDirams: (o.supplierPriceDirams * 107n) / 100n }));
+    .map((o) => ({ ...o, customerPriceDirams: productPrice(o.supplierPriceDirams, percent(o)) }));
 }
 
 export async function listCatalog(query: CatalogQuery) {
@@ -124,7 +128,11 @@ export async function listCatalog(query: CatalogQuery) {
   const ranges = Object.fromEntries(
     Object.entries(query.attributeRanges ?? {}).map(([key, bounds]) => [canonicalKey(key), bounds]),
   );
-  const priced = retailOffers(offerRows.map((r) => r.offer));
+  const productRates = new Map(rows.map(({ product }) => [product.id, product.markupPercent]));
+  const priced = retailOffers(
+    offerRows.map((r) => r.offer),
+    (offer) => productRates.get(offer.productId)!,
+  );
   const candidates: PublicProduct[] = rows.flatMap(({ product, category }) => {
     const offers = priced
       .filter((o) => o.productId === product.id)
@@ -347,7 +355,10 @@ export async function getPublicProduct(slug: string, includeRelated = true) {
       .orderBy(asc(productImages.sort)),
   ]);
 
-  const offers = retailOffers(offerRows.map(({ offer }) => offer));
+  const offers = retailOffers(
+    offerRows.map(({ offer }) => offer),
+    () => row.product.markupPercent,
+  );
   offers.sort((a, b) => {
     const stocked = (offer: typeof a) =>
       Number(offer.stockQty) - Number(offer.reservedQty) >= Number(offer.minOrderQty);

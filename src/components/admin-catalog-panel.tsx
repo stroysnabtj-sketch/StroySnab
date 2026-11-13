@@ -38,6 +38,7 @@ type Product = {
   categoryName: string;
   brand: string | null;
   unit: string;
+  markupPercent: string;
   status: string;
   descriptionRu: string | null;
   createdBySupplierId: string | null;
@@ -52,6 +53,7 @@ const blank = {
   categoryId: "",
   brand: "",
   unit: "шт.",
+  markupPercent: "7",
   status: "DRAFT",
   descriptionRu: "",
   rejectReason: "",
@@ -160,6 +162,7 @@ export function AdminCatalogPanel() {
       categoryId: product.categoryId,
       brand: product.brand ?? "",
       unit: product.unit,
+      markupPercent: product.markupPercent,
       status: product.status,
       descriptionRu: product.descriptionRu ?? "",
       rejectReason: product.rejectReason ?? "",
@@ -463,10 +466,7 @@ export function AdminCatalogPanel() {
             </Field>
           </div>
           {form.status === "REJECTED" && (
-            <Field
-              label="Причина отклонения"
-              hint="Магазин увидит причину и сможет исправить карточку."
-            >
+            <Field label="Причина отклонения" hint="Причина сохраняется в истории товара.">
               <Textarea
                 value={form.rejectReason}
                 minLength={5}
@@ -489,6 +489,15 @@ export function AdminCatalogPanel() {
               />
             </Field>
           </div>
+          <Field label="Наценка, %">
+            <Input
+              inputMode="decimal"
+              value={form.markupPercent}
+              onChange={(e) =>
+                setForm({ ...form, markupPercent: e.target.value.replace(",", ".") })
+              }
+            />
+          </Field>
           <Field label="Описание">
             <Textarea
               value={form.descriptionRu}

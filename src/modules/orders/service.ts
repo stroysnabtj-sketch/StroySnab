@@ -1,3 +1,4 @@
+import { productLinePrice, summarizeProductPrices } from "@/modules/pricing/product-price";
 import { enqueueOrderNotifications } from "@/modules/notifications/events";
 import { visibleCategoryIds } from "@/modules/catalog/category-visibility";
 import { VEHICLE_CODES, validDeliveryDate, knownCartWeight } from "@/modules/delivery/preferences";
@@ -19,7 +20,7 @@ import {
   supplierOffers,
   suppliers,
 } from "@/db/schema";
-import { calculateOrderMarkup, lineBase, quantityMillis } from "@/modules/pricing/order-markup";
+import { lineBase, quantityMillis } from "@/modules/pricing/order-markup";
 import { ApiError } from "@/server/api-error";
 import { nextDocNumber } from "@/modules/system/doc-number";
 import { normalizePhone } from "@/modules/system/phone";
@@ -106,7 +107,10 @@ async function quote(db: DbExecutor, cartId: string) {
     .innerJoin(suppliers, eq(supplierOffers.supplierId, suppliers.id))
     .where(eq(cartItems.cartId, cartId));
   if (!rows.length) throw new ApiError(400, "empty_cart", "Корзина пуста");
-  const items = rows.map(({ item, offer, product, supplier, categoryVisible }) => {
+  const linePrices = rows.map(({ item, offer, product }) =>
+    productLinePrice(offer.supplierPriceDirams, item.qty, product.markupPercent),
+  );
+  const items = rows.map(({ item, offer, product, supplier, categoryVisible }, index) => {
     if (
       !categoryVisible ||
       offer.isActive !== "true" ||
@@ -131,25 +135,11 @@ async function quote(db: DbExecutor, cartId: string) {
       sku: product.sku,
       unit: product.unit,
       qty: item.qty,
-      priceDirams: offer.supplierPriceDirams.toString(),
-      subtotalDirams: lineBase(offer.supplierPriceDirams, item.qty).toString(),
+      priceDirams: linePrices[index].priceDirams.toString(),
+      subtotalDirams: linePrices[index].subtotalDirams.toString(),
     };
   });
-  const pricing = calculateOrderMarkup(
-    items.reduce((sum, item) => sum + BigInt(item.subtotalDirams), 0n),
-  );
-  let allocated = 0n;
-  for (const [index, item] of items.entries()) {
-    const base = BigInt(item.subtotalDirams);
-    const markup =
-      index === items.length - 1
-        ? pricing.markupDirams - allocated
-        : (base * BigInt(pricing.percent)) / 100n;
-    allocated += markup;
-    item.subtotalDirams = (base + markup).toString();
-    const unitPrice = BigInt(item.priceDirams);
-    item.priceDirams = (unitPrice + (unitPrice * BigInt(pricing.percent)) / 100n).toString();
-  }
+  const pricing = summarizeProductPrices(linePrices);
   // The store has not provided a verified delivery tariff. Never add a guessed
   // vehicle rate to the customer's checkout total.
   const delivery = 0n;

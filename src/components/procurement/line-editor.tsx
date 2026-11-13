@@ -79,6 +79,17 @@ export function LineEditor({
                 />
               </label>
             )}
+            {prices && (
+              <label className={s.field}>
+                Наценка, %
+                <input
+                  inputMode="decimal"
+                  value={line.markupPercent ?? "7"}
+                  disabled={disabled || !!line.offerId}
+                  onChange={(e) => update(i, "markupPercent", e.target.value.replace(",", "."))}
+                />
+              </label>
+            )}
             <button
               type="button"
               className={s.remove}

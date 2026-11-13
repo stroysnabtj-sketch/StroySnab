@@ -31,6 +31,7 @@ export type OfferDTO = {
   sku?: string;
   productName?: string;
   unit?: string;
+  markupPercent?: string;
   supplierId: string;
   supplierName?: string;
   supplierPriceDirams: string;
@@ -48,6 +49,7 @@ export function serializeOffer(row: {
   sku?: string | null;
   productName?: string | null;
   unit?: string | null;
+  markupPercent?: string | null;
   supplierId: string;
   supplierName?: string | null;
   supplierPriceDirams: bigint | string | number;
@@ -65,6 +67,7 @@ export function serializeOffer(row: {
     sku: row.sku ?? undefined,
     productName: row.productName ?? undefined,
     unit: row.unit ?? undefined,
+    markupPercent: row.markupPercent ?? undefined,
     supplierId: row.supplierId,
     supplierName: row.supplierName ?? undefined,
     supplierPriceDirams: row.supplierPriceDirams.toString(),
@@ -90,6 +93,7 @@ export async function listOffers(supplierId?: string): Promise<OfferDTO[]> {
       sku: products.sku,
       productName: products.nameRu,
       unit: products.unit,
+      markupPercent: products.markupPercent,
       supplierId: supplierOffers.supplierId,
       supplierName: suppliers.name,
       supplierPriceDirams: sql<string>`${supplierOffers.supplierPriceDirams}::text`,
@@ -137,6 +141,7 @@ export async function searchOffers(query: {
         sku: products.sku,
         productName: products.nameRu,
         unit: products.unit,
+        markupPercent: products.markupPercent,
         supplierName: suppliers.name,
       })
       .from(supplierOffers)
@@ -153,6 +158,7 @@ export async function searchOffers(query: {
       sku: row.sku,
       productName: row.productName,
       unit: row.unit,
+      markupPercent: row.markupPercent,
       supplierName: row.supplierName,
     })),
     total: count.value,

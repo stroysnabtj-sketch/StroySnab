@@ -74,6 +74,7 @@ export function QuotationEditor({
             unit: l.unit,
             offerId: l.offerId || undefined,
             basePriceDirams: toDirams(l.price ?? ""),
+            markupPercent: l.offerId ? undefined : (l.markupPercent ?? "7"),
           })),
         }),
       });
@@ -105,13 +106,12 @@ export function QuotationEditor({
     <section className={s.card}>
       <h2>{q ? "Редактировать КП" : "Подготовить КП"}</h2>
       <p className={s.hint}>
-        Введите исходные цены в сомони. Наценка всего заказа рассчитывается сервером: 7% до 50 000,
-        5% до 100 000, далее 3%. Выберите предложение магазина или оформите отдельную закупку.
+        Введите закупочные цены. Для товаров каталога применяется наценка из карточки товара, для
+        отдельных позиций укажите её в строке.
       </p>
       {q?.baseDirams && (
         <p className={s.hint}>
-          В сохранённой версии: закупка {money(q.baseDirams)}, наценка {q.markupPercent}% (
-          {money(q.markupDirams)}).
+          В сохранённой версии: закупка {money(q.baseDirams)}, наценка ({money(q.markupDirams)}).
         </p>
       )}
       <div className={s.preparation}>
@@ -196,6 +196,7 @@ export function QuotationEditor({
                                     unit: candidate.unit,
                                     offerId: candidate.offerId,
                                     price: fromDirams(candidate.basePriceDirams),
+                                    markupPercent: candidate.markupPercent,
                                   }
                                 : line,
                             ),

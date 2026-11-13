@@ -11,9 +11,7 @@ export default async function AdminUsersPage() {
       <header className={styles.pageHeading}>
         <div>
           <h1>Пользователи и доступы</h1>
-          <p>
-            Покупатели и сотрудники платформы. Доступ магазинов назначается в разделе магазинов.
-          </p>
+          <p>Покупатели и сотрудники StroySnab.</p>
         </div>
       </header>
       <AdminUsersPanel

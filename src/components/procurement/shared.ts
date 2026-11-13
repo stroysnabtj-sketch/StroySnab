@@ -21,6 +21,7 @@ export type Line = {
   unit: string;
   offerId?: string | null;
   basePriceDirams?: string;
+  markupPercent?: string;
   priceDirams?: string;
   subtotalDirams?: string;
 };

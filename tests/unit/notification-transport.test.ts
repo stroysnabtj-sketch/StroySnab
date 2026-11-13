@@ -55,19 +55,60 @@ it("uses Payom's SMS payload and reads its accepted message ID", async () => {
   const transport = configuredNotificationTransport({
     ...env,
     NOTIFICATIONS_SMS_PROVIDER: "payom",
+    NOTIFICATIONS_SMS_ORDER_TEMPLATE_ID: "66c03e11-d52b-403b-905a-7761080d3d7c",
+    NOTIFICATIONS_SMS_ADMIN_TEMPLATE_ID: "cfb6a23b-08b5-47f6-ac43-30cb1d455aee",
   })!;
   expect(
     await transport.send({
       recipient: "+992900111224",
       body: "Заказ принят",
       idempotencyKey: "one",
+      event: "ORDER_CONFIRMED",
+      audience: "customer",
+      orderNumber: "ORD-001",
+      statusLabel: "подтверждён",
     }),
   ).toEqual({ providerMessageId: "payom-1" });
   expect(JSON.parse(send.mock.calls[0][1]?.body as string)).toEqual({
     telephone: "+992900111224",
-    text: "Заказ принят",
+    templateMessage: {
+      templateId: "66c03e11-d52b-403b-905a-7761080d3d7c",
+      variables: { order: "ORD-001", status: "подтверждён" },
+    },
     senderName: "Store",
     type: "SMS",
   });
   expect(transport.retrySafe).toBe(false);
+});
+
+it("uses the admin template and accepts Payom string IDs without sending private links", async () => {
+  const send = vi.fn<typeof fetch>(async () => Response.json("message-id", { status: 201 }));
+  vi.stubGlobal("fetch", send);
+  const transport = configuredNotificationTransport({
+    ...env,
+    NOTIFICATIONS_SMS_PROVIDER: "payom",
+    NOTIFICATIONS_SMS_ORDER_TEMPLATE_ID: "status",
+    NOTIFICATIONS_SMS_ADMIN_TEMPLATE_ID: "admin",
+  })!;
+  await transport.send({
+    recipient: "+992900111224",
+    body: "private link",
+    idempotencyKey: "admin-event",
+    event: "ORDER_CREATED",
+    audience: "admin",
+    orderNumber: "ORD-2",
+  });
+  expect(JSON.parse(send.mock.calls[0][1]?.body as string).templateMessage).toEqual({
+    templateId: "admin",
+    variables: { order: "ORD-2" },
+  });
+  await expect(
+    transport.send({
+      recipient: "+992900111224",
+      body: "КП готово",
+      idempotencyKey: "quote",
+      event: "QUOTE_READY",
+    }),
+  ).rejects.toThrow();
+  expect(send).toHaveBeenCalledTimes(1);
 });

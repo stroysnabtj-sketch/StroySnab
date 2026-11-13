@@ -48,6 +48,7 @@ export type QuotationLine = {
   supplierId?: string | null;
   supplierName?: string | null;
   basePriceDirams: string;
+  markupPercent?: string;
   baseSubtotalDirams: string;
   priceDirams: string;
   subtotalDirams: string;

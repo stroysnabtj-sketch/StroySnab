@@ -86,7 +86,7 @@
   padding-block: 14px;
 }
 .quoteLine {
-  grid-template-columns: minmax(140px, 1fr) 80px 75px 115px 44px;
+  grid-template-columns: minmax(140px, 1fr) 80px 75px 115px 85px 44px;
 }
 .offer {
   grid-column: 1/-1;
@@ -381,3 +381,5 @@
 }
 
 .linePhotos{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:8px}.linePhotos img{object-fit:cover;border:1px solid #dce4ee;border-radius:8px}.photo{position:relative}.photo button{position:absolute;right:-5px;top:-5px;width:23px;height:23px;background:#fff;border:1px solid #dce4ee;border-radius:50%;font-size:17px}.uploadPhoto{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 12px;border:1px solid #dce4ee;border-radius:8px;font-size:12px;color:#074089;cursor:pointer;background:#fff}.uploadPhoto input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+
+@media (max-width: 600px) { .quoteLine > .field:nth-child(5) { grid-column: 1/3; } }

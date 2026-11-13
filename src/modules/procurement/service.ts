@@ -25,7 +25,12 @@ import type { SessionUser } from "@/modules/auth/session";
 import { hasPermission } from "@/modules/rbac/permissions";
 import { nextDocNumber } from "@/modules/system/doc-number";
 import { normalizePhone } from "@/modules/system/phone";
-import { lineBase, quantityMillis, calculateOrderMarkup } from "@/modules/pricing/order-markup";
+import { lineBase, quantityMillis } from "@/modules/pricing/order-markup";
+import {
+  markupPercentInput,
+  productLinePrice,
+  summarizeProductPrices,
+} from "@/modules/pricing/product-price";
 import { visibleCategoryIds } from "@/modules/catalog/category-visibility";
 import { writeAudit } from "@/modules/audit/service";
 import { getOrderPaymentSummary } from "@/modules/orders/payment-service";
@@ -216,6 +221,7 @@ const quoteInput = z.object({
         imageIds: z.array(z.uuid()).max(3).default([]),
         offerId: z.string().uuid().nullable().optional(),
         basePriceDirams: money.refine((v) => BigInt(v) > 0n, "Укажите цену"),
+        markupPercent: markupPercentInput.optional(),
       }),
     )
     .min(1)
@@ -258,13 +264,16 @@ export async function saveQuotation(id: string, actor: SessionUser, input: unkno
     for (const l of data.lines) {
       const subtotal = lineBase(BigInt(l.basePriceDirams), l.qty);
       base += subtotal;
-      let info: { productId: string; supplierId: string; supplierName: string } | undefined;
+      let info:
+        | { productId: string; supplierId: string; supplierName: string; markupPercent: string }
+        | undefined;
       if (l.offerId) {
         const [o] = await tx
           .select({
             productId: products.id,
             supplierId: suppliers.id,
             supplierName: suppliers.name,
+            markupPercent: products.markupPercent,
           })
           .from(supplierOffers)
           .innerJoin(products, eq(products.id, supplierOffers.productId))
@@ -285,6 +294,7 @@ export async function saveQuotation(id: string, actor: SessionUser, input: unkno
         ...l,
         id: l.id ?? crypto.randomUUID(),
         ...info,
+        markupPercent: info?.markupPercent ?? l.markupPercent ?? "7",
         baseSubtotalDirams: subtotal.toString(),
         priceDirams: "0",
         subtotalDirams: "0",
@@ -292,19 +302,13 @@ export async function saveQuotation(id: string, actor: SessionUser, input: unkno
     }
     if (base <= 0n || base > 99999999999999n)
       throw new ApiError(400, "invalid_total", "Проверьте общую стоимость");
-    const markup = calculateOrderMarkup(base);
-    let allocated = 0n;
+    const prices = calculated.map((l) =>
+      productLinePrice(BigInt(l.basePriceDirams), l.qty, l.markupPercent),
+    );
+    const markup = summarizeProductPrices(prices);
     calculated.forEach((l, index) => {
-      const lineMarkup =
-        index === calculated.length - 1
-          ? markup.markupDirams - allocated
-          : (BigInt(l.baseSubtotalDirams) * BigInt(markup.percent)) / 100n;
-      allocated += lineMarkup;
-      l.subtotalDirams = (BigInt(l.baseSubtotalDirams) + lineMarkup).toString();
-      l.priceDirams = (
-        (BigInt(l.basePriceDirams) * (100n + BigInt(markup.percent))) /
-        100n
-      ).toString();
+      l.subtotalDirams = prices[index].subtotalDirams.toString();
+      l.priceDirams = prices[index].priceDirams.toString();
     });
     const values = {
       version: (old?.version ?? 0) + 1,
@@ -458,6 +462,7 @@ export async function decideQuotation(
         idempotencyKey: `quotation:${q.id}`,
         customerName: r.contactName,
         customerPhone: r.contactPhone,
+        customerEmail: r.contactEmail,
         deliveryCity: data.deliveryCity ?? "Таджикистан",
         deliveryLat: data.deliveryLat === undefined ? null : String(data.deliveryLat),
         deliveryLng: data.deliveryLng === undefined ? null : String(data.deliveryLng),
@@ -466,7 +471,7 @@ export async function decideQuotation(
         vehicleType: "UNASSIGNED",
         unloadingType: "SELF",
         status: "NEW",
-        paymentMethod: "BANK_INVOICE",
+        paymentMethod: "CASH_ON_DELIVERY",
         goodsBaseDirams: q.baseDirams,
         markupPercent: q.markupPercent,
         markupDirams: q.markupDirams,

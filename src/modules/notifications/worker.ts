@@ -9,6 +9,7 @@ import {
   notificationOutbox,
 } from "@/db/schema/notifications";
 import type { SmsTransport } from "./transport";
+import { notificationStatusLabel } from "./events";
 
 type DispatchOptions = {
   batchSize?: number;
@@ -34,6 +35,9 @@ export async function dispatchNotifications(
     const claim = await db.transaction(async (tx) => {
       const due = and(
         eq(notificationOutbox.channel, channel),
+        transport.supportedEvents
+          ? inArray(notificationOutbox.event, transport.supportedEvents)
+          : undefined,
         ne(notificationOutbox.audience, "shop"),
         options.createdSince ? gte(notificationOutbox.createdAt, options.createdSince) : undefined,
         eq(notificationOutbox.state, "queued"),
@@ -121,11 +125,18 @@ export async function dispatchNotifications(
     let providerMessageId: string | undefined;
     try {
       let body = claim.body;
+      const [order] = /^(ORDER_|PAYMENT_CONFIRMED$)/.test(claim.event)
+        ? await db
+            .select({
+              accessHash: orders.guestAccessTokenHash,
+              customerId: orders.customerId,
+              orderNumber: orders.orderNumber,
+              vehicleType: orders.vehicleType,
+            })
+            .from(orders)
+            .where(eq(orders.id, claim.entityId))
+        : [];
       if (claim.audience === "customer" && /^(ORDER_|PAYMENT_CONFIRMED$)/.test(claim.event)) {
-        const [order] = await db
-          .select({ accessHash: orders.guestAccessTokenHash, customerId: orders.customerId })
-          .from(orders)
-          .where(eq(orders.id, claim.entityId));
         if (order?.accessHash && !order.customerId) {
           const link = guestOrderLink(claim.entityId, order.accessHash, claim.createdAt);
           if (!link) throw new Error("guest_link_unavailable");
@@ -136,6 +147,10 @@ export async function dispatchNotifications(
         recipient: claim.recipient,
         body,
         idempotencyKey: claim.eventKey,
+        event: claim.event,
+        audience: claim.audience,
+        orderNumber: order?.orderNumber,
+        statusLabel: notificationStatusLabel(claim.event, order?.vehicleType === "PICKUP"),
       });
       if (!result.providerMessageId) throw new Error("provider_send_failed");
       providerMessageId = result.providerMessageId;

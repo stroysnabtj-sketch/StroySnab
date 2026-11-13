@@ -7,6 +7,8 @@ import { categories, productAttributes, products, supplierOffers, suppliers } fr
 import type { SessionUser } from "@/modules/auth/session";
 import { writeAudit } from "@/modules/audit/service";
 import { ApiError } from "@/server/api-error";
+import { markupPercentInput } from "@/modules/pricing/product-price";
+import { hasPermission } from "@/modules/rbac/permissions";
 
 export const productInput = z.object({
   sku: z.string().min(2).max(80),
@@ -17,6 +19,7 @@ export const productInput = z.object({
   categoryId: z.string().uuid(),
   brand: z.string().max(120).optional().nullable(),
   unit: z.string().min(1).max(30),
+  markupPercent: markupPercentInput.default("7"),
   status: z.enum(["DRAFT", "PENDING", "PUBLISHED", "REJECTED", "ARCHIVED"]).default("DRAFT"),
   createdBySupplierId: z.string().uuid().optional().nullable(),
   rejectReason: z.string().trim().max(2000).optional().nullable(),
@@ -48,6 +51,7 @@ export async function adminListProducts(q?: string) {
       categoryName: categories.nameRu,
       brand: products.brand,
       unit: products.unit,
+      markupPercent: products.markupPercent,
       status: products.status,
       rejectReason: products.rejectReason,
       descriptionRu: products.descriptionRu,
@@ -100,6 +104,7 @@ export async function searchAdminProducts(query: {
         categoryName: categories.nameRu,
         brand: products.brand,
         unit: products.unit,
+        markupPercent: products.markupPercent,
         status: products.status,
         rejectReason: products.rejectReason,
         descriptionRu: products.descriptionRu,
@@ -120,6 +125,8 @@ export async function searchAdminProducts(query: {
 }
 export async function createProduct(actor: SessionUser, input: unknown, ip?: string) {
   const data = productInput.parse(await Promise.resolve(input));
+  if (Number(data.markupPercent) !== 7 && !hasPermission(actor.role, "pricing:manage"))
+    throw new ApiError(403, "forbidden", "Недостаточно прав для изменения наценки");
   if (data.status === "REJECTED" && (!data.rejectReason || data.rejectReason.length < 5))
     throw new ApiError(
       400,
@@ -158,6 +165,12 @@ export async function updateProduct(actor: SessionUser, id: string, input: unkno
     const [before] = await tx.select().from(products).where(eq(products.id, id)).limit(1);
     if (!before) throw new ApiError(404, "not_found", "Товар не найден");
     if (
+      data.markupPercent !== undefined &&
+      Number(data.markupPercent) !== Number(before.markupPercent) &&
+      !hasPermission(actor.role, "pricing:manage")
+    )
+      throw new ApiError(403, "forbidden", "Недостаточно прав для изменения наценки");
+    if (
       data.status === "REJECTED" &&
       !(data.rejectReason ?? before.rejectReason ?? "").trim().match(/^.{5,}$/s)
     )
@@ -194,8 +207,12 @@ export async function updateProduct(actor: SessionUser, id: string, input: unkno
       entity: "products",
       entityId: id,
       data: {
-        before: { status: before.status, name: before.nameRu },
-        after: { status: updated.status, name: updated.nameRu },
+        before: { status: before.status, name: before.nameRu, markupPercent: before.markupPercent },
+        after: {
+          status: updated.status,
+          name: updated.nameRu,
+          markupPercent: updated.markupPercent,
+        },
       },
       ip,
     });

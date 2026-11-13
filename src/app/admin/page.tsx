@@ -176,7 +176,7 @@ export default async function AdminPage() {
     },
     {
       href: "/admin/suppliers",
-      label: "Подключение магазинов",
+      label: "Поставщики",
       permission: "suppliers:manage" as const,
       icon: Store,
     },
@@ -255,12 +255,7 @@ export default async function AdminPage() {
                   <ArrowRight size={17} />
                 </Link>
               ))}
-              {!pending.length && (
-                <p className={styles.emptyText}>
-                  Все поступившие товары проверены. Новые карточки магазинов появятся в этой
-                  очереди.
-                </p>
-              )}
+              {!pending.length && <p className={styles.emptyText}>Все товары проверены.</p>}
             </div>
           </section>
         )}

@@ -170,10 +170,10 @@ export default async function HomePage() {
           <div className="service-note">
             <Package size={27} />
             <div>
-              <h3>Предложения магазинов</h3>
-              <p>Выбирайте по цене, остатку и сроку поставки.</p>
+              <h3>Строительные материалы</h3>
+              <p>Материалы для строительства и ремонта.</p>
             </div>
-            <Link href="/catalog" aria-label="Посмотреть предложения">
+            <Link href="/catalog" aria-label="Открыть каталог">
               <ArrowRight size={19} />
             </Link>
           </div>

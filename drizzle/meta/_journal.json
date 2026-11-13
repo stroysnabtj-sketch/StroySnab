@@ -169,6 +169,20 @@
       "when": 1794500000000,
       "tag": "0023_single_store",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1794580000000,
+      "tag": "0024_product_markup",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1794580001000,
+      "tag": "0025_product_pricing_orders",
+      "breakpoints": true
     }
   ]
 }

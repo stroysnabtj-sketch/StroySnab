@@ -13,7 +13,7 @@ export async function generateMetadata({
 
   return {
     title: `${title} — материалы и цены | Stroysnab.tj`,
-    description: `Товары в категории «${title}». Цены в сомони, характеристики и предложения магазинов.`,
+    description: `Товары в категории «${title}». Цены в сомони, характеристики и наличие.`,
     alternates: { canonical: `/catalog/${categorySlug}` },
   };
 }

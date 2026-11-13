@@ -6,7 +6,7 @@ import { orders, products, supplierOffers, supplierUsers, suppliers, users } fro
 import { addCartItem } from "@/modules/cart/service";
 import { createOrder, quoteOrder, getOrder, changeOrderStatus } from "@/modules/orders/service";
 import { getShopOrder, updateShopOrderStatus } from "@/modules/suppliers/shop-service";
-it("routes shop orders, snapshots base prices and applies 7/5/3 percent to the whole basket", async () => {
+it("preserves internal supplier snapshots with product pricing at every basket size", async () => {
   const db = await getDb();
   const [product] = await db
     .select()
@@ -47,9 +47,9 @@ it("routes shop orders, snapshots base prices and applies 7/5/3 percent to the w
     firstId = "",
     firstToken = "";
   for (const scenario of [
-    { a: 1, b: 0, rate: 7 },
-    { a: 1, b: 1, rate: 5 },
-    { a: 3, b: 2, rate: 3 },
+    { a: 1, b: 0, rate: 0 },
+    { a: 1, b: 1, rate: 0 },
+    { a: 3, b: 2, rate: 0 },
   ]) {
     const guestToken = crypto.randomUUID();
     await addCartItem({ offerId: a.offer.id, qty: String(scenario.a), guestToken });
