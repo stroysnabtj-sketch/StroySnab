@@ -183,6 +183,13 @@
       "when": 1794580001000,
       "tag": "0025_product_pricing_orders",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1794580002000,
+      "tag": "0026_quotation_jobs",
+      "breakpoints": true
     }
   ]
 }

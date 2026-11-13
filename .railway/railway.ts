@@ -9,6 +9,10 @@ export default defineRailway(() => {
       NOTIFICATIONS_SMS_ENABLED: "true",
       NOTIFICATIONS_SMS_ORDER_TEMPLATE_ID: "66c03e11-d52b-403b-905a-7761080d3d7c",
       NOTIFICATIONS_SMS_ADMIN_TEMPLATE_ID: "cfb6a23b-08b5-47f6-ac43-30cb1d455aee",
+      AI_QUOTATION_ENABLED: "true",
+      AI_QUOTATION_DAILY_LIMIT: "20",
+      DEEPSEEK_API_KEY: preserve(),
+      DEEPSEEK_MODEL: "deepseek-flash",
       APP_URL: "https://www.stroysnab.tj",
       AUTH_ADMIN_PASSWORD_LOGIN: preserve(),
       AUTH_EMAIL_PROVIDER: preserve(),
@@ -71,7 +75,29 @@ export default defineRailway(() => {
       NOTIFICATIONS_SEND_AFTER: "2026-11-13T10:52:10.760323Z",
     },
   });
+  const quotation = service("StroySnab-quotation", {
+    source: github("stroysnabtj-sketch/StroySnab", { branch: "main" }),
+    build: { builder: "DOCKERFILE", dockerfilePath: "Dockerfile" },
+    start: "node quotation-worker.cjs",
+    deploy: { restartPolicyType: "ON_FAILURE", restartPolicyMaxRetries: 10 },
+    env: {
+      DATABASE_URL: StroySnab.env.DATABASE_URL,
+      APP_URL: "https://www.stroysnab.tj",
+      SITE_URL: "https://www.stroysnab.tj",
+      AI_QUOTATION_ENABLED: "true",
+      AI_QUOTATION_DAILY_LIMIT: "20",
+      DEEPSEEK_API_KEY: StroySnab.env.DEEPSEEK_API_KEY,
+      DEEPSEEK_MODEL: "deepseek-flash",
+      STORAGE_DRIVER: StroySnab.env.STORAGE_DRIVER,
+      S3_ENDPOINT: StroySnab.env.S3_ENDPOINT,
+      S3_BUCKET: StroySnab.env.S3_BUCKET,
+      S3_REGION: StroySnab.env.S3_REGION,
+      S3_ACCESS_KEY_ID: StroySnab.env.S3_ACCESS_KEY_ID,
+      S3_SECRET_ACCESS_KEY: StroySnab.env.S3_SECRET_ACCESS_KEY,
+      S3_FORCE_PATH_STYLE: StroySnab.env.S3_FORCE_PATH_STYLE,
+    },
+  });
   return project("gregarious-vision", {
-    resources: [StroySnab, notifications],
+    resources: [StroySnab, notifications, quotation],
   });
 });

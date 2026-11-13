@@ -9,3 +9,4 @@ export * from "./procurement";
 export * from "./merchandising";
 
 export * from "./notifications";
+export * from "./quotation-jobs";

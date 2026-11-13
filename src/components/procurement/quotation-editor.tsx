@@ -14,11 +14,13 @@ export function QuotationEditor({
   const q = detail.quotation,
     r = detail.request;
   const [lines, setLines] = useState<EditableLine[]>(
-      (q?.lines ?? r.lines).map((l) => ({
-        ...l,
-        id: l.id ?? crypto.randomUUID(),
-        price: l.basePriceDirams ? fromDirams(l.basePriceDirams) : "",
-      })),
+      (q?.lines ?? (detail.preparation?.lines?.length ? detail.preparation.lines : r.lines)).map(
+        (l) => ({
+          ...l,
+          id: l.id ?? crypto.randomUUID(),
+          price: l.basePriceDirams ? fromDirams(l.basePriceDirams) : "",
+        }),
+      ),
     ),
     [delivery, setDelivery] = useState(fromDirams(q?.deliveryDirams)),
     [error, setError] = useState(""),

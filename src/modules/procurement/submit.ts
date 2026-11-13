@@ -1,3 +1,4 @@
+import { enqueueQuotationJob } from "./ai-jobs";
 import { createHash, randomUUID } from "node:crypto";
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
@@ -15,6 +16,7 @@ import { validateListFile } from "./files";
 const hash = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
 const inputSchema = z.object({
   submissionKey: z.string().uuid(),
+  autoPrepare: z.boolean().default(false),
   accessToken: z
     .string()
     .regex(/^[A-Za-z0-9_-]{32,128}$/)
@@ -48,6 +50,11 @@ export async function submitProcurementRequest(
   if (files.length > 5) throw new ApiError(400, "file_limit", "Не более пяти вложений");
   if (!files.length && !data.lines.length)
     throw new ApiError(400, "empty_request", "Добавьте материалы или прикрепите список");
+  if (
+    data.autoPrepare &&
+    (!actor || actor.role !== "CUSTOMER" || !files.length || data.lines.length)
+  )
+    throw new ApiError(400, "invalid_ai_request", "Прикрепите файл для автоматической подготовки");
   const customerId = actor?.role === "CUSTOMER" ? actor.id : null;
   if (!customerId && !data.accessToken)
     throw new ApiError(400, "missing_access", "Обновите страницу и отправьте заявку снова");
@@ -55,7 +62,8 @@ export async function submitProcurementRequest(
     const value = quantityMillis(line.qty);
     return { ...line, qty: `${value / 1000n}.${(value % 1000n).toString().padStart(3, "0")}` };
   });
-  const valid: (Awaited<ReturnType<typeof validateListFile>> & { name: string; size: number })[] = [];
+  const valid: (Awaited<ReturnType<typeof validateListFile>> & { name: string; size: number })[] =
+    [];
   for (const file of files) {
     const checked = await validateListFile(file);
     valid.push({
@@ -74,6 +82,7 @@ export async function submitProcurementRequest(
   const digest = hash(
     JSON.stringify({
       ...normalized,
+      autoPrepare: data.autoPrepare,
       files: valid.map((file) => ({
         name: file.name,
         mime: file.mime,
@@ -131,16 +140,15 @@ export async function submitProcurementRequest(
         const key = `procurement/${record.id}/${randomUUID()}.${file.ext}`;
         written.push(key);
         await storage.put(key, file.bytes);
-        await tx
-          .insert(procurementAttachments)
-          .values({
-            requestId: record.id,
-            storageKey: key,
-            name: file.name,
-            mime: file.mime,
-            size: file.size,
-          });
+        await tx.insert(procurementAttachments).values({
+          requestId: record.id,
+          storageKey: key,
+          name: file.name,
+          mime: file.mime,
+          size: file.size,
+        });
       }
+      if (data.autoPrepare) await enqueueQuotationJob(tx, record.id, actor!.id);
       await writeAudit(tx, {
         actorUserId: actor?.id,
         actorRole: actor?.role ?? "GUEST",

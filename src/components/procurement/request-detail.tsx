@@ -40,7 +40,8 @@ export function ProcurementDetail({
   }, [id, access]);
   const ownRequest = customer && !access && data?.request.id === id;
   const waitingForQuote =
-    ownRequest && !data.quotation && ["NEW", "IN_REVIEW"].includes(data.request.status);
+    (ownRequest && !data.quotation && ["NEW", "IN_REVIEW"].includes(data.request.status)) ||
+    !!(data?.preparation && ["queued", "processing"].includes(data.preparation.state));
   useEffect(() => {
     if (!waitingForQuote) return;
     const controller = new AbortController();
@@ -146,6 +147,63 @@ export function ProcurementDetail({
           {manager ? "Все заявки" : "Мои закупки"}
         </Link>
       </header>
+      {data.preparation && (
+        <section className={s.card} role="status" aria-live="polite">
+          <h2>
+            {
+              (
+                {
+                  queued: "Список принят",
+                  processing: "Готовим расчёт",
+                  review: "Список передан менеджеру",
+                  ready: "Расчёт на проверке",
+                  failed: "Файл передан менеджеру",
+                } as Record<string, string>
+              )[data.preparation.state]
+            }
+          </h2>
+          <p>
+            {["queued", "processing"].includes(data.preparation.state)
+              ? "Распознаём материалы и проверяем каталог."
+              : "Менеджер проверит состав, цены и условия поставки."}
+          </p>
+          {manager && data.preparation.state === "failed" && (
+            <button
+              className="button button-secondary"
+              disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                try {
+                  await api(`/api/procurement/${id}/ai`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: "{}",
+                  });
+                  await refresh();
+                } catch (e) {
+                  setError((e as Error).message);
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
+              Повторить распознавание
+            </button>
+          )}
+          {manager && data.preparation.lines?.some((l) => l.issue) && (
+            <ul>
+              {data.preparation.lines
+                .filter((l) => l.issue)
+                .map((l, i) => (
+                  <li key={i}>
+                    {l.name}: {l.issue}
+                  </li>
+                ))}
+            </ul>
+          )}
+          {manager && data.preparation.warnings?.map((warning, i) => <p key={i}>{warning}</p>)}
+        </section>
+      )}
       {error && (
         <div className={s.error} role="alert">
           {error}
@@ -203,11 +261,7 @@ export function ProcurementDetail({
             <section className={`${s.card} ${s.quotation}`}>
               <div className={s.row}>
                 <h2>Коммерческое предложение {q.number}</h2>
-                <a
-                  className="button button-secondary"
-                  href={resource("pdf")}
-                  download
-                >
+                <a className="button button-secondary" href={resource("pdf")} download>
                   Скачать PDF
                 </a>
               </div>
@@ -332,6 +386,7 @@ export function ProcurementDetail({
           )}
           {manager &&
             data.isManager &&
+            !["queued", "processing"].includes(data.preparation?.state ?? "") &&
             !["ACCEPTED", "COMPLETED", "CANCELLED"].includes(r.status) && (
               <QuotationEditor
                 key={`${q?.version ?? 0}-${r.status}`}

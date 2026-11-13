@@ -14,12 +14,15 @@ export function ProcurementRequestForm({
   contactName = "",
   contactPhone = "",
   contactEmail = "",
+  autoPreparation = false,
 }: {
   contactName?: string;
   contactPhone?: string;
   contactEmail?: string;
+  autoPreparation?: boolean;
 }) {
   const router = useRouter();
+  const [automatic, setAutomatic] = useState(false);
   const [mode, setMode] = useState<"file" | "manual">("file");
   const [lines, setLines] = useState<RequestLine[]>([emptyLine("first")]);
   const [files, setFiles] = useState<File[]>([]);
@@ -52,6 +55,7 @@ export function ProcurementRequestForm({
         contactEmail: form.get("contactEmail"),
         note: form.get("note"),
         lines: requestLines,
+        autoPrepare: mode === "file" && automatic,
       };
       const fingerprint = JSON.stringify({
         ...payload,
@@ -103,10 +107,26 @@ export function ProcurementRequestForm({
             </button>
           </div>
           {mode === "file" ? (
-            <div className={styles.filePanel}>
+            <div
+              className={styles.filePanel}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => {
+                event.preventDefault();
+                const selected = Array.from(event.dataTransfer.files);
+                if (
+                  files.length + selected.length > 5 ||
+                  selected.some((file) => file.size > 10 * 1024 * 1024 || file.size < 1)
+                ) {
+                  setError("До 5 файлов по 10 МБ");
+                  return;
+                }
+                setFiles((current) => [...current, ...selected]);
+                setError("");
+              }}
+            >
               <label className={styles.upload}>
                 <FileUp size={24} aria-hidden="true" />
-                <span>Выберите файлы</span>
+                <span>Загрузите список материалов</span>
                 <small>Word, Excel, PDF или фото · до 5 файлов по 10 МБ</small>
                 <input
                   aria-label="Список материалов"
@@ -129,6 +149,21 @@ export function ProcurementRequestForm({
                   }}
                 />
               </label>
+              {autoPreparation && (
+                <label className={styles.automatic}>
+                  <input
+                    type="checkbox"
+                    checked={automatic}
+                    onChange={(event) => setAutomatic(event.target.checked)}
+                  />
+                  <span>
+                    Подготовить расчёт автоматически
+                    <small>
+                      Файлы передаются DeepSeek для распознавания. Расчёт проверит менеджер.
+                    </small>
+                  </span>
+                </label>
+              )}
               {files.length > 0 && (
                 <ul className={styles.fileList}>
                   {files.map((file, index) => (
@@ -250,7 +285,11 @@ export function ProcurementRequestForm({
         </p>
       )}
       <button type="submit" className={`button button-primary ${styles.submit}`} disabled={busy}>
-        {busy ? "Отправляем…" : "Отправить заявку"}
+        {busy
+          ? "Загружаем список…"
+          : mode === "file" && automatic
+            ? "Подготовить КП"
+            : "Отправить заявку"}
       </button>
     </form>
   );

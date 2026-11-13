@@ -60,6 +60,13 @@ export type Detail = {
     totalDirams: string;
     balanceDirams: string;
   };
+  preparation?: {
+    state: string;
+    updatedAt: string;
+    lines?: Array<Line & { issue?: string; markupPercent?: string }>;
+    warnings?: string[];
+    error?: string | null;
+  } | null;
   isManager: boolean;
 };
 export function money(value: string | undefined) {

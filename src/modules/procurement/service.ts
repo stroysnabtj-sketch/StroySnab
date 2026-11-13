@@ -11,6 +11,7 @@ import {
   auditLog,
   procurementRequests,
   quotations,
+  quotationJobs,
   quotationImages,
   procurementAttachments,
   customers,
@@ -129,6 +130,7 @@ export async function getProcurementRequest(
   )
     throw new ApiError(404, "not_found", "Заявка не найдена");
   const [q] = await db.select().from(quotations).where(eq(quotations.requestId, id));
+  const [ai] = await db.select().from(quotationJobs).where(eq(quotationJobs.requestId, id));
   const files = await db
     .select({
       id: procurementAttachments.id,
@@ -203,6 +205,13 @@ export async function getProcurementRequest(
       updatedAt: r.updatedAt,
     },
     quotation: quote,
+    preparation: ai
+      ? {
+          state: ai.state,
+          updatedAt: ai.updatedAt,
+          ...(manager ? { lines: ai.lines, warnings: ai.warnings, error: ai.error } : {}),
+        }
+      : null,
     attachments: files,
     payment: r.orderId ? await getOrderPaymentSummary(r.orderId) : null,
     isManager: manager,
@@ -227,7 +236,12 @@ const quoteInput = z.object({
     .min(1)
     .max(200),
 });
-export async function saveQuotation(id: string, actor: SessionUser, input: unknown) {
+export async function saveQuotation(
+  id: string,
+  actor: SessionUser,
+  input: unknown,
+  preparationGuard?: { jobId: string; requestUpdatedAt: Date },
+) {
   if (!procurementManager(actor)) throw new ApiError(403, "forbidden", "Недостаточно прав");
   const data = quoteInput.parse(input);
   if (new Date(data.validUntil) <= new Date())
@@ -240,6 +254,20 @@ export async function saveQuotation(id: string, actor: SessionUser, input: unkno
       .from(procurementRequests)
       .where(eq(procurementRequests.id, id));
     if (!request) throw new ApiError(404, "not_found", "Заявка не найдена");
+    if (preparationGuard) {
+      const [job] = await tx
+        .select()
+        .from(quotationJobs)
+        .where(and(eq(quotationJobs.id, preparationGuard.jobId), eq(quotationJobs.requestId, id)))
+        .for("update");
+      if (
+        !job ||
+        job.state !== "review" ||
+        request.status !== "IN_REVIEW" ||
+        request.updatedAt.getTime() !== preparationGuard.requestUpdatedAt.getTime()
+      )
+        throw new ApiError(409, "request_changed", "Заявка изменена менеджером");
+    }
     if (["ACCEPTED", "COMPLETED", "CANCELLED"].includes(request.status))
       throw new ApiError(409, "closed", "Заявка уже завершена или принята");
     const imageIds = [...new Set(data.lines.flatMap((line) => line.imageIds))];
