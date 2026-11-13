@@ -40,7 +40,10 @@ export function ProcurementDetail({
   }, [id, access]);
   const ownRequest = customer && !access && data?.request.id === id;
   const waitingForQuote =
-    (ownRequest && !data.quotation && ["NEW", "IN_REVIEW"].includes(data.request.status)) ||
+    (ownRequest &&
+      !data.preparation &&
+      !data.quotation &&
+      ["NEW", "IN_REVIEW"].includes(data.request.status)) ||
     !!(data?.preparation && ["queued", "processing"].includes(data.preparation.state));
   useEffect(() => {
     if (!waitingForQuote) return;
@@ -155,9 +158,9 @@ export function ProcurementDetail({
                 {
                   queued: "Список принят",
                   processing: "Готовим расчёт",
-                  review: "Список передан менеджеру",
-                  ready: "Расчёт на проверке",
-                  failed: "Файл передан менеджеру",
+                  review: "Результат подбора",
+                  ready: "КП готово",
+                  failed: "Не удалось подготовить расчёт",
                 } as Record<string, string>
               )[data.preparation.state]
             }
@@ -165,7 +168,9 @@ export function ProcurementDetail({
           <p>
             {["queued", "processing"].includes(data.preparation.state)
               ? "Распознаём материалы и проверяем каталог."
-              : "Менеджер проверит состав, цены и условия поставки."}
+              : data.preparation.state === "ready"
+                ? "Предложение доступно ниже."
+                : "Проверьте позиции, для которых нужны уточнения."}
           </p>
           {manager && data.preparation.state === "failed" && (
             <button
@@ -190,7 +195,7 @@ export function ProcurementDetail({
               Повторить распознавание
             </button>
           )}
-          {manager && data.preparation.lines?.some((l) => l.issue) && (
+          {data.preparation.lines?.some((l) => l.issue) && (
             <ul>
               {data.preparation.lines
                 .filter((l) => l.issue)
@@ -380,7 +385,9 @@ export function ProcurementDetail({
             <section className={s.card}>
               <h2>Готовим предложение</h2>
               <p className="muted">
-                Менеджер проверит материалы и опубликует здесь цены, условия и срок действия КП.
+                {data.preparation
+                  ? "Расчёт появится после обработки списка."
+                  : "Заявка принята. Предложение появится на этой странице."}
               </p>
             </section>
           )}

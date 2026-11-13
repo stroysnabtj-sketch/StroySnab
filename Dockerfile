@@ -8,7 +8,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build:noenv
-RUN ./node_modules/.bin/esbuild scripts/notification-worker.ts --bundle --platform=node --external:pg --external:@electric-sql/pglite --outfile=notification-worker.cjs
+RUN ./node_modules/.bin/esbuild scripts/notification-worker.ts --bundle --platform=node --alias:pdfkit=./node_modules/pdfkit/js/pdfkit.js --external:pg --external:@electric-sql/pglite --external:sharp --outfile=notification-worker.cjs
 RUN ./node_modules/.bin/esbuild scripts/quotation-worker.ts --bundle --platform=node --external:pg --external:@electric-sql/pglite --external:sharp --outfile=quotation-worker.cjs
 
 FROM node:20-alpine AS runner

@@ -55,6 +55,8 @@ export async function submitProcurementRequest(
     (!actor || actor.role !== "CUSTOMER" || !files.length || data.lines.length)
   )
     throw new ApiError(400, "invalid_ai_request", "Прикрепите файл для автоматической подготовки");
+  if (data.autoPrepare && !data.contactEmail?.trim())
+    throw new ApiError(400, "email_required", "Укажите e-mail для отправки КП");
   const customerId = actor?.role === "CUSTOMER" ? actor.id : null;
   if (!customerId && !data.accessToken)
     throw new ApiError(400, "missing_access", "Обновите страницу и отправьте заявку снова");

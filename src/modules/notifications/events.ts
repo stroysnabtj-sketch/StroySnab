@@ -154,8 +154,19 @@ export async function enqueueQuoteReadyNotification(
     version: string;
     customerPhone: string;
     customerUserId?: string | null;
+    customerEmail?: string | null;
   },
 ) {
+  if (input.customerEmail && input.customerUserId)
+    await enqueue(tx, {
+      entityId: input.requestId,
+      event: "QUOTE_READY",
+      version: `${input.quoteId}:${input.version}`,
+      recipient: input.customerEmail,
+      audience: "customer",
+      channel: "email",
+      body: `Коммерческое предложение ${safeLabel(input.quoteNumber)} готово.`,
+    });
   await enqueue(tx, {
     entityId: input.requestId,
     event: "QUOTE_READY",
@@ -163,5 +174,23 @@ export async function enqueueQuoteReadyNotification(
     recipient: input.customerPhone,
     audience: "customer",
     body: `КП ${safeLabel(input.quoteNumber)} готово.`,
+  });
+}
+
+/** Result without prices when no valid catalogue lines can be calculated. */
+export async function enqueueQuotationResultEmail(
+  tx: DbTransaction,
+  requestId: string,
+  email: string | null,
+  version: string,
+) {
+  await enqueue(tx, {
+    entityId: requestId,
+    event: "QUOTE_RESULT",
+    version,
+    recipient: email,
+    audience: "customer",
+    channel: "email",
+    body: "Подбор материалов завершён. Для расчёта стоимости необходимо уточнить позиции в заявке.",
   });
 }

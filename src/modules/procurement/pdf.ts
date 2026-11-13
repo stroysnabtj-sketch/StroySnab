@@ -18,7 +18,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
     margins: { top: 38, bottom: 24, left: 38, right: 38 },
     bufferPages: true,
     font: path.join(process.cwd(), "assets/fonts/CourierNew.ttf"),
-    info: { Title: `КП ${q.number}`, Author: "Stroysnab.tj" },
+    info: { Title: `КП ${q.number}`, Author: "Stroysnab.tj", CreationDate: new Date(q.validUntil) },
   });
   doc.registerFont("regular", path.join(process.cwd(), "assets/fonts/CourierNew.ttf"));
   doc.registerFont("bold", path.join(process.cwd(), "assets/fonts/CourierNew-Bold.ttf"));
@@ -249,5 +249,5 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
     });
   }
   doc.end();
-  return { bytes: await done, number: q.number };
+  return { bytes: await done, number: q.number, version: q.version };
 }

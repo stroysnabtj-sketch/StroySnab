@@ -1,5 +1,8 @@
 import { afterEach, expect, it, vi } from "vitest";
-import { configuredNotificationTransport } from "@/modules/notifications/transport";
+import {
+  configuredNotificationTransport,
+  configuredNotificationEmail,
+} from "@/modules/notifications/transport";
 
 afterEach(() => vi.unstubAllGlobals());
 const env = {
@@ -111,4 +114,24 @@ it("uses the admin template and accepts Payom string IDs without sending private
     }),
   ).rejects.toThrow();
   expect(send).toHaveBeenCalledTimes(1);
+});
+
+it("sends quotation PDFs through Resend with the quotation subject", async () => {
+  const send = vi.fn<typeof fetch>(async () => Response.json({ id: "email-id" }));
+  vi.stubGlobal("fetch", send);
+  const email = configuredNotificationEmail({
+    NOTIFICATIONS_EMAIL_ENABLED: "true",
+    NOTIFICATIONS_RESEND_API_KEY: "fake",
+    NOTIFICATIONS_EMAIL_FROM: "notifications@example.test",
+  })!;
+  await email.send({
+    recipient: "buyer@example.test",
+    body: "КП готово",
+    idempotencyKey: "quote",
+    event: "QUOTE_READY",
+    attachments: [{ filename: "KP.pdf", content: "JVBERi0=" }],
+  });
+  const body = JSON.parse(send.mock.calls[0][1]!.body as string);
+  expect(body.subject).toBe("Коммерческое предложение StroySnab");
+  expect(body.attachments[0].filename).toBe("KP.pdf");
 });

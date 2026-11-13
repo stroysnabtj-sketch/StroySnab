@@ -8,6 +8,9 @@ export type PreparedLine = {
   basePriceDirams?: string;
   markupPercent?: string;
   issue?: string;
+  requestedName?: string;
+  matchScore?: number;
+  alternative?: boolean;
 };
 export const quotationJobs = pgTable(
   "quotation_jobs",

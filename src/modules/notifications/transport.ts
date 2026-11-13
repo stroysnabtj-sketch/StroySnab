@@ -9,6 +9,7 @@ export type SmsTransport = {
     audience?: string;
     orderNumber?: string;
     statusLabel?: string;
+    attachments?: Array<{ filename: string; content: string }>;
   }): Promise<{ providerMessageId: string }>;
 };
 
@@ -127,8 +128,14 @@ export function configuredNotificationEmail(
         body: JSON.stringify({
           from,
           to: [message.recipient],
-          subject: "Статус заказа StroySnab",
+          subject:
+            message.event === "QUOTE_READY"
+              ? "Коммерческое предложение StroySnab"
+              : message.event === "QUOTE_RESULT"
+                ? "Результат подбора материалов StroySnab"
+                : "Статус заказа StroySnab",
           text: message.body,
+          ...(message.attachments?.length ? { attachments: message.attachments } : {}),
         }),
         signal: AbortSignal.timeout(10000),
         redirect: "error",

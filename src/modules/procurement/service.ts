@@ -209,7 +209,18 @@ export async function getProcurementRequest(
       ? {
           state: ai.state,
           updatedAt: ai.updatedAt,
-          ...(manager ? { lines: ai.lines, warnings: ai.warnings, error: ai.error } : {}),
+          ...(manager
+            ? { lines: ai.lines, warnings: ai.warnings, error: ai.error }
+            : {
+                lines: ai.lines.map((l) => ({
+                  name: publicProductText(l.name),
+                  qty: l.qty,
+                  unit: l.unit,
+                  requestedName: l.requestedName ? publicProductText(l.requestedName) : undefined,
+                  alternative: l.alternative,
+                  issue: l.issue,
+                })),
+              }),
         }
       : null,
     attachments: files,
@@ -290,6 +301,8 @@ export async function saveQuotation(
     const calculated: QuotationLine[] = [];
     let base = 0n;
     for (const l of data.lines) {
+      if (preparationGuard && !l.offerId)
+        throw new ApiError(409, "offer_unavailable", "Товар недоступен");
       const subtotal = lineBase(BigInt(l.basePriceDirams), l.qty);
       base += subtotal;
       let info:
@@ -302,6 +315,11 @@ export async function saveQuotation(
             supplierId: suppliers.id,
             supplierName: suppliers.name,
             markupPercent: products.markupPercent,
+            supplierPriceDirams: supplierOffers.supplierPriceDirams,
+            stockQty: supplierOffers.stockQty,
+            reservedQty: supplierOffers.reservedQty,
+            minOrderQty: supplierOffers.minOrderQty,
+            unit: products.unit,
           })
           .from(supplierOffers)
           .innerJoin(products, eq(products.id, supplierOffers.productId))
@@ -316,7 +334,20 @@ export async function saveQuotation(
             ),
           );
         if (!o) throw new ApiError(409, "offer_unavailable", "Предложение недоступно");
-        info = o;
+        if (
+          preparationGuard &&
+          (BigInt(o.supplierPriceDirams) !== BigInt(l.basePriceDirams) ||
+            o.unit !== l.unit ||
+            Number(o.stockQty) - Number(o.reservedQty) < Number(l.qty) ||
+            Number(o.minOrderQty) > Number(l.qty))
+        )
+          throw new ApiError(409, "offer_changed", "Цена или остаток товара изменились");
+        info = {
+          productId: o.productId,
+          supplierId: o.supplierId,
+          supplierName: o.supplierName,
+          markupPercent: o.markupPercent,
+        };
       }
       calculated.push({
         ...l,
@@ -330,6 +361,22 @@ export async function saveQuotation(
     }
     if (base <= 0n || base > 99999999999999n)
       throw new ApiError(400, "invalid_total", "Проверьте общую стоимость");
+    if (preparationGuard) {
+      const totals = new Map<string, bigint>();
+      for (const l of calculated)
+        totals.set(l.offerId!, (totals.get(l.offerId!) ?? 0n) + quantityMillis(l.qty));
+      for (const [offerId, qty] of totals) {
+        const [offer] = await tx
+          .select()
+          .from(supplierOffers)
+          .where(eq(supplierOffers.id, offerId));
+        if (
+          !offer ||
+          BigInt(Math.round((Number(offer.stockQty) - Number(offer.reservedQty)) * 1000)) < qty
+        )
+          throw new ApiError(409, "offer_changed", "Недостаточный остаток товара");
+      }
+    }
     const prices = calculated.map((l) =>
       productLinePrice(BigInt(l.basePriceDirams), l.qty, l.markupPercent),
     );
@@ -377,6 +424,7 @@ export async function saveQuotation(
         version: String(result.version),
         customerPhone: request.contactPhone,
         customerUserId: request.userId,
+        customerEmail: request.contactEmail,
       });
     return result;
   });

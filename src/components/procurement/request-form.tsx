@@ -156,12 +156,7 @@ export function ProcurementRequestForm({
                     checked={automatic}
                     onChange={(event) => setAutomatic(event.target.checked)}
                   />
-                  <span>
-                    Подготовить расчёт автоматически
-                    <small>
-                      Файлы передаются DeepSeek для распознавания. Расчёт проверит менеджер.
-                    </small>
-                  </span>
+                  <span>Подготовить расчёт автоматически</span>
                 </label>
               )}
               {files.length > 0 && (
@@ -258,7 +253,10 @@ export function ProcurementRequestForm({
               <ContactFields name={contactName} phone={contactPhone} />
             </div>
           )}
-          <details className={styles.additional}>
+          <details
+            className={styles.additional}
+            open={mode === "file" && automatic ? true : undefined}
+          >
             <summary>Комментарий и e-mail</summary>
             <div className={styles.extraFields}>
               <label className={s.field}>
@@ -271,6 +269,7 @@ export function ProcurementRequestForm({
                   type="email"
                   name="contactEmail"
                   defaultValue={contactEmail}
+                  required={mode === "file" && automatic}
                   maxLength={254}
                   autoComplete="email"
                 />

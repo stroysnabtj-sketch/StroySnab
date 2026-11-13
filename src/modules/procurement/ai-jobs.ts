@@ -1,3 +1,5 @@
+import { publicProductText } from "@/modules/catalog/public-text";
+import { enqueueQuotationResultEmail } from "@/modules/notifications/events";
 import { randomUUID } from "node:crypto";
 import { and, eq, gte, lt, or, sql } from "drizzle-orm";
 import { getDb, type DbTransaction } from "@/db";
@@ -122,30 +124,46 @@ export async function processQuotationJob(
     if (!extracted.length) throw new Error("empty_extraction");
     const manager = { ...admin, role: "SUPER_ADMIN" } as SessionUser;
     const lines: PreparedLine[] = [];
+    const allocated = new Map<string, number>();
     for (const line of extracted) {
       if (!line.qty || !line.unit) {
         lines.push({ ...line, issue: "Уточните количество или единицу" });
         continue;
       }
       const prepared = await prepareQuotationCandidates(claim.requestId, manager, [line]);
-      const exact = prepared.lines[0].candidates.filter(
-        (c) => c.exact && c.unitMatches && c.enoughStock && c.minimumMet,
-      );
-      // Several offers of the same product are internal procurement alternatives; different products require review.
-      const names = new Set(exact.map((c) => c.sku));
-      if (names.size !== 1) {
-        lines.push({
-          ...line,
-          issue: exact.length ? "Несколько подходящих товаров" : "Нужен подбор менеджером",
-        });
+      const matches = prepared.lines[0].candidates
+        .filter(
+          (c) =>
+            c.score >= 70 &&
+            c.unitMatches &&
+            c.enoughStock &&
+            c.minimumMet &&
+            Math.round((Number(c.stockQty) - Number(c.reservedQty)) * 1000) >=
+              (allocated.get(c.offerId) ?? 0) + Math.round(Number(line.qty) * 1000),
+        )
+        .sort(
+          (a, b) =>
+            b.score - a.score || (BigInt(a.basePriceDirams) < BigInt(b.basePriceDirams) ? -1 : 1),
+        );
+      if (!matches.length) {
+        lines.push({ ...line, issue: "Подходящий товар не найден" });
         continue;
       }
-      const selected = exact.sort((a, b) =>
-        BigInt(a.basePriceDirams) < BigInt(b.basePriceDirams) ? -1 : 1,
-      )[0];
+      const selected = matches[0];
+      allocated.set(
+        selected.offerId,
+        (allocated.get(selected.offerId) ?? 0) + Math.round(Number(line.qty) * 1000),
+      );
+      const alternative =
+        !selected.exact ||
+        new Set(matches.filter((c) => c.score === selected.score).map((c) => c.sku)).size > 1;
       lines.push({
         ...line,
-        name: selected.productName,
+        name: publicProductText(selected.productName),
+        unit: selected.unit,
+        requestedName: line.name,
+        matchScore: selected.score,
+        alternative,
         offerId: selected.offerId,
         basePriceDirams: selected.basePriceDirams,
         markupPercent: selected.markupPercent,
@@ -201,19 +219,37 @@ export async function processQuotationJob(
         );
       return updatedAt;
     });
-    if (lines.every((l) => l.offerId && !l.issue) && !warnings.length) {
+    const priced = lines.filter((l) => l.offerId && !l.issue);
+    if (priced.length) {
       try {
+        const unresolved = lines.filter((l) => !l.offerId || l.issue);
+        const conditions = [
+          ...(unresolved.length
+            ? [
+                `Не включены в стоимость (${unresolved.length}): ${unresolved
+                  .slice(0, 20)
+                  .map((l) => publicProductText(l.name))
+                  .join("; ")}. Полный список — в заявке.`,
+              ]
+            : []),
+          ...lines
+            .filter((l) => l.alternative)
+            .map((l) => `Альтернатива: ${publicProductText(l.requestedName ?? "")} → ${l.name}.`),
+          ...warnings.map((w) => `Примечание: ${w}`),
+        ]
+          .join("\n")
+          .slice(0, 5000);
         await saveQuotation(
           claim.requestId,
           manager,
           {
             version: 0,
-            send: false,
+            send: true,
             validUntil: new Date(Date.now() + 7 * 86400000).toISOString(),
             deliveryDirams: "0",
-            conditions: "",
-            lines: lines.map((l) => ({
-              name: l.name,
+            conditions,
+            lines: priced.map((l) => ({
+              name: (l.alternative ? `Альтернатива: ${l.name}` : l.name).slice(0, 300),
               qty: l.qty,
               unit: l.unit,
               offerId: l.offerId,
@@ -227,21 +263,65 @@ export async function processQuotationJob(
           .set({ state: "ready", updatedAt: new Date() })
           .where(eq(quotationJobs.id, claim.id));
       } catch {
-        /* Keep suggestions if a manager saved a version or stock changed during preparation. */
+        // Preserve concurrent manager changes; explain an unavailable calculation without inventing prices.
+        await db.transaction(async (tx) => {
+          const [current] = await tx
+            .select()
+            .from(procurementRequests)
+            .where(eq(procurementRequests.id, claim.requestId))
+            .for("update");
+          const [quote] = await tx
+            .select({ id: quotations.id })
+            .from(quotations)
+            .where(eq(quotations.requestId, claim.requestId));
+          if (
+            !quote &&
+            current.status === "IN_REVIEW" &&
+            current.updatedAt.getTime() === requestUpdatedAt.getTime()
+          )
+            await enqueueQuotationResultEmail(tx, claim.requestId, current.contactEmail, claim.id);
+        });
       }
+    } else {
+      await db.transaction(async (tx) => {
+        const [current] = await tx
+          .select()
+          .from(procurementRequests)
+          .where(eq(procurementRequests.id, claim.requestId))
+          .for("update");
+        if (
+          current.status === "IN_REVIEW" &&
+          current.updatedAt.getTime() === requestUpdatedAt.getTime()
+        )
+          await enqueueQuotationResultEmail(tx, claim.requestId, current.contactEmail, claim.id);
+      });
     }
     return true;
   } catch {
-    await db
-      .update(quotationJobs)
-      .set({
-        state: "failed",
-        error: "preparation_failed",
-        leaseUntil: null,
-        claimToken: null,
-        updatedAt: new Date(),
-      })
-      .where(and(eq(quotationJobs.id, claim.id), eq(quotationJobs.claimToken, claim.claimToken!)));
+    await db.transaction(async (tx) => {
+      const [request] = await tx
+        .select()
+        .from(procurementRequests)
+        .where(eq(procurementRequests.id, claim.requestId))
+        .for("update");
+      const [failed] = await tx
+        .update(quotationJobs)
+        .set({
+          state: "failed",
+          error: "preparation_failed",
+          leaseUntil: null,
+          claimToken: null,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(quotationJobs.id, claim.id), eq(quotationJobs.claimToken, claim.claimToken!)))
+        .returning({ id: quotationJobs.id });
+      const [quote] = await tx
+        .select({ id: quotations.id })
+        .from(quotations)
+        .where(eq(quotations.requestId, claim.requestId));
+      if (failed && request && !quote && ["NEW", "IN_REVIEW"].includes(request.status))
+        await enqueueQuotationResultEmail(tx, request.id, request.contactEmail, claim.id);
+    });
     return true;
   }
 }

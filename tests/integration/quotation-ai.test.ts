@@ -1,7 +1,16 @@
+import { notificationOutbox } from "@/db/schema/notifications";
+import { dispatchNotifications } from "@/modules/notifications/worker";
 import { afterEach, expect, it, vi } from "vitest";
 import { eq, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { users, products, supplierOffers, quotationJobs, procurementRequests } from "@/db/schema";
+import {
+  users,
+  products,
+  supplierOffers,
+  suppliers,
+  quotationJobs,
+  procurementRequests,
+} from "@/db/schema";
 import { submitProcurementRequest } from "@/modules/procurement/submit";
 import { processQuotationJob, retryQuotationJob } from "@/modules/procurement/ai-jobs";
 import { getProcurementRequest } from "@/modules/procurement/service";
@@ -21,11 +30,12 @@ async function setup() {
     autoPrepare: true,
     contactName: "Покупатель",
     contactPhone: "+992900001122",
+    contactEmail: "quotation@example.test",
     lines: [],
   };
   return { db, file, input, buyer: { ...buyer, role: "CUSTOMER" } as SessionUser };
 }
-it("queues once, creates an authoritative draft and hides supplier costs from the customer", async () => {
+it("queues once, publishes an authoritative quote and hides supplier costs from the customer", async () => {
   const { db, file, input, buyer } = await setup();
   const [row] = await db
     .select({ product: products, offer: supplierOffers })
@@ -49,8 +59,29 @@ it("queues once, creates an authoritative draft and hides supplier costs from th
     .where(eq(quotationJobs.requestId, request.id));
   expect(job.state).toBe("ready");
   const view = await getProcurementRequest(request.id, buyer);
-  expect(view.quotation).toBeNull();
+  expect(view.quotation?.status).toBe("SENT");
+  expect(JSON.stringify(view.quotation)).not.toContain("basePriceDirams");
   expect(view.preparation!.state).toBe("ready");
+  const emails = await db
+    .select()
+    .from(notificationOutbox)
+    .where(
+      sql`${notificationOutbox.entityId}=${request.id} and ${notificationOutbox.channel}='email'`,
+    );
+  expect(emails).toHaveLength(1);
+  const send = vi.fn(async () => ({ providerMessageId: "mock-quote-email" }));
+  await dispatchNotifications(db, { send }, { channel: "email", onlyIds: [emails[0].id] });
+  expect(send).toHaveBeenCalledOnce();
+  const message = (
+    send.mock.calls[0] as unknown as [
+      { body: string; attachments: Array<{ content: string; filename: string }> },
+    ]
+  )[0];
+  expect(message.body).toContain(`/requests/${request.id}`);
+  expect(Buffer.from(message.attachments[0].content, "base64").subarray(0, 5).toString()).toBe(
+    "%PDF-",
+  );
+
   expect(JSON.stringify(view.preparation)).not.toContain("basePriceDirams");
   expect(await processQuotationJob({ name: "test", extract })).toBe(false);
 });
@@ -103,4 +134,67 @@ it("retains the submitted request when provider fails and does not automatically
   await expect(
     submitProcurementRequest({ ...input, submissionKey: crypto.randomUUID() }, [file], buyer),
   ).rejects.toMatchObject({ status: 429 });
+});
+
+it("publishes labelled alternatives and excludes repeated demand beyond stock from the total", async () => {
+  const { db, file, input } = await setup();
+  const [buyer] = await db
+    .insert(users)
+    .values({
+      email: `auto-${crypto.randomUUID()}@example.test`,
+      passwordHash: "unused-test-hash",
+      role: "CUSTOMER",
+    })
+    .returning();
+  const [base] = await db.select().from(products).where(eq(products.status, "PUBLISHED")).limit(1);
+  const [supplier] = await db
+    .select()
+    .from(suppliers)
+    .where(eq(suppliers.status, "ACTIVE"))
+    .limit(1);
+  const sku = `AUTO-${crypto.randomUUID()}`;
+  const [product] = await db
+    .insert(products)
+    .values({
+      sku,
+      slug: sku.toLowerCase(),
+      nameRu: "Материалтестовый М500 стандарт",
+      categoryId: base.categoryId,
+      unit: "мешок",
+      status: "PUBLISHED",
+    })
+    .returning();
+  await db
+    .insert(supplierOffers)
+    .values({
+      productId: product.id,
+      supplierId: supplier.id,
+      supplierPriceDirams: 10000n,
+      stockQty: "10",
+      minOrderQty: "1",
+    });
+  const request = await submitProcurementRequest(input, [file], {
+    ...buyer,
+    role: "CUSTOMER",
+  } as SessionUser);
+  await processQuotationJob({
+    name: "test",
+    extract: async () => ({
+      lines: [
+        { name: "Материалтестовый М500", qty: "6", unit: "меш." },
+        { name: "Материалтестовый М500", qty: "6", unit: "меш." },
+      ],
+      warnings: [],
+    }),
+  });
+  const view = await getProcurementRequest(request.id, {
+    ...buyer,
+    role: "CUSTOMER",
+  } as SessionUser);
+  expect(view.quotation?.status).toBe("SENT");
+  expect(view.quotation?.lines).toHaveLength(1);
+  expect(view.quotation?.lines[0].name).toContain("Альтернатива:");
+  expect(view.quotation?.conditions).toContain("Не включены в стоимость (1)");
+  expect(view.quotation?.totalDirams).toBe("64200");
+  expect(view.preparation?.lines?.filter((l) => l.issue)).toHaveLength(1);
 });

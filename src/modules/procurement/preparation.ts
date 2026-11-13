@@ -1,3 +1,4 @@
+import { materialMatchScore, sameMaterialUnit } from "./material-match";
 import { publicProductText } from "@/modules/catalog/public-text";
 import { and, eq, ilike, or, sql } from "drizzle-orm";
 import { z } from "zod";
@@ -45,7 +46,7 @@ export async function prepareQuotationCandidates(
         const words = normalize(line.name)
           .split(" ")
           .filter((w) => w.length > 1)
-          .slice(0, 3);
+          .slice(0, 12);
         const literal = line.name.replace(/[\\%_]/g, "\\$&");
         const rows = await db
           .select({
@@ -75,29 +76,42 @@ export async function prepareQuotationCandidates(
                 eq(products.sku, line.name),
                 ilike(products.nameRu, `%${literal}%`),
                 words.length
-                  ? and(...words.map((w) => ilike(products.nameRu, `%${w}%`)))
+                  ? or(...words.map((w) => ilike(products.nameRu, `%${w}%`)))
                   : undefined,
               ),
             ),
           )
           .orderBy(
             sql`CASE WHEN lower(${products.nameRu})=lower(${line.name}) OR ${products.sku}=${line.name} THEN 0 ELSE 1 END`,
+            words.length
+              ? sql`(${sql.join(
+                  words.map(
+                    (w) => sql`CASE WHEN ${products.nameRu} ILIKE ${`%${w}%`} THEN 1 ELSE 0 END`,
+                  ),
+                  sql` + `,
+                )}) DESC`
+              : products.nameRu,
             products.nameRu,
             supplierOffers.id,
           )
-          .limit(12);
+          .limit(40);
         const candidates = rows.map((row) => ({
           ...row,
           basePriceDirams: row.basePriceDirams.toString(),
           exact:
             normalize(publicProductText(row.productName)) ===
               normalize(publicProductText(line.name)) || row.sku === line.name,
-          unitMatches: normalize(row.unit) === normalize(line.unit),
+          unitMatches: sameMaterialUnit(row.unit, line.unit),
+          score: row.sku === line.name ? 100 : materialMatchScore(line.name, row.productName),
           enoughStock:
             Number(row.stockQty) - Number(row.reservedQty) >= Number(line.qty.replace(",", ".")),
           minimumMet: Number(line.qty.replace(",", ".")) >= Number(row.minOrderQty),
         }));
-        return { index: offset + index, requested: line, candidates };
+        return {
+          index: offset + index,
+          requested: line,
+          candidates: candidates.filter((c) => c.score > 0).sort((a, b) => b.score - a.score),
+        };
       }),
     );
     output.push(...batch);

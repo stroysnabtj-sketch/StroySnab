@@ -1,8 +1,9 @@
+import { quotationPdf } from "@/modules/procurement/pdf";
 import { publicSiteOrigin } from "@/modules/system/site-url";
 import { randomUUID } from "node:crypto";
 import { and, eq, gte, inArray, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import type { AppDatabase, DbExecutor } from "@/db";
-import { orders } from "@/db/schema";
+import { orders, procurementRequests, quotations } from "@/db/schema";
 import { guestOrderLink } from "@/modules/orders/guest-link";
 import {
   notificationAttempts,
@@ -152,9 +153,70 @@ export async function dispatchNotifications(
           body += ` ${new URL(`/orders/${claim.entityId}`, publicSiteOrigin()).href}`;
         }
       }
+      let attachments: Array<{ filename: string; content: string }> | undefined;
+      if (channel === "email" && ["QUOTE_READY", "QUOTE_RESULT"].includes(claim.event)) {
+        const [request] = await db
+          .select()
+          .from(procurementRequests)
+          .where(eq(procurementRequests.id, claim.entityId));
+        if (!request || !request.userId) throw new Error("quote_owner_unavailable");
+        if (claim.event === "QUOTE_READY") {
+          const [quote] = await db
+            .select()
+            .from(quotations)
+            .where(eq(quotations.requestId, claim.entityId));
+          if (
+            !quote ||
+            quote.status !== "SENT" ||
+            claim.version !== `${quote.id}:${quote.version}`
+          ) {
+            await db.transaction(async (tx) => {
+              await tx
+                .update(notificationOutbox)
+                .set({
+                  state: "cancelled",
+                  lastError: "quote_superseded",
+                  leaseUntil: null,
+                  claimToken: null,
+                })
+                .where(
+                  and(
+                    eq(notificationOutbox.id, claim.id),
+                    eq(notificationOutbox.claimToken, claim.claimToken!),
+                  ),
+                );
+              await tx
+                .update(notificationAttempts)
+                .set({ state: "cancelled", error: "quote_superseded", finishedAt: new Date() })
+                .where(eq(notificationAttempts.claimToken, claim.claimToken!));
+            });
+            processed++;
+            continue;
+          }
+          const pdf = await quotationPdf(
+            request.id,
+            {
+              id: request.userId,
+              role: "CUSTOMER",
+              phone: request.contactPhone,
+              email: request.contactEmail,
+            },
+            null,
+          );
+          if (pdf.version !== quote.version) throw new Error("quote_changed");
+          attachments = [
+            {
+              filename: `KP-${pdf.number.replace(/[^a-zA-Z0-9-]/g, "_")}.pdf`,
+              content: pdf.bytes.toString("base64"),
+            },
+          ];
+        }
+        body += ` ${new URL(`/requests/${claim.entityId}`, publicSiteOrigin()).href}`;
+      }
       const result = await transport.send({
         recipient: claim.recipient,
         body,
+        attachments,
         idempotencyKey: claim.eventKey,
         event: claim.event,
         audience: claim.audience,

@@ -22,7 +22,15 @@ export default async function Page() {
     <>
       <SiteHeader />
       <main className={`shell ${s.page}`}>
-        <header className={s.head}>
+        <header
+          className={s.head}
+          style={{
+            maxWidth: 820,
+            marginInline: "auto",
+            textAlign: "center",
+            justifyContent: "center",
+          }}
+        >
           <h1>Новая заявка</h1>
         </header>
         <ProcurementRequestForm
