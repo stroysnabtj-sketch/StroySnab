@@ -104,7 +104,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
     `Действительно до: ${new Date(q.validUntil).toLocaleDateString("ru-RU", { timeZone: "Asia/Dushanbe" })}`,
   );
   y += 18;
-  const sizes = [25, 190, 45, 40, 109, width - 409];
+  const sizes = [25, 180, 45, 52, 109, width - 411];
   const headers = ["№", "МАТЕРИАЛ", "КОЛ-ВО", "ЕД.", "ЦЕНА / TJS", "СУММА / TJS"];
   const tableHeader = () => {
     if (y + 40 > bottom) page();
@@ -152,28 +152,25 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
       offset += rows;
     }
   }
-  if (y + 78 > bottom) page();
-  y += 20;
-  const gap = 12,
-    boxWidth = (width - gap) / 2;
-  doc.rect(left, y, boxWidth, 44).lineWidth(0.5).strokeColor(rule).stroke();
-  doc.rect(left + boxWidth + gap, y, boxWidth, 44).fill(ink);
-  text("ДОСТАВКА", left + 12, y + 8, boxWidth - 24, 7);
-  text(formatTJS(q.deliveryDirams), left + 12, y + 24, boxWidth - 24, 10, true);
+  // Compact, aligned totals instead of large decorative payment cards.
+  if (y + 70 > bottom) page();
+  y += 16;
+  const summaryTop = y;
+  const summaryWidth = 290,
+    summaryLeft = left;
+  text("Доставка", summaryLeft, y, 118, 9);
+  text(formatTJS(q.deliveryDirams), summaryLeft + 118, y, summaryWidth - 118, 9, false, "right");
+  y += 21;
   doc
-    .font("regular")
-    .fontSize(7)
-    .fillColor(paper)
-    .text("ИТОГО К ОПЛАТЕ", left + boxWidth + gap + 12, y + 8, { lineBreak: false });
-  doc
-    .font("bold")
-    .fontSize(11)
-    .fillColor(paper)
-    .text(formatTJS(q.totalDirams), left + boxWidth + gap + 12, y + 24, {
-      width: boxWidth - 24,
-      lineBreak: false,
-    });
-  y += 60;
+    .moveTo(summaryLeft, y)
+    .lineTo(summaryLeft + summaryWidth, y)
+    .lineWidth(0.5)
+    .strokeColor(rule)
+    .stroke();
+  y += 9;
+  text("Итого к оплате", summaryLeft, y, 118, 9, true);
+  text(formatTJS(q.totalDirams), summaryLeft + 118, y, summaryWidth - 118, 10, true, "right");
+  y += 26;
   if (q.conditions) {
     y += 18;
     if (y + 42 > bottom) page();
@@ -212,27 +209,33 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
       if (i % 2 === 1 || i === photos.length - 1) y += 173;
     }
   }
-  // Reserved payment area: deliberately contains no payable QR payload.
-  if (y + 112 > bottom) page();
-  y += 14;
-  const qrSize = 82;
-  doc.rect(left, y, qrSize, qrSize).lineWidth(0.7).strokeColor(rule).stroke();
+  // A short quote keeps the QR placeholder beside the totals, avoiding an empty extra page.
+  const compactQr = !q.conditions && !photos.length && summaryTop + 88 <= bottom;
+  if (compactQr) y = summaryTop;
+  else {
+    if (y + 100 > bottom) page();
+    y += 14;
+  }
+  const qrLeft = compactQr ? left + summaryWidth + 28 : left;
+  const qrSize = 64;
+  doc.rect(qrLeft, y, qrSize, qrSize).lineWidth(0.7).strokeColor(rule).stroke();
   for (const [dx, dy] of [
-    [8, 8],
-    [54, 8],
-    [8, 54],
+    [6, 6],
+    [42, 6],
+    [6, 42],
   ]) {
     doc
-      .rect(left + dx, y + dy, 20, 20)
-      .lineWidth(1.5)
+      .rect(qrLeft + dx, y + dy, 16, 16)
+      .lineWidth(1.2)
       .strokeColor(rule)
       .stroke();
-    doc.rect(left + dx + 6, y + dy + 6, 8, 8).fill(rule);
+    doc.rect(qrLeft + dx + 5, y + dy + 5, 6, 6).fill(rule);
   }
-  text("QR", left + 29, y + 36, 28, 13, true);
-  text("ОПЛАТА ПО QR", left + 100, y + 13, width - 100, 10, true);
-  text("Место для банковского QR-кода", left + 100, y + 35, width - 100, 9);
-  text("Оплата пока недоступна", left + 100, y + 53, width - 100, 9);
+  text("QR", qrLeft + 24, y + 29, 24, 10, true);
+  const qrTextWidth = compactQr ? left + width - qrLeft - 78 : width - 82;
+  text("ОПЛАТА ПО QR", qrLeft + 78, y + 7, qrTextWidth, 8, true);
+  text("Банковский QR-код", qrLeft + 78, y + 26, qrTextWidth, 7.5);
+  text("Пока недоступен", qrLeft + 78, y + 43, qrTextWidth, 7.5);
   const range = doc.bufferedPageRange();
   for (let i = range.start; i < range.start + range.count; i++) {
     doc.switchToPage(i);
