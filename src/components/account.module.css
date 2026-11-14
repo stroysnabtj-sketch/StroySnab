@@ -156,7 +156,7 @@
 }
 .stat span {
   font-size: 12px;
-  color: #62748b;
+  color: #53657c;
 }
 .stat:hover {
   border-color: #94b3da;
@@ -254,7 +254,7 @@
   justify-content: center;
 }
 .hint {
-  color: #62748b;
+  color: #53657c;
   font-size: 13px;
   margin: 0 0 24px;
   line-height: 1.65;
@@ -722,7 +722,7 @@
 }
 .sidebarBottom > span {
   font-size: 12px;
-  color: #62748b;
+  color: #53657c;
   overflow-wrap: anywhere;
 }
 .sidebarBottom > button {
@@ -739,7 +739,7 @@
 }
 .resultCount {
   font-size: 12px;
-  color: #62748b;
+  color: #53657c;
   margin: 18px 0 12px;
 }
 .compactRequests {
@@ -767,7 +767,7 @@
 }
 .requestSummary > span {
   font-size: 11px;
-  color: #62748b;
+  color: #53657c;
   overflow-wrap: anywhere;
 }
 .requestSummary > strong {
@@ -785,7 +785,7 @@
 }
 .requestAmount small {
   font-size: 10px;
-  color: #62748b;
+  color: #53657c;
   overflow-wrap: anywhere;
 }
 .compactRequest > svg {

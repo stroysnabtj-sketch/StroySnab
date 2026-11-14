@@ -46,7 +46,7 @@ export const orderInputSchema = z
     preferredTimeSlot: z.enum(["MORNING", "AFTERNOON", "EVENING"]).optional(),
     cargoWeightKg: z.number().positive().max(1000000).optional(),
     cargoVolumeM3: z.number().positive().max(10000).optional(),
-    paymentMethod: z.enum(["CASH_ON_DELIVERY", "BANK_INVOICE"]),
+    paymentMethod: z.literal("CASH_ON_DELIVERY"),
   })
   .superRefine((v, c) => {
     if ((v.deliveryLat === undefined) !== (v.deliveryLng === undefined))

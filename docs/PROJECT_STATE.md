@@ -22,3 +22,7 @@ Production-build acceptance checks, Windows Chromium visual baselines, axe acces
 ## Quotation update — 2026-11-14
 
 AI quotation daily quotas (global and per customer) removed at the owner's request. File validation, idempotency, timeouts and bounded failure retry remain. PDF quotations now use the website navy/blue/white palette; Courier and the non-payable QR placeholder remain. Full functional reconciliation of the 30-item supplied gaps document: audit/2026-11-14-gaps-reconciliation.md. Architecture unchanged.
+
+## Подготовка демонстрации — 14.11.2026
+
+Новые заказы принимают только наличную оплату на уровне формы и серверной схемы. Исторические способы оплаты не переписываются. Приёмка расширена до 30 браузерных сценариев и 19 визуальных эталонов, включая кабинет, админку и полный путь статуса заказа. Исправлен контраст мелкого текста, подготовлены DEMO.md, PROJECT_DECISIONS.md и DEPLOYMENT.md. Локально 248 модульных/интеграционных тестов прошли на свежей базе. Результат публикации проверяется отдельно.

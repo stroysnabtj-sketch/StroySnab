@@ -1,9 +1,11 @@
 import { spawn } from "node:child_process";
 import path from "node:path";
+import { mkdirSync, mkdtempSync } from "node:fs";
+mkdirSync(".data", { recursive: true });
 const env = {
   ...process.env,
   DATABASE_URL: "",
-  PGLITE_DATA_DIR: path.resolve(".data/acceptance-db"),
+  PGLITE_DATA_DIR: mkdtempSync(path.resolve(".data/acceptance-db-")),
   AUTH_EMAIL_PROVIDER: "disabled",
   AUTH_SMS_PROVIDER: "disabled",
   NOTIFICATIONS_EMAIL_ENABLED: "false",

@@ -619,7 +619,7 @@ export function OrderStatusDashboard({
             <a href="tel:+992446000000" className={styles.supportPhone}>
               +992 (44) 600-00-00
             </a>
-            <span style={{ fontSize: "11px", color: "#8a909d" }}>
+            <span style={{ fontSize: "11px", color: "#53657c" }}>
               Пн–Сб, 08:00–18:00 (время Душанбе)
             </span>
           </div>

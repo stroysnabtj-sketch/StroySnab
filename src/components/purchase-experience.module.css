@@ -692,3 +692,12 @@
   color: #8190a3;
   opacity: 1;
 }
+
+.cashPayment {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #12335b;
+  padding: 14px 0;
+  font-weight: 600;
+}

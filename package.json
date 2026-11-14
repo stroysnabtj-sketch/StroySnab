@@ -18,7 +18,12 @@
     "db:seed": "tsx scripts/seed.ts",
     "notifications:dispatch": "tsx scripts/notification-worker.ts",
     "audit:data": "tsx scripts/audit-data.ts",
-    "test:acceptance": "playwright test -c playwright.acceptance.config.ts"
+    "test:acceptance": "playwright test -c playwright.acceptance.config.ts",
+    "ui:check": "npm run test:acceptance -- --grep @roles",
+    "ui:links": "npm run test:acceptance -- --grep @links",
+    "ui:visual": "npm run test:acceptance -- --grep @visual",
+    "smoke": "npm run test:acceptance -- --grep \"@roles|@checkout\"",
+    "check:release": "npm run check && npm run build:noenv && npm run test:acceptance"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1164.0",

@@ -6,7 +6,7 @@ import { DeliveryTimePicker } from "@/components/delivery-time-picker";
 import { type DeliveryTimeSlot } from "@/modules/delivery/preferences";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { ArrowLeft, Truck, Store, CreditCard, Banknote, Check, MapPin } from "lucide-react";
+import { ArrowLeft, Truck, Store, Banknote, Check, MapPin } from "lucide-react";
 import { Button } from "@/components/ui";
 import styles from "./purchase-experience.module.css";
 import { useRouter } from "next/navigation";
@@ -54,7 +54,7 @@ export function CheckoutView({
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
-  const [paymentMethod, setPayment] = useState("CASH_ON_DELIVERY");
+  const paymentMethod = "CASH_ON_DELIVERY" as const;
   const [point, setPoint] = useState<MapPoint | null>(null);
   const [deliveryDate, setDeliveryDate] = useState("");
   const [deliverySlot, setDeliverySlot] = useState<DeliveryTimeSlot | "">("");
@@ -286,39 +286,10 @@ export function CheckoutView({
           )}
           <section className="checkout-section">
             <h2 className={styles.sectionTitle}>{tr("Оплата")}</h2>
-            <fieldset className={styles.choices}>
-              <legend className="sr-only">{tr("Способ оплаты")}</legend>
-              {(
-                [
-                  [
-                    "CASH_ON_DELIVERY",
-                    tr("При получении"),
-                    tr("Оплата после подтверждения заказа"),
-                  ],
-                  ["BANK_INVOICE", tr("По счёту"), tr("Для организаций и безналичной оплаты")],
-                ] as const
-              ).map(([value, title, detail]) => (
-                <label
-                  className={styles.choice}
-                  data-selected={paymentMethod === value}
-                  key={value}
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    value={value}
-                    checked={paymentMethod === value}
-                    onChange={() => setPayment(value)}
-                  />
-                  {value === "BANK_INVOICE" ? <CreditCard size={23} /> : <Banknote size={23} />}
-                  <span>
-                    <strong>{tr(title)}</strong>
-                    <small>{tr(detail)}</small>
-                  </span>
-                  <Check className={styles.choiceCheck} size={17} />
-                </label>
-              ))}
-            </fieldset>
+            <div className={styles.cashPayment}>
+              <Banknote size={22} aria-hidden="true" />
+              <span>{tr("Наличными при получении")}</span>
+            </div>
             {fulfillment === "PICKUP" && commentField}
           </section>
         </div>

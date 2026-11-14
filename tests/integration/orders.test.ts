@@ -82,7 +82,7 @@ it("allows only the owning customer and keeps customer prices on linked lines", 
       deliveryCity: "Кушониён",
       deliveryAddress: "Улица 10",
       fulfillment: "DELIVERY" as const,
-      paymentMethod: "BANK_INVOICE" as const,
+      paymentMethod: "CASH_ON_DELIVERY" as const,
     };
     const quote = await quoteOrder(input);
     expect(quote.deliveryTotalDirams).toBe("0");

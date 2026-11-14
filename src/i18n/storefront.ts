@@ -404,6 +404,7 @@ Object.assign(storefrontTg, {
   "Предложение готово": "Пешниҳод омода аст",
   "КП готово": "Пешниҳоди тиҷоратӣ омода аст",
 });
+Object.assign(storefrontTg, { "Наличными при получении": "Бо пули нақд ҳангоми гирифтан" });
 export function translate(text: string, locale: Locale): string {
   return locale === "tg" ? (storefrontTg[text] ?? text) : text;
 }
