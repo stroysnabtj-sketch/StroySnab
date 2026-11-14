@@ -1,3 +1,5 @@
+> Historical note: daily quotas described below were removed on 2026-11-14 at the owner's request. See PROJECT_STATE.md and the current gaps reconciliation.
+
 # DeepSeek quotation preparation
 
 - Customer opts in at `/request` and uploads DOCX, XLSX, UTF-8 CSV, PDF, JPEG or PNG (5 files, 10 MB each). Originals remain private. Provider receives file bytes under a generic filename; temporary provider files expire in one hour and are deleted after processing where possible.

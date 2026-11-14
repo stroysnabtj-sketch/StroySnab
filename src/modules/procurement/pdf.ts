@@ -31,10 +31,10 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
   const left = 38,
     width = doc.page.width - 76,
     bottom = 775;
-  const ink = "#242d2e",
-    muted = "#687171",
-    rule = "#c8ccca",
-    paper = "#f8f7f4";
+  const ink = "#12335b",
+    muted = "#536b88",
+    rule = "#bdcfe3",
+    paper = "#ffffff";
   let y = 0;
   const text = (
     value: string,
@@ -137,7 +137,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
       }
       const rows = Math.min(count - offset, Math.floor((bottom - y - 12) / 12));
       const height = rows * 12 + 12;
-      if (index % 2 === 0) doc.rect(left, y, width, height).fill("#eeefec");
+      if (index % 2 === 0) doc.rect(left, y, width, height).fill("#edf3fa");
       let x = left;
       cells.forEach((cell, i) => {
         cell
@@ -198,7 +198,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
       if (i % 2 === 0 && y + 176 > bottom) page();
       const x = left + (i % 2) * (photoWidth + 16),
         photo = photos[i];
-      doc.rect(x, y, photoWidth, 128).fill("#eeefec");
+      doc.rect(x, y, photoWidth, 128).fill("#edf3fa");
       try {
         const raw = await readQuotationImage(id, photo.imageId, actor, token);
         const image = await sharp(raw.bytes).jpeg({ quality: 85 }).toBuffer();

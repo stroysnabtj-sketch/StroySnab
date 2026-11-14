@@ -1,7 +1,7 @@
 import { publicProductText } from "@/modules/catalog/public-text";
 import { enqueueQuotationResultEmail } from "@/modules/notifications/events";
 import { randomUUID } from "node:crypto";
-import { and, eq, gte, lt, or, sql } from "drizzle-orm";
+import { and, eq, lt, or, sql } from "drizzle-orm";
 import { getDb, type DbTransaction } from "@/db";
 import {
   procurementRequests,
@@ -19,27 +19,9 @@ import { prepareQuotationCandidates } from "./preparation";
 import { saveQuotation } from "./service";
 import type { SessionUser } from "@/modules/auth/session";
 
-export async function enqueueQuotationJob(tx: DbTransaction, requestId: string, userId: string) {
+export async function enqueueQuotationJob(tx: DbTransaction, requestId: string) {
   if (!configuredDocumentProvider())
     throw new ApiError(503, "ai_unavailable", "Автоматическая подготовка временно недоступна");
-  await tx.execute(sql`select pg_advisory_xact_lock(hashtext('quotation-ai-budget'))`);
-  const since = new Date(Date.now() - 86400000);
-  const [{ total }] = await tx
-    .select({ total: sql<number>`count(*)::int` })
-    .from(quotationJobs)
-    .where(gte(quotationJobs.createdAt, since));
-  const [{ own }] = await tx
-    .select({ own: sql<number>`count(*)::int` })
-    .from(quotationJobs)
-    .innerJoin(procurementRequests, eq(procurementRequests.id, quotationJobs.requestId))
-    .where(and(eq(procurementRequests.userId, userId), gte(quotationJobs.createdAt, since)));
-  const limit = Math.min(100, Math.max(1, Number(process.env.AI_QUOTATION_DAILY_LIMIT || 20)));
-  if (!Number.isSafeInteger(limit) || total >= limit || own >= 3)
-    throw new ApiError(
-      429,
-      "ai_limit",
-      "Лимит автоматической подготовки исчерпан. Отправьте заявку менеджеру.",
-    );
   await tx.insert(quotationJobs).values({ requestId }).onConflictDoNothing();
 }
 

@@ -18,3 +18,7 @@ Backups: scheduled database and file backups exist. A fresh database backup was 
 Customer interface now has an explicit Russian/Tajik switch, persisted locale and matching server/client language. Translation covers navigation, primary storefront forms and account actions; catalogue descriptions, legal content, PDF and admin copy are not claimed fully translated. Native-speaker review remains required.
 
 Production-build acceptance checks, Windows Chromium visual baselines, axe accessibility, internal links, keyboard menu/search, isolated map/reverse-address and Turnstile script checks are configured in GitHub Actions. See [ACCEPTANCE.md](ACCEPTANCE.md). Historical IMPLEMENTATION_STATUS.md is explicitly archived; NOT_IMPLEMENTED.md now lists current outstanding work.
+
+## Quotation update — 2026-11-14
+
+AI quotation daily quotas (global and per customer) removed at the owner's request. File validation, idempotency, timeouts and bounded failure retry remain. PDF quotations now use the website navy/blue/white palette; Courier and the non-payable QR placeholder remain. Full functional reconciliation of the 30-item supplied gaps document: audit/2026-11-14-gaps-reconciliation.md. Architecture unchanged.

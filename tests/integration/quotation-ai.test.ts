@@ -21,7 +21,7 @@ async function setup() {
   vi.stubEnv("DEEPSEEK_API_KEY", "fake-test-key");
   vi.stubEnv("STORAGE_DRIVER", "local");
   vi.stubEnv("STORAGE_DIR", ".data/quotation-ai-test-files");
-  vi.stubEnv("AI_QUOTATION_DAILY_LIMIT", "100");
+
   const db = await getDb();
   const [buyer] = await db.select().from(users).where(eq(users.role, "CUSTOMER")).limit(1);
   const file = new File(["Наименование;Количество;Единица\nМатериал;1;шт."], "list.csv");
@@ -131,9 +131,6 @@ it("retains the submitted request when provider fails and does not automatically
   await expect(
     retryQuotationJob(request.id, { ...admin, role: "SUPER_ADMIN" } as SessionUser),
   ).rejects.toMatchObject({ status: 409 });
-  await expect(
-    submitProcurementRequest({ ...input, submissionKey: crypto.randomUUID() }, [file], buyer),
-  ).rejects.toMatchObject({ status: 429 });
 });
 
 it("publishes labelled alternatives and excludes repeated demand beyond stock from the total", async () => {
@@ -195,4 +192,21 @@ it("publishes labelled alternatives and excludes repeated demand beyond stock fr
   expect(view.quotation?.conditions).toContain("Не включены в стоимость (1)");
   expect(view.quotation?.totalDirams).toBe("64200");
   expect(view.preparation?.lines?.filter((l) => l.issue)).toHaveLength(1);
+});
+
+it("allows more than the former per-customer and global AI quotas", async () => {
+  const { db, file, input, buyer } = await setup();
+  vi.stubEnv("AI_QUOTATION_DAILY_LIMIT", "1");
+  for (let i = 0; i < 5; i++) {
+    const request = await submitProcurementRequest(
+      { ...input, submissionKey: crypto.randomUUID() },
+      [file],
+      buyer,
+    );
+    const [job] = await db
+      .select()
+      .from(quotationJobs)
+      .where(eq(quotationJobs.requestId, request.id));
+    expect(job.state).toBe("queued");
+  }
 });

@@ -151,7 +151,7 @@ export async function submitProcurementRequest(
           size: file.size,
         });
       }
-      if (data.autoPrepare) await enqueueQuotationJob(tx, record.id, actor!.id);
+      if (data.autoPrepare) await enqueueQuotationJob(tx, record.id);
       await enqueueRequestReceivedNotifications(tx, {
         requestId: record.id,
         number: record.number,
