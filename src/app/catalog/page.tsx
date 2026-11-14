@@ -1,3 +1,4 @@
+import { getTranslator } from "@/i18n/server";
 import { CategoryTile } from "@/components/category-tile";
 import { CATEGORIES_TREE } from "@/modules/catalog/categories-data";
 import type { Metadata } from "next";
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
 type Params = Record<string, string | string[] | undefined>;
 const one = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
 export default async function CatalogPage({ searchParams }: { searchParams: Promise<Params> }) {
+  const tr = await getTranslator();
   const params = await searchParams;
   const categorySlug = one(params.category);
   const categories = await listCategories();
@@ -92,7 +94,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
   };
   const breadcrumb = (
     <nav className="breadcrumbs" aria-label="Хлебные крошки">
-      <Link href="/">Главная</Link>
+      <Link href="/">{tr("Главная")}</Link>
       <span>/</span>
       <Link href="/catalog">Каталог</Link>
       {ancestors.map((c) => (
@@ -189,7 +191,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
           <section className="catalog-results" aria-live="polite">
             <div className="catalog-toolbar">
               <h1 className="toolbar-title">Товары</h1>
-              <span className="catalog-price-caption">Цены в сомони</span>
+              <span className="catalog-price-caption">{tr("Цены в сомони")}</span>
               <CatalogSortSelect currentSort={query.sort} currentCategory={categorySlug} />
             </div>
             <ActiveFilterChips
@@ -208,7 +210,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
               </div>
             ) : (
               <EmptyState
-                title="Товары не найдены"
+                title={tr("Товары не найдены")}
                 text="Измените фильтры или отправьте запрос на нужный материал."
                 action={
                   <div className="empty-actions">
@@ -220,16 +222,16 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
                           : "/catalog"
                       }
                     >
-                      <span className="button-label" data-label="Сбросить фильтры">
-                        Сбросить фильтры
+                      <span className="button-label" data-label={tr("Сбросить фильтры")}>
+                        {tr("Сбросить фильтры")}
                       </span>
                     </Link>
                     <Link
                       className="button button-primary"
                       href={`/catalog/request${query.q ? `?product=${encodeURIComponent(query.q)}` : ""}`}
                     >
-                      <span className="button-label" data-label="Запросить товар">
-                        Запросить товар
+                      <span className="button-label" data-label={tr("Запросить товар")}>
+                        {tr("Запросить товар")}
                       </span>
                     </Link>
                   </div>

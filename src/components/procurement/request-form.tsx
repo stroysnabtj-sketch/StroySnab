@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 
 import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,7 @@ export function ProcurementRequestForm({
   contactEmail?: string;
   autoPreparation?: boolean;
 }) {
+  const { tr } = useLocale();
   const router = useRouter();
   const [automatic, setAutomatic] = useState(false);
   const [mode, setMode] = useState<"file" | "manual">("file");
@@ -49,7 +51,9 @@ export function ProcurementRequestForm({
           : [];
       const requestFiles = mode === "file" ? files : [];
       if (!requestLines.length && !requestFiles.length)
-        throw new Error(mode === "file" ? "Прикрепите список материалов" : "Добавьте материал");
+        throw new Error(
+          mode === "file" ? tr("Прикрепите список материалов") : tr("Добавьте материал"),
+        );
       const payload = {
         contactName: form.get("contactName"),
         contactPhone: form.get("contactPhone"),
@@ -89,14 +93,14 @@ export function ProcurementRequestForm({
     <form onSubmit={submit} className={styles.form} aria-busy={busy}>
       <fieldset disabled={busy} className={styles.fieldset}>
         <section className={s.card}>
-          <div className={styles.modes} role="group" aria-label="Способ добавления списка">
+          <div className={styles.modes} role="group" aria-label={tr("Способ добавления списка")}>
             <button
               type="button"
               className={mode === "file" ? styles.active : ""}
               aria-pressed={mode === "file"}
               onClick={() => setMode("file")}
             >
-              Прикрепить список
+              {tr("Прикрепить список")}
             </button>
             <button
               type="button"
@@ -104,7 +108,7 @@ export function ProcurementRequestForm({
               aria-pressed={mode === "manual"}
               onClick={() => setMode("manual")}
             >
-              Добавить материалы
+              {tr("Добавить материалы")}
             </button>
           </div>
           {mode === "file" ? (
@@ -118,7 +122,7 @@ export function ProcurementRequestForm({
                   files.length + selected.length > 5 ||
                   selected.some((file) => file.size > 10 * 1024 * 1024 || file.size < 1)
                 ) {
-                  setError("До 5 файлов по 10 МБ");
+                  setError(tr("До 5 файлов по 10 МБ"));
                   return;
                 }
                 setFiles((current) => [...current, ...selected]);
@@ -127,10 +131,10 @@ export function ProcurementRequestForm({
             >
               <label className={styles.upload}>
                 <FileUp size={24} aria-hidden="true" />
-                <span>Загрузите список материалов</span>
-                <small>Word, Excel, PDF или фото · до 5 файлов по 10 МБ</small>
+                <span>{tr("Загрузите список материалов")}</span>
+                <small>{tr("Word, Excel, PDF или фото · до 5 файлов по 10 МБ")}</small>
                 <input
-                  aria-label="Список материалов"
+                  aria-label={tr("Список материалов")}
                   type="file"
                   multiple
                   accept=".pdf,.jpg,.jpeg,.png,.csv,.xlsx,.docx"
@@ -138,11 +142,11 @@ export function ProcurementRequestForm({
                     const selected = Array.from(event.target.files ?? []);
                     event.target.value = "";
                     if (files.length + selected.length > 5) {
-                      setError("Не более пяти вложений");
+                      setError(tr("Не более пяти вложений"));
                       return;
                     }
                     if (selected.some((file) => file.size > 10 * 1024 * 1024 || file.size < 1)) {
-                      setError("Каждый файл должен быть от 1 байта до 10 МБ");
+                      setError(tr("Каждый файл должен быть от 1 байта до 10 МБ"));
                       return;
                     }
                     setError("");
@@ -157,7 +161,7 @@ export function ProcurementRequestForm({
                     checked={automatic}
                     onChange={(event) => setAutomatic(event.target.checked)}
                   />
-                  <span>Подготовить расчёт автоматически</span>
+                  <span>{tr("Подготовить расчёт автоматически")}</span>
                 </label>
               )}
               {files.length > 0 && (
@@ -183,13 +187,14 @@ export function ProcurementRequestForm({
               {lines.map((line, index) => (
                 <div className={styles.line} key={line.id}>
                   <label className={s.field}>
-                    Материал {index + 1}
+                    {tr("Материал")}
+                    {index + 1}
                     <input
                       required
                       minLength={2}
                       maxLength={300}
                       value={line.name}
-                      placeholder="Например, цемент М500"
+                      placeholder={tr("Например, цемент М500")}
                       onChange={(event) => updateLine(line.id, "name", event.target.value)}
                     />
                   </label>
@@ -215,13 +220,13 @@ export function ProcurementRequestForm({
                     <X size={16} aria-hidden="true" />
                   </button>
                   <details className={styles.unit}>
-                    <summary>Единица измерения</summary>
+                    <summary>{tr("Единица измерения")}</summary>
                     <label className={s.field}>
-                      Единица, если известна
+                      {tr("Единица, если известна")}
                       <input
                         maxLength={30}
                         value={line.unit}
-                        placeholder="м, меш., шт."
+                        placeholder={tr("м, меш., шт.")}
                         onChange={(event) => updateLine(line.id, "unit", event.target.value)}
                       />
                     </label>
@@ -234,7 +239,7 @@ export function ProcurementRequestForm({
                 disabled={lines.length >= 200}
                 onClick={() => setLines((current) => [...current, emptyLine(crypto.randomUUID())])}
               >
-                <Plus size={16} aria-hidden="true" /> Добавить материал
+                <Plus size={16} aria-hidden="true" /> {tr("Добавить материал")}
               </button>
             </div>
           )}
@@ -243,7 +248,8 @@ export function ProcurementRequestForm({
           {contactsComplete ? (
             <details>
               <summary>
-                Контакты: {contactName}, {contactPhone} · изменить
+                {tr("Контакты:")}
+                {contactName}, {contactPhone} {tr("· изменить")}
               </summary>
               <div className={s.fields} style={{ marginTop: 16 }}>
                 <ContactFields name={contactName} phone={contactPhone} />
@@ -258,10 +264,10 @@ export function ProcurementRequestForm({
             className={styles.additional}
             open={mode === "file" && automatic ? true : undefined}
           >
-            <summary>Комментарий и e-mail</summary>
+            <summary>{tr("Комментарий и e-mail")}</summary>
             <div className={styles.extraFields}>
               <label className={s.field}>
-                Комментарий
+                {tr("Комментарий")}
                 <textarea name="note" maxLength={5000} />
               </label>
               <label className={s.field}>
@@ -286,10 +292,10 @@ export function ProcurementRequestForm({
       )}
       <button type="submit" className={`button button-primary ${styles.submit}`} disabled={busy}>
         {busy
-          ? "Загружаем список…"
+          ? tr("Загружаем список…")
           : mode === "file" && automatic
-            ? "Подготовить КП"
-            : "Отправить заявку"}
+            ? tr("Подготовить КП")
+            : tr("Отправить заявку")}
       </button>
     </form>
   );

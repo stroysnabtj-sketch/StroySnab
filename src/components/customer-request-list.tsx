@@ -1,3 +1,5 @@
+"use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { formatTJS } from "@/modules/system/money";
@@ -17,6 +19,7 @@ export type CustomerRequestRow = {
 };
 
 export function CustomerRequestList({ items }: { items: CustomerRequestRow[] }) {
+  const { tr } = useLocale();
   return (
     <div className={styles.compactRequests}>
       {items.map((item) => (
@@ -27,7 +30,7 @@ export function CustomerRequestList({ items }: { items: CustomerRequestRow[] }) 
             </span>
             <strong>{item.title}</strong>
           </div>
-          <span className={styles.status}>{item.statusLabel}</span>
+          <span className={styles.status}>{tr(item.statusLabel)}</span>
           <div className={styles.requestAmount}>
             {item.amount !== null ? (
               <>
@@ -41,7 +44,7 @@ export function CustomerRequestList({ items }: { items: CustomerRequestRow[] }) 
           <ArrowUpRight size={18} aria-hidden="true" />
         </Link>
       ))}
-      {!items.length && <p className={styles.empty}>Заявок нет</p>}
+      {!items.length && <p className={styles.empty}>{tr("Заявок нет")}</p>}
     </div>
   );
 }

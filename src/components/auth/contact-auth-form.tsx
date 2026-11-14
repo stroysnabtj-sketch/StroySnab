@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import { useCspNonce } from "@/components/csp-nonce-provider";
 import Script from "next/script";
@@ -38,6 +39,7 @@ export function ContactAuthForm({
   refCode?: string;
   captchaSiteKey?: string;
 }) {
+  const { tr } = useLocale();
   const nonce = useCspNonce();
   const [channel, setChannel] = useState<"sms" | "email">("sms"),
     [identifier, setIdentifier] = useState(""),
@@ -85,13 +87,13 @@ export function ContactAuthForm({
   async function requestCode() {
     if (needsCaptcha && !captchaToken) return;
     if (mode === "register" && !terms) {
-      setError("Примите условия соглашения и политику конфиденциальности");
+      setError(tr("Примите условия соглашения и политику конфиденциальности"));
       return;
     }
     if (mode !== "login") {
       const passwordError = registrationPasswordError(password, passwordConfirmation);
       if (passwordError) {
-        setError(passwordError);
+        setError(tr(passwordError));
         return;
       }
     }
@@ -113,7 +115,7 @@ export function ContactAuthForm({
       if (!response.ok) {
         const retry = Number(response.headers.get("Retry-After"));
         if (retry > 0) setWaitUntil(Date.now() + retry * 1000);
-        throw new Error(result.error?.message || "Не удалось отправить код");
+        throw new Error(result.error?.message || tr("Не удалось отправить код"));
       }
       setChallenge(result);
       setCodeStep(true);
@@ -149,7 +151,7 @@ export function ContactAuthForm({
         }),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error?.message || "Не удалось войти");
+      if (!response.ok) throw new Error(result.error?.message || tr("Не удалось войти"));
       if (result.requiresLogin) {
         window.location.href = `/auth/password?next=${encodeURIComponent(safeAuthDestination(next))}`;
         return;
@@ -171,7 +173,7 @@ export function ContactAuthForm({
       )}
       {!codeStep ? (
         <>
-          <div className={styles.channelTabs} aria-label="Куда отправить код">
+          <div className={styles.channelTabs} aria-label={tr("Куда отправить код")}>
             <button
               type="button"
               aria-pressed={channel === "sms"}
@@ -182,7 +184,7 @@ export function ContactAuthForm({
                 setError("");
               }}
             >
-              По телефону
+              {tr("По телефону")}
             </button>
             <button
               type="button"
@@ -194,11 +196,11 @@ export function ContactAuthForm({
                 setError("");
               }}
             >
-              По почте
+              {tr("По почте")}
             </button>
           </div>
           {mode === "register" && (
-            <Field label="Имя и фамилия">
+            <Field label={tr("Имя и фамилия")}>
               <Input
                 autoComplete="name"
                 required
@@ -210,13 +212,13 @@ export function ContactAuthForm({
               />
             </Field>
           )}
-          <Field label={channel === "sms" ? "Телефон" : "E-mail"}>
+          <Field label={channel === "sms" ? tr("Телефон") : "E-mail"}>
             {channel === "sms" ? (
               <span className={styles.phoneInput}>
                 <span aria-hidden="true">+992</span>
                 <input
                   type="tel"
-                  aria-label="Телефон"
+                  aria-label={tr("Телефон")}
                   inputMode="numeric"
                   autoComplete="tel-national"
                   placeholder="000 00 00 00"
@@ -263,7 +265,7 @@ export function ContactAuthForm({
             <>
               <div className="field">
                 <label className="field-label" htmlFor="registration-password">
-                  Пароль
+                  {tr("Пароль")}
                 </label>
                 <div className={styles.password}>
                   <Input
@@ -280,7 +282,7 @@ export function ContactAuthForm({
                   <button
                     className={styles.reveal}
                     type="button"
-                    aria-label={showPasswords ? "Скрыть пароль" : "Показать пароль"}
+                    aria-label={showPasswords ? tr("Скрыть пароль") : tr("Показать пароль")}
                     aria-pressed={showPasswords}
                     onClick={() => setShowPasswords(!showPasswords)}
                   >
@@ -294,7 +296,7 @@ export function ContactAuthForm({
                         <Check size={12} strokeWidth={3} />
                       </span>
                       <span>
-                        {rule.label}
+                        {tr(rule.label)}
                         <span className="sr-only">
                           {rule.met ? " — выполнено" : " — не выполнено"}
                         </span>
@@ -303,7 +305,7 @@ export function ContactAuthForm({
                   ))}
                 </ul>
               </div>
-              <Field label="Повторите пароль">
+              <Field label={tr("Повторите пароль")}>
                 <Input
                   type="password"
                   autoComplete="new-password"
@@ -321,23 +323,23 @@ export function ContactAuthForm({
                   onChange={(e) => setTerms(e.target.checked)}
                   label={
                     <span>
-                      Согласен с обработкой персональных данных,{" "}
+                      {tr("Согласен с обработкой персональных данных,")}{" "}
                       <Link
                         className="inline-link"
                         href="/terms"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        условия соглашения
+                        {tr("условия соглашения")}
                       </Link>{" "}
-                      и{" "}
+                      {tr("и")}{" "}
                       <Link
                         className="inline-link"
                         href="/privacy"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        политику конфиденциальности
+                        {tr("политику конфиденциальности")}
                       </Link>
                     </span>
                   }
@@ -350,11 +352,11 @@ export function ContactAuthForm({
         <>
           {challenge && (
             <p className={styles.caption}>
-              Код отправлен {channel === "sms" ? "на телефон" : "на почту"}{" "}
-              {challenge.maskedRecipient}
+              {tr("Код отправлен")}
+              {channel === "sms" ? tr("на телефон") : tr("на почту")} {challenge.maskedRecipient}
             </p>
           )}
-          <Field label="Код подтверждения">
+          <Field label={tr("Код подтверждения")}>
             <span className={styles.otpControl}>
               <input
                 className={styles.otpInput}
@@ -385,7 +387,7 @@ export function ContactAuthForm({
             nonce={nonce}
             src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
             onReady={() => setCaptchaReady(true)}
-            onError={() => setError("Проверка временно недоступна")}
+            onError={() => setError(tr("Проверка временно недоступна"))}
           />
           <div ref={captchaHost} />
         </>
@@ -400,14 +402,14 @@ export function ContactAuthForm({
         }
       >
         {busy
-          ? "Подождите…"
+          ? tr("Подождите…")
           : codeStep
             ? mode === "register"
-              ? "Создать аккаунт"
+              ? tr("Создать аккаунт")
               : mode === "recover"
-                ? "Сохранить пароль"
-                : "Войти"
-            : "Получить код"}
+                ? tr("Сохранить пароль")
+                : tr("Войти")
+            : tr("Получить код")}
       </Button>
       {codeStep && (
         <div className={styles.codeActions}>
@@ -417,7 +419,7 @@ export function ContactAuthForm({
             disabled={busy || remaining > 0 || (needsCaptcha && !captchaToken)}
             onClick={() => void requestCode()}
           >
-            {remaining > 0 ? `Повторить через ${remaining} с` : "Отправить код ещё раз"}
+            {remaining > 0 ? `Повторить через ${remaining} с` : tr("Отправить код ещё раз")}
           </button>
           <button
             type="button"
@@ -432,13 +434,14 @@ export function ContactAuthForm({
               setError("");
             }}
           >
-            Изменить контакт
+            {tr("Изменить контакт")}
           </button>
         </div>
       )}
       {!codeStep && remaining > 0 && (
         <p className={styles.caption} role="status">
-          Повторить через {remaining} с
+          {tr("Повторить через")}
+          {remaining} {tr("с")}
         </p>
       )}
     </form>

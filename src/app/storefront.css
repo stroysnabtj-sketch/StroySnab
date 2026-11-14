@@ -3580,3 +3580,11 @@ input[type="file"]::file-selector-button { border:0; border-radius:7px; padding:
  .product-card .product-card-body .product-card-unit { font-size: 9px; line-height: 12px; }
  .product-card .product-card-body .product-card-price-row { gap: 2px 3px; }
 }
+
+/* Accessible secondary text on light cards and dark footer. */
+.service-note p { color:#53647a; }
+.site-footer .footer-brand small { color:#c5d8ee; }
+
+.breadcrumbs, .category-tile-count { color:#53647a; }
+.breadcrumbs a, .category-tile-count, .product-card-unit { color:#53647a; }
+.category-photo-card .category-tile-count { color:#53647a; }

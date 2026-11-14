@@ -1,9 +1,12 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
+import { LanguageSwitch } from "./language-switch";
 import Link from "next/link";
 import { PanelsTopLeft, MapPin, Menu, Search, ShoppingCart, UserRound, X } from "lucide-react";
 import { HeaderSearch } from "@/components/header-search";
 import { useEffect, useState } from "react";
 export function SiteHeader({ className = "" }: { className?: string }) {
+  const { tr } = useLocale();
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(false);
   const [searchPinned, setSearchPinned] = useState(false);
@@ -52,30 +55,31 @@ export function SiteHeader({ className = "" }: { className?: string }) {
       <div className="header-utility">
         <div className="shell">
           <span>
-            <MapPin size={13} /> Таджикистан
+            <MapPin size={13} /> {tr("Таджикистан")}
           </span>
-          <nav aria-label="Информация">
-            <Link href="/delivery">Доставка и оплата</Link>
-            <Link href="/contacts">Контакты</Link>
+          <nav aria-label={tr("Информация")}>
+            <Link href="/delivery">{tr("Доставка и оплата")}</Link>
+            <Link href="/contacts">{tr("Контакты")}</Link>
           </nav>
         </div>
       </div>
       <div className="shell header-inner">
-        <Link href="/" className="brand" aria-label="Stroysnab.tj — на главную">
+        <Link href="/" className="brand" aria-label={tr("Stroysnab.tj — на главную")}>
           <span className="brand-mark">S</span>
           <span>
             STROYSNAB<small>.TJ</small>
           </span>
         </Link>
         <Link className="header-catalog-button" href="/catalog">
-          <PanelsTopLeft size={18} /> Каталог
+          <PanelsTopLeft size={18} /> {tr("Каталог")}
         </Link>
         <HeaderSearch />
         <div className="header-actions">
+          <LanguageSwitch />
           {compact && (
             <button
               className="header-search-toggle"
-              aria-label="Открыть поиск"
+              aria-label={tr("Открыть поиск")}
               onClick={() => {
                 setSearchPinned(true);
                 setCompact(false);
@@ -86,7 +90,7 @@ export function SiteHeader({ className = "" }: { className?: string }) {
           )}
           <Link className="header-action" href={accountHref}>
             <UserRound size={21} />
-            <span>{staff ? "Управление" : "Кабинет"}</span>
+            <span>{staff ? tr("Управление") : tr("Кабинет")}</span>
           </Link>
           <Link className="header-action" href="/cart">
             <span className="cart-icon-wrap" data-cart-target>
@@ -95,30 +99,30 @@ export function SiteHeader({ className = "" }: { className?: string }) {
                 <span className="cart-counter">{session.cartCount}</span>
               )}
             </span>
-            <span>Корзина</span>
+            <span>{tr("Корзина")}</span>
           </Link>
           <button
             className="menu-button"
             onClick={() => setOpen(!open)}
             aria-expanded={open}
             aria-controls="mobile-site-nav"
-            aria-label={open ? "Закрыть меню" : "Открыть меню"}
+            aria-label={open ? tr("Закрыть меню") : tr("Открыть меню")}
           >
             {open ? <X /> : <Menu />}
           </button>
         </div>
       </div>
       {open && (
-        <nav className="mobile-site-nav shell" id="mobile-site-nav" aria-label="Меню">
+        <nav className="mobile-site-nav shell" id="mobile-site-nav" aria-label={tr("Меню")}>
           <Link href="/catalog" onClick={() => setOpen(false)}>
-            Каталог
+            {tr("Каталог")}
           </Link>
           <Link href={accountHref} onClick={() => setOpen(false)}>
-            {staff ? "Управление" : "Личный кабинет"}
+            {staff ? tr("Управление") : tr("Личный кабинет")}
           </Link>
-          <Link href="/catalog/request">Заявка на товар</Link>
-          <Link href="/delivery">Доставка и оплата</Link>
-          <Link href="/contacts">Контакты</Link>
+          <Link href="/catalog/request">{tr("Заявка на товар")}</Link>
+          <Link href="/delivery">{tr("Доставка и оплата")}</Link>
+          <Link href="/contacts">{tr("Контакты")}</Link>
         </nav>
       )}
     </header>

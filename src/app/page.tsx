@@ -1,3 +1,4 @@
+import { getTranslator } from "@/i18n/server";
 import Link from "next/link";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -35,6 +36,7 @@ const getHomeCatalog = unstable_cache(
 
 export default async function HomePage() {
   await connection();
+  const tr = await getTranslator();
   const [catalog, categories, collections, content] = await getHomeCatalog();
   const roots = categories.filter((category) => !category.parentId && category.isActive === "true");
   const canonicalRoots = CATEGORIES_TREE.map((node) =>
@@ -49,29 +51,31 @@ export default async function HomePage() {
           <div className="store-hero">
             <div className="store-hero-copy">
               <h1>
-                {content.hero.title.split("\n").map((line, index) => (
-                  <span key={index}>{line}</span>
-                ))}
+                {tr(content.hero.title)
+                  .split("\n")
+                  .map((line, index) => (
+                    <span key={index}>{line}</span>
+                  ))}
               </h1>
-              <p>{content.hero.subtitle}</p>
+              <p>{tr(content.hero.subtitle)}</p>
               <div className="hero-banner-actions">
                 <Link
                   href={content.hero.primaryHref}
                   className="button button-primary hero-shop-button"
-                  aria-label={content.hero.primaryLabel}
+                  aria-label={tr(content.hero.primaryLabel)}
                 >
-                  <span className="button-label" data-label={content.hero.primaryLabel}>
-                    {content.hero.primaryLabel}
+                  <span className="button-label" data-label={tr(content.hero.primaryLabel)}>
+                    {tr(content.hero.primaryLabel)}
                   </span>
                   <ArrowRight size={18} />
                 </Link>
                 <Link
                   href={content.hero.secondaryHref}
                   className="button hero-quote-button"
-                  aria-label={content.hero.secondaryLabel}
+                  aria-label={tr(content.hero.secondaryLabel)}
                 >
-                  <span className="button-label" data-label={content.hero.secondaryLabel}>
-                    {content.hero.secondaryLabel}
+                  <span className="button-label" data-label={tr(content.hero.secondaryLabel)}>
+                    {tr(content.hero.secondaryLabel)}
                   </span>
                 </Link>
               </div>
@@ -95,9 +99,9 @@ export default async function HomePage() {
         </section>
         <section className="shell home-categories-section">
           <div className="section-head">
-            <h2>Каталог</h2>
+            <h2>{tr("Каталог")}</h2>
             <Link href="/catalog" className="section-more">
-              Все разделы <ArrowRight size={17} />
+              {tr("Все разделы")} <ArrowRight size={17} />
             </Link>
           </div>
           <HomeCardGrid className="home-categories-grid">
@@ -122,9 +126,9 @@ export default async function HomePage() {
                 aria-labelledby={`home-${kind}-title`}
               >
                 <div className="section-head">
-                  <h2 id={`home-${kind}-title`}>{kind === "new" ? "Новинки" : "Акции"}</h2>
+                  <h2 id={`home-${kind}-title`}>{kind === "new" ? tr("Новинки") : tr("Акции")}</h2>
                   <Link href="/catalog" className="section-more">
-                    В каталог <ArrowRight size={17} />
+                    {tr("В каталог")} <ArrowRight size={17} />
                   </Link>
                 </div>
                 <HomeCardGrid className="product-grid product-grid-4">
@@ -141,10 +145,10 @@ export default async function HomePage() {
           <section className="shell home-products-section">
             <div className="section-head">
               <div>
-                <h2>В наличии</h2>
+                <h2>{tr("В наличии")}</h2>
               </div>
               <Link href="/catalog?inStock=1" className="section-more">
-                Все товары <ArrowRight size={17} />
+                {tr("Все товары")} <ArrowRight size={17} />
               </Link>
             </div>
             <HomeCardGrid className="product-grid product-grid-4">
@@ -160,8 +164,8 @@ export default async function HomePage() {
           <div className="service-note">
             <Truck size={27} />
             <div>
-              <h3>Доставка на объект</h3>
-              <p>Адрес и способ получения — при оформлении заказа.</p>
+              <h3>{tr("Доставка на объект")}</h3>
+              <p>{tr("Адрес и способ получения — при оформлении заказа.")}</p>
             </div>
             <Link href="/delivery" aria-label="Условия доставки">
               <ArrowRight size={19} />
@@ -170,8 +174,8 @@ export default async function HomePage() {
           <div className="service-note">
             <Package size={27} />
             <div>
-              <h3>Строительные материалы</h3>
-              <p>Материалы для строительства и ремонта.</p>
+              <h3>{tr("Строительные материалы")}</h3>
+              <p>{tr("Материалы для строительства и ремонта.")}</p>
             </div>
             <Link href="/catalog" aria-label="Открыть каталог">
               <ArrowRight size={19} />

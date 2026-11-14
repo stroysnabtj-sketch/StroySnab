@@ -1,7 +1,9 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import { Children, useEffect, useId, useState, type ReactNode } from "react";
 
 export function HomeCardGrid({ children, className }: { children: ReactNode; className: string }) {
+  const { tr } = useLocale();
   const [visible, setVisible] = useState(4);
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
@@ -24,7 +26,7 @@ export function HomeCardGrid({ children, className }: { children: ReactNode; cla
           disabled={!ready}
           onClick={() => setVisible((count) => count + 4)}
         >
-          Показать ещё
+          {tr("Показать ещё")}
         </button>
       )}
     </>

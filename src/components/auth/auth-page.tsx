@@ -1,3 +1,4 @@
+import { getTranslator } from "@/i18n/server";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -6,7 +7,7 @@ import { ContactAuthForm } from "./contact-auth-form";
 import { t } from "@/i18n";
 import { safeAuthDestination } from "@/modules/auth/destination";
 import styles from "./auth-experience.module.css";
-export function AuthPage({
+export async function AuthPage({
   mode,
   next,
   refCode,
@@ -19,6 +20,7 @@ export function AuthPage({
   token?: string;
   passwordLogin?: boolean;
 }) {
+  const tr = await getTranslator();
   const titleKey =
     mode === "login"
       ? "auth.loginTitle"
@@ -34,7 +36,7 @@ export function AuthPage({
       <SiteHeader />
       <main className={`shell ${styles.layout}`}>
         <section className={styles.card}>
-          <h1>{t(titleKey)}</h1>
+          <h1>{tr(t(titleKey))}</h1>
           {!passwordLogin && (mode === "login" || mode === "register" || mode === "forgot") ? (
             <ContactAuthForm
               mode={mode === "forgot" ? "recover" : mode}
@@ -47,19 +49,19 @@ export function AuthPage({
           )}
           {mode === "login" && !passwordLogin && (
             <Link className={styles.passwordLink} href={`/auth/password${destination}`}>
-              Войти по паролю
+              {tr("Войти по паролю")}
             </Link>
           )}
           {passwordLogin && (
             <Link className={styles.passwordLink} href={codeLogin}>
-              Войти по коду
+              {tr("Войти по коду")}
             </Link>
           )}
           <div className={styles.switch}>
             {mode === "login" ? (
-              <Link href={`/auth/register${destination}`}>Создать аккаунт</Link>
+              <Link href={`/auth/register${destination}`}>{tr("Создать аккаунт")}</Link>
             ) : (
-              <Link href={`/auth/login${destination}`}>{t("auth.hasAccount")}</Link>
+              <Link href={`/auth/login${destination}`}>{tr(t("auth.hasAccount"))}</Link>
             )}
           </div>
         </section>

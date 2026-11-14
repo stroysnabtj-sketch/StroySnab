@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -20,6 +21,7 @@ export function AuthForm({
   refCode?: string;
   token?: string;
 }) {
+  const { tr } = useLocale();
   const router = useRouter();
   const [form, setForm] = useState({
     fullName: "",
@@ -48,7 +50,7 @@ export function AuthForm({
     setErrors({});
     setMessage("");
     if (mode === "register" && !terms) {
-      setErrors({ termsAccepted: t("auth.termsRequired") });
+      setErrors({ termsAccepted: tr(t("auth.termsRequired")) });
       setLoading(false);
       return;
     }
@@ -60,7 +62,8 @@ export function AuthForm({
           body: JSON.stringify({ challengeId: challenge.challengeId, code: staffCode }),
         });
         const result = await response.json();
-        if (!response.ok) throw new Error(result.error?.message ?? "Не удалось подтвердить вход");
+        if (!response.ok)
+          throw new Error(result.error?.message ?? tr("Не удалось подтвердить вход"));
         const destination = safeAuthDestination(next);
         window.location.href = destination === "/account" ? "/admin" : destination;
       } catch (error) {
@@ -104,7 +107,7 @@ export function AuthForm({
       });
       const result = await response.json();
       if (!response.ok) {
-        setErrors(result.error?.fields ?? { root: result.error?.message ?? t("common.error") });
+        setErrors(result.error?.fields ?? { root: result.error?.message ?? tr(t("common.error")) });
         return;
       }
       if (result.requiresCode && result.challenge) {
@@ -114,12 +117,12 @@ export function AuthForm({
         return;
       }
       if (mode === "forgot") {
-        setMessage(t("auth.resetSent"));
+        setMessage(tr(t("auth.resetSent")));
         setDevelopmentToken(result.developmentToken ?? "");
         return;
       }
       if (mode === "reset") {
-        setMessage(t("auth.resetDone"));
+        setMessage(tr(t("auth.resetDone")));
         setTimeout(() => router.push("/auth/login"), 700);
         return;
       }
@@ -130,7 +133,7 @@ export function AuthForm({
           : destination;
       window.location.href = target;
     } catch {
-      setErrors({ root: t("common.error") });
+      setErrors({ root: tr(t("common.error")) });
     } finally {
       setLoading(false);
     }
@@ -139,13 +142,16 @@ export function AuthForm({
   if (challenge)
     return (
       <form className={`auth-form ${styles.form}`} onSubmit={submit} aria-busy={loading}>
-        <p>Код отправлен на {challenge.maskedRecipient}</p>
+        <p>
+          {tr("Код отправлен на")}
+          {challenge.maskedRecipient}
+        </p>
         {errors.root && (
           <div className="form-alert" role="alert">
             {errors.root}
           </div>
         )}
-        <Field label="Код подтверждения">
+        <Field label={tr("Код подтверждения")}>
           <Input
             autoFocus
             inputMode="numeric"
@@ -158,7 +164,7 @@ export function AuthForm({
           />
         </Field>
         <Button type="submit" disabled={loading || staffCode.length !== 6}>
-          Подтвердить вход
+          {tr("Подтвердить вход")}
         </Button>
         <button
           type="button"
@@ -169,7 +175,7 @@ export function AuthForm({
             setErrors({});
           }}
         >
-          Войти заново
+          {tr("Войти заново")}
         </button>
       </form>
     );
@@ -186,7 +192,7 @@ export function AuthForm({
         </div>
       ) : null}
       {mode === "register" ? (
-        <Field label={t("auth.fullName")} error={errors.fullName}>
+        <Field label={tr(t("auth.fullName"))} error={errors.fullName}>
           <Input
             required
             aria-required
@@ -197,7 +203,7 @@ export function AuthForm({
         </Field>
       ) : null}
       {mode === "login" ? (
-        <Field label={t("auth.identifier")} error={errors.identifier}>
+        <Field label={tr(t("auth.identifier"))} error={errors.identifier}>
           <Input
             required
             value={form.identifier}
@@ -208,7 +214,7 @@ export function AuthForm({
       ) : null}
       {mode === "register" ? (
         <>
-          <Field label={t("common.phone")} error={errors.phone}>
+          <Field label={tr(t("common.phone"))} error={errors.phone}>
             <Input
               required
               aria-required
@@ -219,7 +225,7 @@ export function AuthForm({
               autoComplete="tel"
             />
           </Field>
-          <Field label={t("auth.emailOptional")} error={errors.email}>
+          <Field label={tr(t("auth.emailOptional"))} error={errors.email}>
             <Input
               type="email"
               value={form.email}
@@ -230,7 +236,7 @@ export function AuthForm({
         </>
       ) : null}
       {mode === "forgot" ? (
-        <Field label={t("common.email")} error={errors.email}>
+        <Field label={tr(t("common.email"))} error={errors.email}>
           <Input
             required
             type="email"
@@ -243,7 +249,7 @@ export function AuthForm({
       {mode !== "forgot" ? (
         <div className="field">
           <label className="field-label" htmlFor="auth-password">
-            {t("common.password")}
+            {tr(t("common.password"))}
           </label>
           <div className={styles.password}>
             <Input
@@ -261,7 +267,7 @@ export function AuthForm({
             <button
               className={styles.reveal}
               type="button"
-              aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+              aria-label={showPassword ? tr("Скрыть пароль") : tr("Показать пароль")}
               aria-pressed={showPassword}
               onClick={() => setShowPassword((value) => !value)}
             >
@@ -274,7 +280,7 @@ export function AuthForm({
             </span>
           ) : mode !== "login" ? (
             <span className="field-hint" id="password-hint">
-              {t("auth.passwordHint")}
+              {tr(t("auth.passwordHint"))}
             </span>
           ) : null}
         </div>
@@ -287,23 +293,23 @@ export function AuthForm({
             aria-describedby="terms-error"
             label={
               <span>
-                {t("auth.termsPrefix")}
+                {tr(t("auth.termsPrefix"))}
                 <Link
                   className="inline-link"
                   href="/terms"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {t("auth.termsLink")}
+                  {tr(t("auth.termsLink"))}
                 </Link>{" "}
-                и{" "}
+                {tr("и")}{" "}
                 <Link
                   className="inline-link"
                   href="/privacy"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  политикой конфиденциальности
+                  {tr("политикой конфиденциальности")}
                 </Link>
               </span>
             }
@@ -317,15 +323,17 @@ export function AuthForm({
       ) : null}
       <Button type="submit" disabled={loading}>
         {loading
-          ? t("common.loading")
-          : t(
-              mode === "login"
-                ? "auth.loginAction"
-                : mode === "register"
-                  ? "auth.registerAction"
-                  : mode === "forgot"
-                    ? "auth.forgotAction"
-                    : "auth.resetAction",
+          ? tr(t("common.loading"))
+          : tr(
+              t(
+                mode === "login"
+                  ? "auth.loginAction"
+                  : mode === "register"
+                    ? "auth.registerAction"
+                    : mode === "forgot"
+                      ? "auth.forgotAction"
+                      : "auth.resetAction",
+              ),
             )}
       </Button>
       {mode === "login" ? (
@@ -334,13 +342,13 @@ export function AuthForm({
             className="auth-secondary-link"
             href={`/auth/forgot?next=${encodeURIComponent(safeAuthDestination(next))}`}
           >
-            {t("auth.forgot")}
+            {tr(t("auth.forgot"))}
           </Link>
         </>
       ) : null}
       {developmentToken ? (
         <Link className="text-link" href={`/auth/reset?token=${developmentToken}`}>
-          Открыть ссылку восстановления
+          {tr("Открыть ссылку восстановления")}
         </Link>
       ) : null}
     </form>

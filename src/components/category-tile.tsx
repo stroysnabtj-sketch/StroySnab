@@ -1,3 +1,5 @@
+"use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
@@ -16,6 +18,7 @@ export function CategoryTile({
   description?: string;
   actionText?: string;
 }) {
+  const { tr, locale } = useLocale();
   return (
     <Link
       href={`/catalog?category=${encodeURIComponent(slug)}`}
@@ -31,12 +34,14 @@ export function CategoryTile({
         />
       </span>
       <span className="category-tile-content">
-        <h3 className="category-tile-title">{name}</h3>
+        <h3 className="category-tile-title">{tr(name)}</h3>
         {description && <span className="category-tile-desc">{description}</span>}
         <span className="category-tile-count">
           {childCount
-            ? countNoun(childCount, "раздел", "раздела", "разделов")
-            : (actionText ?? "Смотреть товары")}
+            ? locale === "tg"
+              ? `${childCount} бахш`
+              : countNoun(childCount, "раздел", "раздела", "разделов")
+            : (actionText ?? tr("Смотреть товары"))}
         </span>
       </span>
       <ArrowUpRight className="category-tile-arrow" size={18} />

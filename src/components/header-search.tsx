@@ -1,10 +1,12 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import { Search, ArrowUpRight } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 type Suggestion = { name: string; slug: string };
 export function HeaderSearch() {
+  const { tr } = useLocale();
   const [q, setQ] = useState("");
   const [items, setItems] = useState<Suggestion[]>([]);
   const [open, setOpen] = useState(false);
@@ -80,13 +82,13 @@ export function HeaderSearch() {
           autoComplete="off"
           role="combobox"
           aria-autocomplete="list"
-          aria-label="Поиск товаров"
+          aria-label={tr("Поиск товаров")}
           aria-expanded={open && items.length > 0}
           aria-controls={id}
           aria-activedescendant={active >= 0 ? `${id}-${active}` : undefined}
-          placeholder="Название товара, марка или артикул"
+          placeholder={tr("Название товара, марка или артикул")}
         />
-        <button type="submit" aria-label="Найти">
+        <button type="submit" aria-label={tr("Найти")}>
           <Search size={21} />
         </button>
       </form>

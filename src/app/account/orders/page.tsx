@@ -1,3 +1,4 @@
+import { getTranslator } from "@/i18n/server";
 import { CustomerWorkspace } from "@/components/customer-workspace";
 import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
@@ -26,6 +27,7 @@ const paymentLabels: Record<string, string> = {
 };
 
 export default async function AccountOrders() {
+  const tr = await getTranslator();
   const user = await requirePageUser(["CUSTOMER"], "/account/orders");
   const db = await getDb();
   const [customer] = await db
@@ -44,11 +46,11 @@ export default async function AccountOrders() {
   const payments = await Promise.all(items.map((order) => getOrderPaymentSummary(order.id)));
   return (
     <CustomerWorkspace
-      title="Заказы"
+      title={tr("Заказы")}
       identity={user.phone}
       actions={
         <Link href="/catalog" className="button button-secondary">
-          В каталог
+          {tr("В каталог")}
         </Link>
       }
     >
@@ -89,7 +91,7 @@ export default async function AccountOrders() {
                   </div>
                   <dl className={styles.amounts}>
                     <div>
-                      <dt>Сумма заказа</dt>
+                      <dt>{tr("Сумма заказа")}</dt>
                       <dd>{formatTJS(payment.totalDirams)}</dd>
                     </div>
                     <div>
@@ -126,7 +128,7 @@ export default async function AccountOrders() {
                 Перейти в каталог
               </Link>
               <Link href="/account/requests" className="button button-secondary">
-                Заявки
+                {tr("Заявки")}
               </Link>
             </div>
           </div>

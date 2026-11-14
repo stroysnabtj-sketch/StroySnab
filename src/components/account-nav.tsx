@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +16,7 @@ import { LogoutButton } from "./auth/logout-button";
 import styles from "./account.module.css";
 
 export function AccountNav({ identity }: { identity?: string }) {
+  const { tr } = useLocale();
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -38,7 +40,7 @@ export function AccountNav({ identity }: { identity?: string }) {
         aria-controls="account-navigation"
         onClick={() => setOpen(!open)}
       >
-        <Menu size={18} aria-hidden="true" /> Меню кабинета{" "}
+        <Menu size={18} aria-hidden="true" /> {tr("Меню кабинета")}{" "}
         <ChevronDown size={16} aria-hidden="true" />
       </button>
       <div
@@ -51,8 +53,8 @@ export function AccountNav({ identity }: { identity?: string }) {
           }
         }}
       >
-        <span className={styles.sidebarTitle}>Мой кабинет</span>
-        <nav className={styles.nav} aria-label="Личный кабинет">
+        <span className={styles.sidebarTitle}>{tr("Мой кабинет")}</span>
+        <nav className={styles.nav} aria-label={tr("Личный кабинет")}>
           {links.map(({ href, label, icon: Icon }) => {
             const active =
               href === "/account"
@@ -63,7 +65,7 @@ export function AccountNav({ identity }: { identity?: string }) {
             return (
               <Link key={href} href={href} aria-current={active ? "page" : undefined}>
                 <Icon size={18} aria-hidden="true" />
-                {label}
+                {tr(label)}
               </Link>
             );
           })}

@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { AddressMap, type MapPoint } from "./address-map";
 import { Select, Input, Field, Button } from "./ui";
@@ -26,12 +27,13 @@ export function AddressFields({
   requireStreet?: boolean;
   children?: ReactNode;
 }) {
+  const { tr } = useLocale();
   const [items, setItems] = useState<SavedAddress[]>([]),
     [locating, setLocating] = useState(false),
     [lookupFailed, setLookupFailed] = useState(false),
     [manual, setManual] = useState(false),
     [selected, setSelected] = useState(""),
-    [label, setLabel] = useState("Адрес"),
+    [label, setLabel] = useState(tr("Адрес")),
     [primary, setPrimary] = useState(false),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
@@ -119,7 +121,7 @@ export function AddressFields({
         point: item.lat !== null && item.lng !== null ? { lat: item.lat, lng: item.lng } : null,
       });
     } else {
-      setLabel("Адрес");
+      setLabel(tr("Адрес"));
       setPrimary(false);
       setManual(false);
       onChange({ city: "", street: "", point: null });
@@ -146,7 +148,7 @@ export function AddressFields({
       setItems(refreshed);
       setPrimary(refreshed.find((item) => item.id === saved.id)?.isDefault ?? false);
       setSelected(saved.id);
-      setMessage("Адрес сохранён");
+      setMessage(tr("Адрес сохранён"));
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -165,7 +167,7 @@ export function AddressFields({
       });
       setItems((await api<{ items: SavedAddress[] }>("/api/account/addresses")).items);
       choose("");
-      setMessage("Адрес удалён");
+      setMessage(tr("Адрес удалён"));
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -174,7 +176,7 @@ export function AddressFields({
   }
   const saveControls = (
     <div className={styles.save}>
-      <Field label="Название адреса">
+      <Field label={tr("Название адреса")}>
         <Input maxLength={60} value={label} onChange={(e) => setLabel(e.target.value)} />
       </Field>
       <Button
@@ -187,11 +189,15 @@ export function AddressFields({
         }
         onClick={() => void save()}
       >
-        {busy ? "Сохраняем…" : manage && selected ? "Сохранить изменения" : "Сохранить адрес"}
+        {busy
+          ? tr("Сохраняем…")
+          : manage && selected
+            ? tr("Сохранить изменения")
+            : tr("Сохранить адрес")}
       </Button>
       {manage && selected && (
         <Button type="button" variant="ghost" disabled={busy} onClick={() => void remove()}>
-          Удалить
+          {tr("Удалить")}
         </Button>
       )}
     </div>
@@ -199,17 +205,17 @@ export function AddressFields({
   return (
     <div className={styles.fields}>
       {canSave && items.length > 0 && (
-        <Field label="Сохранённые адреса">
+        <Field label={tr("Сохранённые адреса")}>
           <Select
-            aria-label="Сохранённые адреса"
+            aria-label={tr("Сохранённые адреса")}
             value={selected}
             onChange={(e) => choose(e.target.value)}
             disabled={busy}
           >
-            <option value="">Новый адрес</option>
+            <option value="">{tr("Новый адрес")}</option>
             {items.map((item) => (
               <option value={item.id} key={item.id}>
-                {item.label} · {item.street || "Точка на карте"}
+                {tr(item.label)} · {item.street || tr("Точка на карте")}
               </option>
             ))}
           </Select>
@@ -227,10 +233,10 @@ export function AddressFields({
       {!manual && value.point && (
         <p role="status" className={styles.message}>
           {locating
-            ? "Определяем адрес…"
+            ? tr("Определяем адрес…")
             : lookupFailed
-              ? "Точка выбрана. Адрес можно указать вручную."
-              : [value.city, value.street].filter(Boolean).join(", ") || "Точка выбрана"}
+              ? tr("Точка выбрана. Адрес можно указать вручную.")
+              : [value.city, value.street].filter(Boolean).join(", ") || tr("Точка выбрана")}
         </p>
       )}
       <Button
@@ -245,18 +251,18 @@ export function AddressFields({
           onChange({ ...value, point: manual ? value.point : null });
         }}
       >
-        {manual ? "Выбрать на карте" : "Указать вручную"}
+        {manual ? tr("Выбрать на карте") : tr("Указать вручную")}
       </Button>
       <div id={manualId} hidden={!manual} className={manual ? styles.two : undefined}>
         {manual && (
           <>
-            <Field label="Город или район">
+            <Field label={tr("Город или район")}>
               <Input
                 required={requireStreet}
                 minLength={requireStreet ? 2 : undefined}
                 maxLength={100}
                 autoComplete="address-level2"
-                placeholder="Душанбе"
+                placeholder={tr("Душанбе")}
                 value={value.city}
                 onChange={(e) => {
                   if (!manage) setSelected("");
@@ -264,13 +270,13 @@ export function AddressFields({
                 }}
               />
             </Field>
-            <Field label="Адрес доставки">
+            <Field label={tr("Адрес доставки")}>
               <Input
                 required={requireStreet}
                 minLength={requireStreet ? 5 : undefined}
                 maxLength={500}
                 autoComplete="street-address"
-                placeholder="Улица, дом или ориентир"
+                placeholder={tr("Улица, дом или ориентир")}
                 value={value.street}
                 onChange={(e) => {
                   if (!manage) setSelected("");
@@ -285,7 +291,7 @@ export function AddressFields({
       {manage && (
         <label className="checkbox">
           <input type="checkbox" checked={primary} onChange={(e) => setPrimary(e.target.checked)} />
-          <span>Основной адрес</span>
+          <span>{tr("Основной адрес")}</span>
         </label>
       )}
       {canSave &&
@@ -293,7 +299,7 @@ export function AddressFields({
           saveControls
         ) : (
           <details className={styles.optionalSave}>
-            <summary>Сохранить в профиль</summary>
+            <summary>{tr("Сохранить в профиль")}</summary>
             {saveControls}
           </details>
         ))}

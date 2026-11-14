@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 
 import { useEffect, useTransition } from "react";
 import Image from "next/image";
@@ -92,6 +93,7 @@ export function OrderStatusDashboard({
   payment,
   guestRegistrationHref,
 }: OrderDashboardProps) {
+  const { tr } = useLocale();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -101,8 +103,8 @@ export function OrderStatusDashboard({
   const statusLabels: Record<string, string> = {
     NEW: "Заказ получен",
     CONFIRMED: "Подтверждён",
-    DISPATCHED: isPickup ? "Готов к выдаче" : "В доставке",
-    DELIVERED: isPickup ? "Получен" : "Доставлен",
+    DISPATCHED: isPickup ? tr("Готов к выдаче") : tr("В доставке"),
+    DELIVERED: isPickup ? tr("Получен") : tr("Доставлен"),
     CANCELLED: "Отменён",
   };
 
@@ -119,12 +121,12 @@ export function OrderStatusDashboard({
     },
     {
       key: "DISPATCHED",
-      label: isPickup ? "Готов к выдаче" : "В доставке",
+      label: isPickup ? tr("Готов к выдаче") : tr("В доставке"),
       sub: isPickup ? "Ожидает на складе" : "Машина в пути к объекту",
     },
     {
       key: "DELIVERED",
-      label: isPickup ? "Получен" : "Доставлен",
+      label: isPickup ? tr("Получен") : tr("Доставлен"),
       sub: "Заказ успешно передан",
     },
   ];
@@ -201,7 +203,7 @@ export function OrderStatusDashboard({
         <div className={styles.actions}>
           {guestRegistrationHref && (
             <Link href={guestRegistrationHref} className={styles.refreshButton}>
-              Создать аккаунт
+              {tr("Создать аккаунт")}
             </Link>
           )}
           <button
@@ -212,7 +214,7 @@ export function OrderStatusDashboard({
             title="Обновить данные заказа"
           >
             <RefreshCw size={15} className={isPending ? styles.spinning : ""} />
-            {isPending ? "Обновление…" : "Обновить статус"}
+            {isPending ? tr("Обновление…") : tr("Обновить статус")}
           </button>
           <PrintButton orderId={order.id} />
         </div>
@@ -230,7 +232,7 @@ export function OrderStatusDashboard({
             )}
           </div>
           <div>
-            <span className={styles.overviewEyebrow}>Текущий статус</span>
+            <span className={styles.overviewEyebrow}>{tr("Текущий статус")}</span>
             <h2>{currentMessage.title}</h2>
             <p>{currentMessage.detail}</p>
           </div>
@@ -267,7 +269,7 @@ export function OrderStatusDashboard({
                   <div className={styles.stepText}>
                     <span className={styles.stepLabel}>{step.label}</span>
                     <span className={styles.stepSub}>
-                      {state === "upcoming" ? "Следующий этап" : step.sub}
+                      {state === "upcoming" ? tr("Следующий этап") : step.sub}
                     </span>
                     {order.history.find((event) => event.status === step.key) && (
                       <time
@@ -310,10 +312,10 @@ export function OrderStatusDashboard({
             <div className={styles.cardHead}>
               <h2 className={styles.cardTitle}>
                 {isPickup ? <Warehouse size={20} /> : <Truck size={20} />}
-                {isPickup ? "Способ получения: Самовывоз" : "Транспорт и доставка"}
+                {isPickup ? "Способ получения: Самовывоз" : tr("Транспорт и доставка")}
               </h2>
               <span className={styles.cardBadge}>
-                {isPickup ? "Самовывоз" : "Грузовая логистика"}
+                {isPickup ? tr("Самовывоз") : "Грузовая логистика"}
               </span>
             </div>
 
@@ -335,7 +337,7 @@ export function OrderStatusDashboard({
                         <Weight size={13} /> До {vehicle.capacityKg.toLocaleString("ru")} кг
                       </span>
                       <span className={styles.specBadge}>
-                        <Package size={13} /> {vehicle.volumeM3} м³
+                        <Package size={13} /> {vehicle.volumeM3} {tr("м³")}
                       </span>
                     </div>
                     <span className={styles.vehicleDimensions}>Габариты: {vehicle.dimensions}</span>
@@ -344,11 +346,11 @@ export function OrderStatusDashboard({
 
                 <div className={styles.vehicleDetailsGrid}>
                   <div className={styles.infoTile}>
-                    <span className={styles.infoTileLabel}>Желаемая дата</span>
+                    <span className={styles.infoTileLabel}>{tr("Желаемая дата")}</span>
                     <span className={styles.infoTileValue}>
                       {order.preferredDeliveryDate
                         ? deliveryDateLabel(order.preferredDeliveryDate)
-                        : "По согласованию"}
+                        : tr("По согласованию")}
                     </span>
                     <span className={styles.infoTileSub}>
                       {order.preferredTimeSlot
@@ -368,9 +370,9 @@ export function OrderStatusDashboard({
                   <div className={styles.infoTile}>
                     <span className={styles.infoTileLabel}>Расчётный вес груза</span>
                     <span className={styles.infoTileValue}>
-                      {order.estimatedWeightKg ? `${order.estimatedWeightKg} кг` : "Уточняется"}
+                      {order.estimatedWeightKg ? `${order.estimatedWeightKg} кг` : tr("Уточняется")}
                     </span>
-                    <span className={styles.infoTileSub}>Данные заказа</span>
+                    <span className={styles.infoTileSub}>{tr("Данные заказа")}</span>
                   </div>
 
                   <div className={styles.infoTile}>
@@ -419,7 +421,7 @@ export function OrderStatusDashboard({
                   <span className={styles.infoTileValue}>
                     {order.preferredDeliveryDate
                       ? deliveryDateLabel(order.preferredDeliveryDate)
-                      : "По согласованию"}
+                      : tr("По согласованию")}
                   </span>
                 </div>
                 <div className={styles.infoTile}>
@@ -435,7 +437,7 @@ export function OrderStatusDashboard({
             <div className={styles.cardHead}>
               <h2 className={styles.cardTitle}>
                 <MapPin size={20} />
-                {isPickup ? "Контакты и получение" : "Адрес и получатель"}
+                {isPickup ? tr("Контакты и получение") : tr("Адрес и получатель")}
               </h2>
             </div>
 
@@ -445,8 +447,8 @@ export function OrderStatusDashboard({
                   <Warehouse size={16} />
                 </div>
                 <div className={styles.routePointBody}>
-                  <span className={styles.routePointLabel}>Откуда</span>
-                  <span className={styles.routePointAddress}>Склад StroySnab</span>
+                  <span className={styles.routePointLabel}>{tr("Откуда")}</span>
+                  <span className={styles.routePointAddress}>{tr("Склад StroySnab")}</span>
                 </div>
               </div>
 
@@ -456,7 +458,7 @@ export function OrderStatusDashboard({
                 </div>
                 <div className={styles.routePointBody}>
                   <span className={styles.routePointLabel}>
-                    {isPickup ? "Город выдачи" : "Куда доставить"}
+                    {isPickup ? tr("Город выдачи") : tr("Куда доставить")}
                   </span>
                   <span className={styles.routePointAddress}>
                     {[order.deliveryCity, order.deliveryAddress].filter(Boolean).join(", ")}
@@ -468,7 +470,7 @@ export function OrderStatusDashboard({
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        На карте
+                        {tr("На карте")}
                       </a>
                     )}
                   </span>
@@ -499,16 +501,16 @@ export function OrderStatusDashboard({
               <table className={styles.itemsTable}>
                 <thead>
                   <tr>
-                    <th>Материал</th>
-                    <th>Кол-во</th>
-                    <th>Цена</th>
-                    <th style={{ textAlign: "right" }}>Сумма</th>
+                    <th>{tr("Материал")}</th>
+                    <th>{tr("Кол-во")}</th>
+                    <th>{tr("Цена")}</th>
+                    <th style={{ textAlign: "right" }}>{tr("Сумма")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {order.items.map((item) => (
                     <tr key={item.id}>
-                      <td data-label="Материал">
+                      <td data-label={tr("Материал")}>
                         <p className={styles.itemTitle}>{item.productName}</p>
                         <span className={styles.itemSku}>Арт: {item.sku}</span>
                       </td>
@@ -516,7 +518,7 @@ export function OrderStatusDashboard({
                         {item.qty} {item.unit}
                       </td>
                       <td data-label="Цена за единицу">{formatTJS(item.priceDirams)}</td>
-                      <td data-label="Сумма" className={styles.itemSubtotal}>
+                      <td data-label={tr("Сумма")} className={styles.itemSubtotal}>
                         {formatTJS(item.subtotalDirams)}
                       </td>
                     </tr>
@@ -554,7 +556,7 @@ export function OrderStatusDashboard({
           {/* Order Summary */}
           <div className={styles.card}>
             <h2 className={styles.cardTitle} style={{ marginBottom: "16px" }}>
-              Сумма заказа
+              {tr("Сумма заказа")}
             </h2>
 
             <div className={styles.summaryRow}>
@@ -566,7 +568,7 @@ export function OrderStatusDashboard({
               <span>Доставка</span>
               <span>
                 {isPickup
-                  ? "Самовывоз"
+                  ? tr("Самовывоз")
                   : BigInt(order.deliveryTotalDirams) > 0n
                     ? formatTJS(order.deliveryTotalDirams)
                     : "Согласуется отдельно"}
@@ -579,7 +581,7 @@ export function OrderStatusDashboard({
             </div>
 
             <div className={styles.summaryRow} style={{ gap: 12, flexWrap: "wrap" }}>
-              <span>Статус оплаты</span>
+              <span>{tr("Статус оплаты")}</span>
               <strong>
                 {(
                   {
@@ -588,7 +590,7 @@ export function OrderStatusDashboard({
                     PAID: "Оплачен",
                     REFUNDED: "Возвращено",
                   } as Record<string, string>
-                )[payment.status] ?? "Уточняется"}
+                )[payment.status] ?? tr("Уточняется")}
               </strong>
             </div>
             <div className={styles.summaryRow} style={{ gap: 12, flexWrap: "wrap" }}>
@@ -596,7 +598,7 @@ export function OrderStatusDashboard({
               <strong>{formatTJS(payment.paidDirams)}</strong>
             </div>
             <div className={styles.summaryRow} style={{ gap: 12, flexWrap: "wrap" }}>
-              <span>Остаток к оплате</span>
+              <span>{tr("Остаток к оплате")}</span>
               <strong>{formatTJS(payment.balanceDirams)}</strong>
             </div>
             <div className={styles.paymentNotice}>

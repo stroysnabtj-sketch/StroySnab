@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import { CustomSelect } from "@/components/custom-select";
 
 import { useRouter, useSearchParams } from "next/navigation";
@@ -23,6 +24,7 @@ export function CatalogFiltersPanel({
   facets,
   totalProducts,
 }: Props) {
+  const { tr } = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
@@ -228,23 +230,23 @@ export function CatalogFiltersPanel({
         <div className="filter-header">
           <div className="filter-header-title">
             <SlidersHorizontal size={18} />
-            <h3 id={titleId}>Фильтры</h3>
+            <h3 id={titleId}>{tr("Фильтры")}</h3>
           </div>
           <button
             type="button"
             className="filter-reset-btn"
             onClick={resetAll}
-            title="Сбросить все фильтры"
+            title={tr("Сбросить все фильтры")}
           >
             <RotateCcw size={14} />
-            <span>Сбросить</span>
+            <span>{tr("Сбросить")}</span>
           </button>
           {mobileOpen && (
             <button
               type="button"
               className="filter-close-btn"
               onClick={() => setMobileOpen(false)}
-              aria-label="Закрыть фильтры"
+              aria-label={tr("Закрыть фильтры")}
             >
               <X size={20} />
             </button>
@@ -260,7 +262,7 @@ export function CatalogFiltersPanel({
               onChange={(e) => toggleInStock(e.target.checked)}
             />
             <span className="toggle-indicator" />
-            <span className="toggle-text">Только в наличии</span>
+            <span className="toggle-text">{tr("Только в наличии")}</span>
           </label>
         </div>
 
@@ -272,7 +274,7 @@ export function CatalogFiltersPanel({
             onClick={() => toggleGroup("price")}
             aria-expanded={openGroups["price"]}
           >
-            <span>Цена, сомони (TJS)</span>
+            <span>{tr("Цена, сомони (TJS)")}</span>
             {openGroups["price"] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
 
@@ -281,10 +283,10 @@ export function CatalogFiltersPanel({
               <div className="price-inputs-row">
                 <input
                   type="number"
-                  aria-label="Минимальная цена в сомони"
+                  aria-label={tr("Минимальная цена в сомони")}
                   min="0"
                   step="0.01"
-                  placeholder="От"
+                  placeholder={tr("От")}
                   className="filter-input-price"
                   value={minPriceInput}
                   onChange={(e) => setMinPriceInput(e.target.value)}
@@ -293,10 +295,10 @@ export function CatalogFiltersPanel({
                 <span className="price-sep">—</span>
                 <input
                   type="number"
-                  aria-label="Максимальная цена в сомони"
+                  aria-label={tr("Максимальная цена в сомони")}
                   min="0"
                   step="0.01"
-                  placeholder="До"
+                  placeholder={tr("До")}
                   className="filter-input-price"
                   value={maxPriceInput}
                   onChange={(e) => setMaxPriceInput(e.target.value)}
@@ -323,7 +325,7 @@ export function CatalogFiltersPanel({
               onClick={() => toggleGroup("brand")}
               aria-expanded={openGroups["brand"]}
             >
-              <span>Бренд</span>
+              <span>{tr("Бренд")}</span>
               {openGroups["brand"] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </button>
 
@@ -334,7 +336,7 @@ export function CatalogFiltersPanel({
                     <Search size={14} />
                     <input
                       type="text"
-                      placeholder="Поиск бренда..."
+                      placeholder={tr("Поиск бренда...")}
                       value={groupSearches["brand"] ?? ""}
                       onChange={(e) => handleSearchChange("brand", e.target.value)}
                     />
@@ -371,92 +373,99 @@ export function CatalogFiltersPanel({
         )}
 
         {/* Умные динамические фильтры текущей категории */}
-        {facets.filter(facet => !allBrands.length || !["brand", "бренд"].includes(facet.key.toLowerCase()) && facet.label.trim().toLowerCase() !== "бренд").map((facet) => {
-          const searchVal = groupSearches[facet.key]?.toLowerCase() ?? "";
-          const filteredOptions = facet.options.filter((opt) =>
-            searchVal ? opt.value.toLowerCase().includes(searchVal) : true,
-          );
+        {facets
+          .filter(
+            (facet) =>
+              !allBrands.length ||
+              (!["brand", "бренд"].includes(facet.key.toLowerCase()) &&
+                facet.label.trim().toLowerCase() !== "бренд"),
+          )
+          .map((facet) => {
+            const searchVal = groupSearches[facet.key]?.toLowerCase() ?? "";
+            const filteredOptions = facet.options.filter((opt) =>
+              searchVal ? opt.value.toLowerCase().includes(searchVal) : true,
+            );
 
-          if (facet.options.length === 0) return null;
+            if (facet.options.length === 0) return null;
 
-          return (
-            <div key={facet.key} className="filter-group">
-              <button
-                type="button"
-                className="filter-group-header"
-                onClick={() => toggleGroup(facet.key)}
-                aria-expanded={openGroups[facet.key] ?? true}
-              >
-                <span>{facet.label}</span>
-                {(openGroups[facet.key] ?? true) ? (
-                  <ChevronUp size={16} />
-                ) : (
-                  <ChevronDown size={16} />
-                )}
-              </button>
-
-              {(openGroups[facet.key] ?? true) && (
-                <div className="filter-group-content">
-                  {facet.options.length > 6 && (
-                    <div className="filter-search-box">
-                      <Search size={14} />
-                      <input
-                        type="text"
-                        placeholder={`Поиск по ${facet.label.toLowerCase()}...`}
-                        value={groupSearches[facet.key] ?? ""}
-                        onChange={(e) => handleSearchChange(facet.key, e.target.value)}
-                      />
-                    </div>
-                  )}
-
-                  {facet.type === "range" ? (
-                    <AttributeRangeFilter
-                      facet={facet}
-                      onApply={(min, max) => applyRange(facet.key, min, max)}
-                    />
-                  ) : facet.type === "select" || facet.type === "boolean" ? (
-                    <CustomSelect
-                      className="input"
-                      aria-label={facet.label}
-                      value={searchParams.get(facet.key) ?? ""}
-                      onChange={(event) => selectFilter(facet.key, event.target.value)}
-                    >
-                      <option value="">Все</option>
-                      {facet.options.map((option) => (
-                        <option
-                          key={option.value}
-                          value={option.value}
-                          disabled={option.count === 0 && !isSelected(facet.key, option.value)}
-                        >
-                          {option.value} ({option.count})
-                        </option>
-                      ))}
-                    </CustomSelect>
+            return (
+              <div key={facet.key} className="filter-group">
+                <button
+                  type="button"
+                  className="filter-group-header"
+                  onClick={() => toggleGroup(facet.key)}
+                  aria-expanded={openGroups[facet.key] ?? true}
+                >
+                  <span>{facet.label}</span>
+                  {(openGroups[facet.key] ?? true) ? (
+                    <ChevronUp size={16} />
                   ) : (
-                    <div className="filter-options-list">
-                      {filteredOptions.map((opt) => {
-                        const checked = isSelected(facet.key, opt.value);
-                        return (
-                          <label key={opt.value} className="filter-checkbox-option">
-                            <input
-                              type="checkbox"
-                              checked={checked}
-                              disabled={opt.count === 0 && !checked}
-                              onChange={() => toggleFilter(facet.key, opt.value)}
-                            />
-                            <span className="checkbox-custom" />
-                            <span className="filter-option-label">{opt.value}</span>
-                            {<span className="filter-count-badge">{opt.count}</span>}
-                          </label>
-                        );
-                      })}
-                    </div>
+                    <ChevronDown size={16} />
                   )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+                </button>
+
+                {(openGroups[facet.key] ?? true) && (
+                  <div className="filter-group-content">
+                    {facet.options.length > 6 && (
+                      <div className="filter-search-box">
+                        <Search size={14} />
+                        <input
+                          type="text"
+                          placeholder={`Поиск по ${facet.label.toLowerCase()}...`}
+                          value={groupSearches[facet.key] ?? ""}
+                          onChange={(e) => handleSearchChange(facet.key, e.target.value)}
+                        />
+                      </div>
+                    )}
+
+                    {facet.type === "range" ? (
+                      <AttributeRangeFilter
+                        facet={facet}
+                        onApply={(min, max) => applyRange(facet.key, min, max)}
+                      />
+                    ) : facet.type === "select" || facet.type === "boolean" ? (
+                      <CustomSelect
+                        className="input"
+                        aria-label={facet.label}
+                        value={searchParams.get(facet.key) ?? ""}
+                        onChange={(event) => selectFilter(facet.key, event.target.value)}
+                      >
+                        <option value="">Все</option>
+                        {facet.options.map((option) => (
+                          <option
+                            key={option.value}
+                            value={option.value}
+                            disabled={option.count === 0 && !isSelected(facet.key, option.value)}
+                          >
+                            {option.value} ({option.count})
+                          </option>
+                        ))}
+                      </CustomSelect>
+                    ) : (
+                      <div className="filter-options-list">
+                        {filteredOptions.map((opt) => {
+                          const checked = isSelected(facet.key, opt.value);
+                          return (
+                            <label key={opt.value} className="filter-checkbox-option">
+                              <input
+                                type="checkbox"
+                                checked={checked}
+                                disabled={opt.count === 0 && !checked}
+                                onChange={() => toggleFilter(facet.key, opt.value)}
+                              />
+                              <span className="checkbox-custom" />
+                              <span className="filter-option-label">{opt.value}</span>
+                              {<span className="filter-count-badge">{opt.count}</span>}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
 
         {/* Мобильная кнопка применить */}
         {mobileOpen && (

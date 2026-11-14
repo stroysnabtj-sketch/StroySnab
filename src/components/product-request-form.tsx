@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import { useState } from "react";
 import { Button, Field, Input, Select, Textarea } from "@/components/ui";
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export function ProductRequestForm(props: Props) {
+  const { tr } = useLocale();
   const todayStr = getDushanbeDateStr(new Date());
   const maxDateStr = (() => {
     const y = Number(todayStr.slice(0, 4)) + 2;
@@ -79,7 +81,7 @@ export function ProductRequestForm(props: Props) {
       if (!response.ok) {
         const fieldErrors = result.error?.fields ?? {};
         setErrors(fieldErrors);
-        setMessage(result.error?.message ?? "Проверьте форму");
+        setMessage(result.error?.message ?? tr("Проверьте форму"));
 
         // Focus first errored field
         const firstKey = Object.keys(fieldErrors)[0];
@@ -103,9 +105,9 @@ export function ProductRequestForm(props: Props) {
   if (success) {
     return (
       <div className="request-success">
-        <span className="eyebrow">Заявка принята</span>
+        <span className="eyebrow">{tr("Заявка принята")}</span>
         <h2>{success.number}</h2>
-        <p>Мы ответим в ближайшее время. Менеджер проверит наличие и свяжется с вами.</p>
+        <p>{tr("Мы ответим в ближайшее время. Менеджер проверит наличие и свяжется с вами.")}</p>
         <div className="hero-actions">
           <Button
             variant="secondary"
@@ -121,13 +123,13 @@ export function ProductRequestForm(props: Props) {
               });
             }}
           >
-            Создать ещё заявку
+            {tr("Создать ещё заявку")}
           </Button>
           <Link
             className="button button-primary"
             href={props.authenticated ? "/account/requests" : "/catalog"}
           >
-            {props.authenticated ? "Мои заявки" : "В каталог"}
+            {props.authenticated ? tr("Мои заявки") : tr("В каталог")}
           </Link>
         </div>
       </div>
@@ -147,7 +149,7 @@ export function ProductRequestForm(props: Props) {
         </div>
       ) : null}
 
-      <Field label="Название товара *" error={errors.productName}>
+      <Field label={tr("Название товара *")} error={errors.productName}>
         <Input
           required
           aria-required="true"
@@ -155,12 +157,12 @@ export function ProductRequestForm(props: Props) {
           name="productName"
           value={form.productName}
           onChange={(e) => set("productName", e.target.value)}
-          placeholder="Например: арматура А500С Ø12"
+          placeholder={tr("Например: арматура А500С Ø12")}
         />
       </Field>
 
       <Field
-        label="Описание"
+        label={tr("Описание")}
         hint={`${form.description.length}/2000. Марка, размеры, ГОСТ, бренд`}
         error={errors.description}
       >
@@ -173,7 +175,7 @@ export function ProductRequestForm(props: Props) {
       </Field>
 
       <div className="form-grid">
-        <Field label="Количество" error={errors.quantity}>
+        <Field label={tr("Количество")} error={errors.quantity}>
           <Input
             inputMode="decimal"
             aria-describedby={errors.quantity ? "err-quantity" : undefined}
@@ -181,16 +183,16 @@ export function ProductRequestForm(props: Props) {
             onChange={(e) => set("quantity", e.target.value)}
           />
         </Field>
-        <Field label="Единица" error={errors.unit}>
+        <Field label={tr("Единица")} error={errors.unit}>
           <Select
             aria-describedby={errors.unit ? "err-unit" : undefined}
             value={form.unit}
             onChange={(e) => set("unit", e.target.value)}
           >
-            <option value="">Выберите</option>
+            <option value="">{tr("Выберите")}</option>
             {UNITS.map((u) => (
               <option key={u} value={u}>
-                {u}
+                {tr(u)}
               </option>
             ))}
           </Select>
@@ -198,19 +200,19 @@ export function ProductRequestForm(props: Props) {
       </div>
 
       {form.unit === "другое" ? (
-        <Field label="Укажите единицу *" error={errors.customUnit}>
+        <Field label={tr("Укажите единицу *")} error={errors.customUnit}>
           <Input
             required
             aria-required="true"
             maxLength={20}
             value={form.customUnit}
             onChange={(e) => set("customUnit", e.target.value)}
-            placeholder="До 20 символов"
+            placeholder={tr("До 20 символов")}
           />
         </Field>
       ) : null}
 
-      <Field label="Нужен к дате" error={errors.requiredDate}>
+      <Field label={tr("Нужен к дате")} error={errors.requiredDate}>
         <Input
           type="date"
           min={todayStr}
@@ -222,7 +224,7 @@ export function ProductRequestForm(props: Props) {
       </Field>
 
       <div className="form-grid">
-        <Field label="Контактное имя *" error={errors.contactName}>
+        <Field label={tr("Контактное имя *")} error={errors.contactName}>
           <Input
             required
             aria-required="true"
@@ -231,7 +233,7 @@ export function ProductRequestForm(props: Props) {
             onChange={(e) => set("contactName", e.target.value)}
           />
         </Field>
-        <Field label="Телефон *" error={errors.contactPhone}>
+        <Field label={tr("Телефон *")} error={errors.contactPhone}>
           <Input
             required
             aria-required="true"
@@ -255,7 +257,7 @@ export function ProductRequestForm(props: Props) {
 
       <div className="honeypot" aria-hidden="true">
         <label>
-          Веб-сайт
+          {tr("Веб-сайт")}
           <input
             tabIndex={-1}
             autoComplete="off"
@@ -266,15 +268,15 @@ export function ProductRequestForm(props: Props) {
       </div>
 
       <Button type="submit" loading={pending}>
-        Отправить заявку
+        {tr("Отправить заявку")}
       </Button>
 
       <p className="form-legal">
-        Отправляя заявку, вы соглашаетесь с{" "}
+        {tr("Отправляя заявку, вы соглашаетесь с")}{" "}
         <Link className="inline-link" href="/terms" target="_blank" rel="noopener noreferrer">
-          пользовательским соглашением
+          {tr("пользовательским соглашением")}
         </Link>{" "}
-        и обработкой контактных данных.
+        {tr("и обработкой контактных данных.")}
       </p>
     </form>
   );

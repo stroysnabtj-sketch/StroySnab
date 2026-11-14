@@ -1,3 +1,5 @@
+import { getLocale } from "@/i18n/server";
+import { LocaleProvider } from "@/i18n/provider";
 import { headers } from "next/headers";
 import { CspNonceProvider } from "@/components/csp-nonce-provider";
 import type { Metadata } from "next";
@@ -26,13 +28,16 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
   const nonce = (await headers()).get("x-nonce") ?? "";
   return (
-    <html lang="ru" className={`${body.variable} ${mono.variable}`}>
+    <html lang={locale} className={`${body.variable} ${mono.variable}`}>
       <body>
         <CspNonceProvider nonce={nonce}>
-          <NavigationProgress />
-          {children}
+          <LocaleProvider locale={locale}>
+            <NavigationProgress />
+            {children}
+          </LocaleProvider>
         </CspNonceProvider>
       </body>
     </html>

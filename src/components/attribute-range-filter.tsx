@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { SmartFilterFacetGroup } from "@/modules/catalog/types";
@@ -9,6 +10,7 @@ export function AttributeRangeFilter({
   facet: SmartFilterFacetGroup;
   onApply: (min: string, max: string) => void;
 }) {
+  const { tr } = useLocale();
   const params = useSearchParams();
   const currentMin = params.get(`rangeMin.${facet.key}`) ?? "";
   const currentMax = params.get(`rangeMax.${facet.key}`) ?? "";
@@ -28,7 +30,7 @@ export function AttributeRangeFilter({
       (upper !== undefined && !Number.isFinite(upper)) ||
       (lower !== undefined && upper !== undefined && lower > upper)
     ) {
-      setError("Проверьте границы диапазона");
+      setError(tr("Проверьте границы диапазона"));
       return;
     }
     setError("");
@@ -42,7 +44,7 @@ export function AttributeRangeFilter({
           step="any"
           className="filter-input-price"
           aria-label={`${facet.label}: от`}
-          placeholder={String(facet.min ?? "От")}
+          placeholder={String(facet.min ?? tr("От"))}
           value={min}
           onChange={(e) => setMin(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && apply()}
@@ -53,7 +55,7 @@ export function AttributeRangeFilter({
           step="any"
           className="filter-input-price"
           aria-label={`${facet.label}: до`}
-          placeholder={String(facet.max ?? "До")}
+          placeholder={String(facet.max ?? tr("До"))}
           value={max}
           onChange={(e) => setMax(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && apply()}

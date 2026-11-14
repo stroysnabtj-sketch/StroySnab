@@ -1,3 +1,5 @@
+"use client";
+import { useLocale } from "@/i18n/provider";
 import type { ReactNode } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { AccountNav } from "@/components/account-nav";
@@ -14,6 +16,7 @@ export function CustomerWorkspace({
   actions?: ReactNode;
   identity?: string | null;
 }) {
+  const { tr } = useLocale();
   return (
     <>
       <SiteHeader />
@@ -22,7 +25,7 @@ export function CustomerWorkspace({
         <main className={styles.workspaceContent} id="account-content">
           <header className={styles.heading}>
             <div>
-              <h1>{title}</h1>
+              <h1>{tr(title)}</h1>
             </div>
             {actions}
           </header>

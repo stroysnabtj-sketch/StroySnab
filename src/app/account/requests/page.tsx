@@ -1,3 +1,4 @@
+import { getTranslator } from "@/i18n/server";
 import Link from "next/link";
 import { requirePageUser } from "@/modules/auth/page";
 import { CustomerWorkspace } from "@/components/customer-workspace";
@@ -13,6 +14,7 @@ export default async function AccountRequestsPage({
 }: {
   searchParams: Promise<{ page?: string; q?: string; status?: string }>;
 }) {
+  const tr = await getTranslator();
   const user = await requirePageUser(["CUSTOMER"], "/account/requests");
   const params = await searchParams;
   const query = (params.q ?? "").slice(0, 200).trim();
@@ -37,11 +39,11 @@ export default async function AccountRequestsPage({
     `/account/requests?${new URLSearchParams({ q: query, status, page: String(nextPage) })}`;
   return (
     <CustomerWorkspace
-      title="Заявки"
+      title={tr("Заявки")}
       identity={user.phone}
       actions={
         <Link className="button button-primary" href="/request">
-          Создать заявку
+          {tr("Создать заявку")}
         </Link>
       }
     >

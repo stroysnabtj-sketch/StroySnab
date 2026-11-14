@@ -12,3 +12,9 @@ External unresolved items:
 - Legal operator details await the owner's information. Do not invent company registration details.
 
 Backups: scheduled database and file backups exist. A fresh database backup was restore-verified before these migrations on 2026-11-14 at 04:35 UTC, covering 39 pre-migration tables. See ops/backups/README.md for operation and recovery.
+
+## Language and continuous checks — 2026-11-14
+
+Customer interface now has an explicit Russian/Tajik switch, persisted locale and matching server/client language. Translation covers navigation, primary storefront forms and account actions; catalogue descriptions, legal content, PDF and admin copy are not claimed fully translated. Native-speaker review remains required.
+
+Production-build acceptance checks, Windows Chromium visual baselines, axe accessibility, internal links, keyboard menu/search, isolated map/reverse-address and Turnstile script checks are configured in GitHub Actions. See [ACCEPTANCE.md](ACCEPTANCE.md). Historical IMPLEMENTATION_STATUS.md is explicitly archived; NOT_IMPLEMENTED.md now lists current outstanding work.

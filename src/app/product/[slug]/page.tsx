@@ -70,7 +70,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           offers={item.offers}
           relatedProducts={item.relatedProducts ?? []}
         />
-        <script nonce={(await headers()).get("x-nonce") ?? undefined}
+        <script
+          nonce={(await headers()).get("x-nonce") ?? undefined}
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),

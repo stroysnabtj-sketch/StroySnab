@@ -1,3 +1,4 @@
+import { getTranslator } from "@/i18n/server";
 import Link from "next/link";
 import { desc, eq } from "drizzle-orm";
 import { ArrowRight, ShoppingBag } from "lucide-react";
@@ -21,6 +22,7 @@ const statuses: Record<string, string> = {
 };
 
 export default async function AccountPage() {
+  const tr = await getTranslator();
   const user = await requirePageUser(["CUSTOMER"], "/account");
   const db = await getDb();
   const [customer] = await db
@@ -48,20 +50,20 @@ export default async function AccountPage() {
   const offers = requests.filter((request) => request.group === "offered");
   return (
     <CustomerWorkspace
-      title="Обзор"
+      title={tr("Обзор")}
       identity={customer?.fullName || user.phone}
       actions={
         <Link href="/request" className="button button-primary">
-          Создать заявку
+          {tr("Создать заявку")}
         </Link>
       }
     >
       <div className={styles.overviewColumns}>
         <section className={styles.panel}>
           <div className={styles.sectionHead}>
-            <h2>Активные заказы</h2>
+            <h2>{tr("Активные заказы")}</h2>
             <Link href="/account/orders">
-              Все заказы
+              {tr("Все заказы")}
               <ArrowRight size={16} aria-hidden="true" />
             </Link>
           </div>
@@ -84,16 +86,16 @@ export default async function AccountPage() {
           ) : (
             <div className={styles.empty}>
               <ShoppingBag size={32} aria-hidden="true" />
-              <h3>Активных заказов нет</h3>
+              <h3>{tr("Активных заказов нет")}</h3>
               <Link href="/catalog" className="button button-primary">
-                Открыть каталог
+                {tr("Открыть каталог")}
               </Link>
             </div>
           )}
         </section>
         <section className={styles.panel}>
           <div className={styles.sectionHead}>
-            <h2>Новые предложения</h2>
+            <h2>{tr("Новые предложения")}</h2>
             <Link href="/account/requests?status=offered">
               Все <ArrowRight size={16} aria-hidden="true" />
             </Link>

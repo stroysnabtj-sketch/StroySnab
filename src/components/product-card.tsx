@@ -1,3 +1,5 @@
+"use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import Image from "next/image";
 import { ProductArt, getArtVariant } from "@/components/product-art";
@@ -5,6 +7,7 @@ import { AddToCartButton } from "@/components/add-to-cart-button";
 import { formatTJS } from "@/modules/system/money";
 import type { PublicProduct } from "@/modules/catalog/types";
 export function ProductCard({ product }: { product: PublicProduct }) {
+  const { tr } = useLocale();
   const inStock = Number(product.stockQty) >= Number(product.minOrderQty);
   const image =
     (product as PublicProduct & { imageUrl?: string | null }).imageUrl || product.imageKey;
@@ -53,7 +56,7 @@ export function ProductCard({ product }: { product: PublicProduct }) {
         </div>
         <div className="product-card-status" data-stock={inStock}>
           <span className="status-indicator" />
-          <span>{inStock ? "В наличии" : "Под заказ"}</span>
+          <span>{inStock ? tr("В наличии") : tr("Под заказ")}</span>
         </div>
         <div className="product-card-action-bar">
           {inStock ? (
@@ -63,8 +66,8 @@ export function ProductCard({ product }: { product: PublicProduct }) {
               href={`/catalog/request?product=${encodeURIComponent(product.name)}`}
               className="button button-secondary"
             >
-              <span className="button-label" data-label="Запросить">
-                Запросить
+              <span className="button-label" data-label={tr("Запросить")}>
+                {tr("Запросить")}
               </span>
             </Link>
           )}

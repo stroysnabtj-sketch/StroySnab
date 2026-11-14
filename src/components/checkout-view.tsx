@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import { AddressFields } from "./address-fields";
 import type { MapPoint } from "./address-map";
 import { DeliveryTimePicker } from "@/components/delivery-time-picker";
@@ -38,6 +39,7 @@ export function CheckoutView({
   initialCart: { id: string | null; items: CartItem[]; totalDirams: string };
   currentUser?: { phone?: string; email?: string; fullName?: string };
 }) {
+  const { tr } = useLocale();
   const router = useRouter();
   const key = useRef<string | null>(null);
   const [fulfillment, setFulfillment] = useState<"DELIVERY" | "PICKUP">("DELIVERY");
@@ -68,13 +70,13 @@ export function CheckoutView({
     })
       .then(async (response) => {
         const data = await response.json();
-        if (!response.ok) throw new Error(data.error?.message ?? "Не удалось рассчитать заказ");
+        if (!response.ok) throw new Error(data.error?.message ?? tr("Не удалось рассчитать заказ"));
         if (active) setQuote(data);
       })
       .catch((err) => {
         if (active) {
           setQuote(null);
-          setError(err instanceof Error ? err.message : "Не удалось рассчитать заказ");
+          setError(err instanceof Error ? err.message : tr("Не удалось рассчитать заказ"));
         }
       })
       .finally(() => {
@@ -83,7 +85,7 @@ export function CheckoutView({
     return () => {
       active = false;
     };
-  }, [fulfillment, quoteRefresh]);
+  }, [fulfillment, quoteRefresh, tr]);
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (busy || !quote || quoteLoading) return;
@@ -93,7 +95,7 @@ export function CheckoutView({
       !notes.trim() &&
       (city.trim().length < 2 || address.trim().length < 5)
     ) {
-      setError("Укажите точку на карте, адрес или комментарий");
+      setError(tr("Укажите точку на карте, адрес или комментарий"));
       return;
     }
     setBusy(true);
@@ -125,11 +127,11 @@ export function CheckoutView({
         }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message ?? "Не удалось оформить заказ");
+      if (!response.ok) throw new Error(data.error?.message ?? tr("Не удалось оформить заказ"));
       router.push(`/orders/${data.id}`);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Не удалось оформить заказ");
+      setError(err instanceof Error ? err.message : tr("Не удалось оформить заказ"));
       setBusy(false);
       if (err instanceof Error && err.message.includes("Стоимость изменилась"))
         setQuoteRefresh((value) => value + 1);
@@ -137,7 +139,7 @@ export function CheckoutView({
   }
   const commentField = (
     <label className="field">
-      {fulfillment === "DELIVERY" ? "Комментарий к адресу" : "Комментарий к заказу"}
+      {fulfillment === "DELIVERY" ? tr("Комментарий к адресу") : tr("Комментарий к заказу")}
       <textarea
         className="input"
         rows={3}
@@ -150,25 +152,25 @@ export function CheckoutView({
   return (
     <form onSubmit={submit} className={`checkout-flow ${styles.checkout}`}>
       <Link className={styles.back} href="/cart">
-        <ArrowLeft size={16} /> Вернуться в корзину
+        <ArrowLeft size={16} /> {tr("Вернуться в корзину")}
       </Link>
       <header className={styles.pageHead}>
         <div>
-          <span className={styles.eyebrow}>Последний шаг</span>
-          <h1>Оформление заказа</h1>
-          <p>Укажите контакты и выберите, как получить материалы.</p>
+          <span className={styles.eyebrow}>{tr("Последний шаг")}</span>
+          <h1>{tr("Оформление заказа")}</h1>
+          <p>{tr("Укажите контакты и выберите, как получить материалы.")}</p>
         </div>
       </header>
       <div className="checkout-grid">
         <div className="checkout-main">
           <section className="checkout-section">
-            <h2 className={styles.sectionTitle}>Получение заказа</h2>
+            <h2 className={styles.sectionTitle}>{tr("Получение заказа")}</h2>
             <fieldset className={styles.choices}>
-              <legend className="sr-only">Способ получения</legend>
+              <legend className="sr-only">{tr("Способ получения")}</legend>
               {(
                 [
-                  ["DELIVERY", "Доставка", "На ваш адрес или строительный объект"],
-                  ["PICKUP", "Самовывоз", "Со склада после подтверждения"],
+                  ["DELIVERY", "Доставка", tr("На ваш адрес или строительный объект")],
+                  ["PICKUP", tr("Самовывоз"), tr("Со склада после подтверждения")],
                 ] as const
               ).map(([value, title, detail]) => (
                 <label className={styles.choice} data-selected={fulfillment === value} key={value}>
@@ -181,8 +183,8 @@ export function CheckoutView({
                   />
                   {value === "DELIVERY" ? <Truck size={23} /> : <Store size={23} />}
                   <span>
-                    <strong>{title}</strong>
-                    <small>{detail}</small>
+                    <strong>{tr(title)}</strong>
+                    <small>{tr(detail)}</small>
                   </span>
                   <Check className={styles.choiceCheck} size={17} />
                 </label>
@@ -209,7 +211,7 @@ export function CheckoutView({
             )}
           </section>
           <section className="checkout-section">
-            <h2 className={styles.sectionTitle}>Контакты получателя</h2>
+            <h2 className={styles.sectionTitle}>{tr("Контакты получателя")}</h2>
             <div className={styles.twoFields}>
               <label className="field">
                 Имя
@@ -219,7 +221,7 @@ export function CheckoutView({
                   minLength={2}
                   maxLength={120}
                   autoComplete="name"
-                  placeholder="Как к вам обращаться"
+                  placeholder={tr("Как к вам обращаться")}
                   value={customerName}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -256,7 +258,7 @@ export function CheckoutView({
                 </span>
               </label>
               <label className="field">
-                E-mail (необязательно)
+                {tr("E-mail (необязательно)")}
                 <input
                   className="input"
                   type="email"
@@ -271,7 +273,7 @@ export function CheckoutView({
           </section>
           {fulfillment === "DELIVERY" && (
             <details className="checkout-section">
-              <summary>Пожелания к доставке</summary>
+              <summary>{tr("Пожелания к доставке")}</summary>
               <DeliveryTimePicker
                 date={deliveryDate}
                 slot={deliverySlot}
@@ -283,13 +285,17 @@ export function CheckoutView({
             </details>
           )}
           <section className="checkout-section">
-            <h2 className={styles.sectionTitle}>Оплата</h2>
+            <h2 className={styles.sectionTitle}>{tr("Оплата")}</h2>
             <fieldset className={styles.choices}>
-              <legend className="sr-only">Способ оплаты</legend>
+              <legend className="sr-only">{tr("Способ оплаты")}</legend>
               {(
                 [
-                  ["CASH_ON_DELIVERY", "При получении", "Оплата после подтверждения заказа"],
-                  ["BANK_INVOICE", "По счёту", "Для организаций и безналичной оплаты"],
+                  [
+                    "CASH_ON_DELIVERY",
+                    tr("При получении"),
+                    tr("Оплата после подтверждения заказа"),
+                  ],
+                  ["BANK_INVOICE", tr("По счёту"), tr("Для организаций и безналичной оплаты")],
                 ] as const
               ).map(([value, title, detail]) => (
                 <label
@@ -306,8 +312,8 @@ export function CheckoutView({
                   />
                   {value === "BANK_INVOICE" ? <CreditCard size={23} /> : <Banknote size={23} />}
                   <span>
-                    <strong>{title}</strong>
-                    <small>{detail}</small>
+                    <strong>{tr(title)}</strong>
+                    <small>{tr(detail)}</small>
                   </span>
                   <Check className={styles.choiceCheck} size={17} />
                 </label>
@@ -318,8 +324,8 @@ export function CheckoutView({
         </div>
         <aside className="checkout-summary checkout-section">
           <div className={styles.summaryHeading}>
-            <h2>Ваш заказ</h2>
-            <Link href="/cart">Изменить</Link>
+            <h2>{tr("Ваш заказ")}</h2>
+            <Link href="/cart">{tr("Изменить")}</Link>
           </div>
           <ul className={styles.orderItems}>
             {(quote?.items ?? initialCart.items).map((item, index) => (
@@ -337,20 +343,22 @@ export function CheckoutView({
           </ul>
           <div className={styles.costs} aria-live="polite" aria-busy={quoteLoading}>
             {quoteLoading ? (
-              <p className={styles.helper}>Рассчитываем стоимость…</p>
+              <p className={styles.helper}>{tr("Рассчитываем стоимость…")}</p>
             ) : (
               quote && (
                 <>
                   <div>
-                    <span>Материалы</span>
+                    <span>{tr("Материалы")}</span>
                     <strong>{formatTJS(quote.materialsTotalDirams)}</strong>
                   </div>
                   <div>
-                    <span>{fulfillment === "PICKUP" ? "Получение" : "Доставка"}</span>
-                    <span>{fulfillment === "PICKUP" ? "Самовывоз" : "Согласуем отдельно"}</span>
+                    <span>{fulfillment === "PICKUP" ? tr("Получение") : "Доставка"}</span>
+                    <span>
+                      {fulfillment === "PICKUP" ? tr("Самовывоз") : tr("Согласуем отдельно")}
+                    </span>
                   </div>
                   <div className={styles.total}>
-                    <span>Итого за материалы</span>
+                    <span>{tr("Итого за материалы")}</span>
                     <strong>{formatTJS(quote.totalDirams)}</strong>
                   </div>
                 </>
@@ -364,7 +372,7 @@ export function CheckoutView({
           )}
           {!quote && !quoteLoading && (
             <Button type="button" variant="secondary" onClick={() => setQuoteRefresh((v) => v + 1)}>
-              Повторить расчёт
+              {tr("Повторить расчёт")}
             </Button>
           )}
           <Button
@@ -373,7 +381,7 @@ export function CheckoutView({
             loading={busy}
             disabled={quoteLoading || !quote}
           >
-            {busy ? "Оформляем…" : "Оформить заказ"}
+            {busy ? tr("Оформляем…") : tr("Оформить заказ")}
           </Button>
         </aside>
       </div>

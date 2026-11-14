@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap, Marker } from "leaflet";
 import { LocateFixed, Crosshair } from "lucide-react";
@@ -11,6 +12,7 @@ export function AddressMap({
   value: MapPoint | null;
   onChange: (point: MapPoint) => void;
 }) {
+  const { tr } = useLocale();
   const host = useRef<HTMLDivElement>(null),
     map = useRef<LeafletMap | null>(null),
     marker = useRef<Marker | null>(null),
@@ -90,7 +92,7 @@ export function AddressMap({
         setReady(true);
       })
       .catch(() => {
-        if (!disposed) setError("Карта не загрузилась. Обновите страницу.");
+        if (!disposed) setError(tr("Карта не загрузилась. Обновите страницу."));
       });
     return () => {
       disposed = true;
@@ -99,7 +101,7 @@ export function AddressMap({
       map.current = null;
       marker.current = null;
     };
-  }, []);
+  }, [tr]);
   useEffect(() => {
     if (ready) map.current?.fire("address:point");
   }, [value?.lat, value?.lng, ready]);
@@ -109,7 +111,7 @@ export function AddressMap({
   }
   function locate() {
     if (!navigator.geolocation) {
-      setError("Определение местоположения недоступно");
+      setError(tr("Определение местоположения недоступно"));
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -119,20 +121,20 @@ export function AddressMap({
         change.current(p);
         map.current?.setView([p.lat, p.lng], 16);
       },
-      () => setError("Не удалось определить местоположение. Выберите точку на карте."),
+      () => setError(tr("Не удалось определить местоположение. Выберите точку на карте.")),
       { enableHighAccuracy: true, timeout: 10000 },
     );
   }
   return (
     <div className={styles.wrap}>
-      <div ref={host} className={styles.map} aria-label="Карта выбора адреса доставки" />
+      <div ref={host} className={styles.map} aria-label={tr("Карта выбора адреса доставки")} />
       <div className={styles.controls}>
         <button
           type="button"
           disabled={!ready}
           onClick={locate}
-          aria-label="Моё местоположение"
-          title="Моё местоположение"
+          aria-label={tr("Моё местоположение")}
+          title={tr("Моё местоположение")}
         >
           <LocateFixed size={18} />
         </button>
@@ -140,14 +142,14 @@ export function AddressMap({
           type="button"
           disabled={!ready}
           onClick={center}
-          aria-label="Выбрать центр карты"
-          title="Выбрать центр карты"
+          aria-label={tr("Выбрать центр карты")}
+          title={tr("Выбрать центр карты")}
         >
           <Crosshair size={18} />
         </button>
       </div>
       <span className="sr-only" role="status">
-        {value ? "Точка выбрана" : "Выберите точку на карте"}
+        {value ? tr("Точка выбрана") : tr("Выберите точку на карте")}
       </span>
       {error && (
         <p className={styles.error} role="alert">

@@ -58,10 +58,6 @@ export function Reveal({
     return () => window.removeEventListener("resize", updateCols);
   }, [columns]);
 
-  if (reduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
   const hasLadder = ladderIndex !== null && ladderIndex !== undefined;
   const col = hasLadder ? ladderIndex % cols : 0;
   const initialY = hasLadder ? 24 + col * 12 : distance;
@@ -69,7 +65,7 @@ export function Reveal({
 
   return (
     <motion.div
-      className={className}
+      className={`reveal-motion ${className}`}
       initial={{
         opacity: 0,
         y: initialY,
@@ -89,8 +85,8 @@ export function Reveal({
         margin: "0px 0px -30px 0px",
       }}
       transition={{
-        duration,
-        delay: computedDelay,
+        duration: reduceMotion ? 0 : duration,
+        delay: reduceMotion ? 0 : computedDelay,
         ease: [0.16, 1, 0.3, 1],
       }}
     >

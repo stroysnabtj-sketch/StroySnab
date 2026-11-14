@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState, type MouseEvent } from "react";
@@ -16,6 +17,7 @@ export function AddToCartButton({
   disabled?: boolean;
   compact?: boolean;
 }) {
+  const { tr } = useLocale();
   const [pending, setPending] = useState(false);
   const submitting = useRef(false);
   const [message, setMessage] = useState("");
@@ -39,15 +41,15 @@ export function AddToCartButton({
         error?: { message?: string };
       } | null;
       if (!response.ok) {
-        setError(data?.error?.message ?? "Не удалось добавить товар. Попробуйте ещё раз.");
+        setError(data?.error?.message ?? tr("Не удалось добавить товар. Попробуйте ещё раз."));
         return;
       }
-      setMessage("Товар добавлен в корзину");
+      setMessage(tr("Товар добавлен в корзину"));
       flyToCart(source, button);
       window.dispatchEvent(new Event("cartUpdated"));
       router.refresh();
     } catch {
-      setError("Нет связи с сервером. Проверьте подключение и повторите попытку.");
+      setError(tr("Нет связи с сервером. Проверьте подключение и повторите попытку."));
     } finally {
       submitting.current = false;
       setPending(false);
@@ -63,7 +65,7 @@ export function AddToCartButton({
         className={compact ? "cart-add-compact" : ""}
       >
         <ShoppingCart size={16} />
-        {disabled ? "Нет в наличии" : "В корзину"}
+        {disabled ? tr("Нет в наличии") : tr("В корзину")}
       </Button>
       {message && <Toast text={message} onClose={() => setMessage("")} />}
       {error && <Toast text={error} tone="error" onClose={() => setError("")} />}

@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import { Minus, Plus, Trash2, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,7 @@ export function CartPanel({
   initialItems: Item[];
   totalDirams: string;
 }) {
+  const { tr } = useLocale();
   const [pending, setPending] = useState("");
   const [error, setError] = useState("");
   const [drafts, setDrafts] = useState<Record<string, string>>({});
@@ -33,7 +35,7 @@ export function CartPanel({
     if (pending) return;
     const qty = value.trim().replace(",", ".");
     if (!/^\d+(?:\.\d{1,3})?$/.test(qty)) {
-      setError("Укажите количество: не больше трёх знаков после запятой.");
+      setError(tr("Укажите количество: не больше трёх знаков после запятой."));
       setDrafts((d) => ({ ...d, [item.id]: item.qty }));
       return;
     }
@@ -48,12 +50,12 @@ export function CartPanel({
       });
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error?.message ?? "Не удалось изменить количество");
+        throw new Error(data.error?.message ?? tr("Не удалось изменить количество"));
       }
       window.dispatchEvent(new Event("cartUpdated"));
       router.refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Проверьте подключение к интернету");
+      setError(e instanceof Error ? e.message : tr("Проверьте подключение к интернету"));
       setDrafts((d) => ({ ...d, [item.id]: item.qty }));
     } finally {
       setPending("");
@@ -130,21 +132,22 @@ export function CartPanel({
           ))}
         </section>
         <aside className="cart-summary card">
-          <h2>Сумма заказа</h2>
+          <h2>{tr("Сумма заказа")}</h2>
           <div>
-            <span>Товары</span>
+            <span>{tr("Товары")}</span>
             <strong>{formatTJS(totalDirams)}</strong>
           </div>
           <div>
-            <span>Доставка</span>
-            <span>Рассчитается при оформлении</span>
+            <span>{tr("Доставка")}</span>
+            <span>{tr("Рассчитается при оформлении")}</span>
           </div>
           <div className="cart-total">
-            <span>Итого за товары</span>
+            <span>{tr("Итого за товары")}</span>
             <strong>{formatTJS(totalDirams)}</strong>
           </div>
           <Link className="button button-primary" href="/checkout">
-            К оформлению <ArrowRight size={16} />
+            {tr("К оформлению")}
+            <ArrowRight size={16} />
           </Link>
         </aside>
       </div>
