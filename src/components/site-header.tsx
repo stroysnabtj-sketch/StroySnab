@@ -88,11 +88,15 @@ export function SiteHeader({ className = "" }: { className?: string }) {
               <Search size={20} />
             </button>
           )}
-          <Link className="header-action" href={accountHref}>
+          <Link
+            className="header-action"
+            href={accountHref}
+            aria-label={staff ? tr("Управление") : tr("Кабинет")}
+          >
             <UserRound size={21} />
             <span>{staff ? tr("Управление") : tr("Кабинет")}</span>
           </Link>
-          <Link className="header-action" href="/cart">
+          <Link className="header-action" href="/cart" aria-label={tr("Корзина")}>
             <span className="cart-icon-wrap" data-cart-target>
               <ShoppingCart size={21} />
               {Boolean(session.cartCount) && (

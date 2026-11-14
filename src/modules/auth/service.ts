@@ -1,3 +1,4 @@
+import { linkReferral } from "@/modules/referrals/service";
 import { requestContactCode } from "./contact-code";
 import { sendContactCode, type CodeDelivery } from "./code-delivery";
 import { randomBytes } from "node:crypto";
@@ -53,10 +54,11 @@ export async function registerCustomer(input: unknown, ip: string) {
         .values({
           userId: user.id,
           fullName: data.fullName,
-          source: data.refCode ? "referral" : "direct",
+          source: "direct",
         })
         .returning();
 
+      await linkReferral(tx, customer.id, data.refCode, ip);
       await tx.insert(userRoles).values({ userId: user.id, role: "CUSTOMER" });
       await writeAudit(tx, {
         actorUserId: user.id,

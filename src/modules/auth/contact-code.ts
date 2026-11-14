@@ -1,3 +1,4 @@
+import { linkReferral } from "@/modules/referrals/service";
 import { randomInt } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { and, desc, eq, isNull, sql } from "drizzle-orm";
@@ -191,9 +192,11 @@ export async function verifyContactCode(input: unknown, ip: string, userAgent: s
         .returning({ id: users.id });
       if (!created) return { error: duplicateContact() };
       userId = created.id;
-      await tx
+      const [customer] = await tx
         .insert(customers)
-        .values({ userId, fullName: reg.fullName, source: reg.refCode ? "referral" : "direct" });
+        .values({ userId, fullName: reg.fullName, source: "direct" })
+        .returning({ id: customers.id });
+      await linkReferral(tx, customer.id, reg.refCode, ip);
       await tx.insert(userRoles).values({ userId, role: "CUSTOMER" });
       await writeAudit(tx, {
         actorUserId: userId,

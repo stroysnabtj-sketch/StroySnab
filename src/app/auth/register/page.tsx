@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { normalizeReferralCode, REFERRAL_COOKIE } from "@/modules/referrals/service";
 import type { Metadata } from "next";
 import { AuthPage } from "@/components/auth/auth-page";
 export const metadata: Metadata = { title: "Регистрация" };
@@ -7,5 +9,15 @@ export default async function RegisterPage({
   searchParams: Promise<{ ref?: string; next?: string }>;
 }) {
   const { ref, next } = await searchParams;
-  return <AuthPage mode="register" refCode={ref ?? ""} next={next} />;
+  return (
+    <AuthPage
+      mode="register"
+      refCode={
+        normalizeReferralCode(ref) ??
+        normalizeReferralCode((await cookies()).get(REFERRAL_COOKIE)?.value) ??
+        ""
+      }
+      next={next}
+    />
+  );
 }

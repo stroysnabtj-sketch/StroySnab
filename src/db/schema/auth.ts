@@ -1,5 +1,8 @@
+import { sql } from "drizzle-orm";
 import { customType } from "drizzle-orm/pg-core";
 import {
+  check,
+  foreignKey,
   index,
   integer,
   jsonb,
@@ -74,22 +77,40 @@ export const passwordResets = pgTable("password_resets", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const customers = pgTable("customers", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
-    .notNull()
-    .unique()
-    .references(() => users.id, { onDelete: "cascade" }),
-  type: text("type").notNull().default("PERSON"),
-  fullName: text("full_name").notNull(),
-  companyName: text("company_name"),
-  taxId: text("tax_id"),
-  referralCode: text("referral_code"),
-  referredByCustomerId: uuid("referred_by_customer_id"),
-  source: text("source"),
-  deletedAt: timestamp("deleted_at", { withTimezone: true }),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
+export const customers = pgTable(
+  "customers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .unique()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull().default("PERSON"),
+    fullName: text("full_name").notNull(),
+    companyName: text("company_name"),
+    taxId: text("tax_id"),
+    referralCode: text("referral_code"),
+    referredByCustomerId: uuid("referred_by_customer_id"),
+    source: text("source"),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("customers_referral_code_uq")
+      .on(t.referralCode)
+      .where(sql`${t.referralCode} IS NOT NULL`),
+    index("customers_referrer_idx").on(t.referredByCustomerId),
+    check(
+      "customers_referral_not_self",
+      sql`${t.referredByCustomerId} IS NULL OR ${t.referredByCustomerId} <> ${t.id}`,
+    ),
+    foreignKey({
+      name: "customers_referrer_fk",
+      columns: [t.referredByCustomerId],
+      foreignColumns: [t.id],
+    }).onDelete("set null"),
+  ],
+);
 
 export const addresses = pgTable("addresses", {
   id: uuid("id").primaryKey().defaultRandom(),

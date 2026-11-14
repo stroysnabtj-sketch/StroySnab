@@ -23,6 +23,7 @@ const customerPaths = [
   "/account/requests",
   "/account/addresses",
   "/account/profile",
+  "/account/referral",
   "/request",
   "/catalog/request",
 ];
@@ -45,6 +46,8 @@ async function login(context: BrowserContext, role: "customer" | "admin") {
   ]);
 }
 async function settled(page: Page) {
+  await expect(page.getByText("Загружаем приглашения…", { exact: true })).toHaveCount(0);
+  await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.getByText("Загружаем данные…", { exact: false })).toHaveCount(0);
   await expect(
     page.getByRole("alert").filter({ hasText: "Не удалось загрузить данные" }),
@@ -156,6 +159,7 @@ const visualScreens = [
   ["registration", "/auth/register", 390, "guest"],
   ["account", "/account", 1440, "customer"],
   ["profile", "/account/profile", 390, "customer"],
+  ["referrals", "/account/referral", 390, "customer"],
   ["requests", "/account/requests", 1440, "customer"],
   ["addresses", "/account/addresses", 390, "customer"],
   ...[
@@ -194,7 +198,12 @@ for (const [name, path, width, role] of visualScreens)
     await page.evaluate(() => document.fonts.ready);
     await expect(page).toHaveScreenshot(`${name}-${width}.png`, {
       animations: "disabled",
-      mask: [page.getByText(/\d{2}\.\d{2}\.\d{4}/), page.locator(".leaflet-control-attribution")],
+      mask: [
+        page.getByText(/\d{2}\.\d{2}\.\d{4}/),
+        page.locator(".leaflet-control-attribution"),
+        page.locator("#referral-link"),
+        page.locator("strong").filter({ hasText: /^[A-F0-9]{8}$/ }),
+      ],
     });
   });
 test("@checkout cash order reaches admin and a status change reaches its customer", async ({

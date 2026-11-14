@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
   UserRound,
+  UsersRound,
   ShoppingBag,
   ClipboardList,
   LayoutDashboard,
@@ -28,6 +29,7 @@ export function AccountNav({ identity }: { identity?: string }) {
     { href: "/account/requests", label: "Заявки", icon: ClipboardList },
     { href: "/account/orders", label: "Заказы", icon: ShoppingBag },
     { href: "/account/addresses", label: "Адреса", icon: MapPin },
+    { href: "/account/referral", label: "Рефералы", icon: UsersRound },
     { href: "/account/profile", label: "Профиль", icon: UserRound },
   ];
   return (

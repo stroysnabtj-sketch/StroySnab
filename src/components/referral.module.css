@@ -1,0 +1,168 @@
+.stack {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.invitation {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 26px;
+  border-radius: 18px;
+  background: #12335b;
+  color: white;
+}
+.icon {
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  background: #ffffff15;
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+.invitation h2 {
+  margin: 0 0 8px;
+  font-size: 23px;
+  line-height: 1.3;
+  color: white;
+}
+.invitation p {
+  margin: 0;
+  max-width: 65ch;
+  color: #dce8f7;
+  line-height: 1.6;
+  font-size: 14px;
+}
+.card,
+.stat,
+.note {
+  background: white;
+  border: 1px solid #dce4ef;
+  border-radius: 16px;
+  padding: 24px;
+  min-width: 0;
+}
+.card h2,
+.note h2 {
+  font-size: 17px;
+  line-height: 1.4;
+  margin: 0 0 16px;
+  color: #12335b;
+}
+.linkRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #ccd9e8;
+  border-radius: 10px;
+  padding: 0 12px;
+  min-width: 0;
+  flex: 1 1 280px;
+  color: #53657c;
+  background: #f6f8fc;
+}
+.field input {
+  border: 0;
+  outline-offset: 3px;
+  min-width: 0;
+  width: 100%;
+  background: transparent;
+  color: #12335b;
+  padding: 14px 0;
+  font-size: 14px;
+}
+.caption {
+  color: #53657c;
+  font-size: 13px;
+  margin-top: 14px;
+}
+.caption strong {
+  color: #12335b;
+  letter-spacing: 0.04em;
+}
+.hint {
+  color: #126346;
+  font-size: 13px;
+  margin: 8px 0 0;
+  min-height: 20px;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.stat {
+  display: grid;
+  gap: 10px;
+  color: #074089;
+}
+.stat strong {
+  color: #12335b;
+  font-size: 30px;
+  line-height: 1;
+}
+.stat span {
+  color: #53657c;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.note {
+  padding: 22px 24px;
+}
+.note ol {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: #12335b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.note p {
+  margin: 0;
+  color: #53657c;
+  font-size: 13px;
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .stack {
+    gap: 14px;
+  }
+  .invitation {
+    padding: 20px;
+    gap: 12px;
+  }
+  .invitation h2 {
+    font-size: 20px;
+  }
+  .icon {
+    padding: 9px;
+  }
+  .card,
+  .note {
+    padding: 20px;
+  }
+  .stats {
+    gap: 8px;
+  }
+  .stat {
+    padding: 14px 10px;
+  }
+  .stat strong {
+    font-size: 26px;
+  }
+  .stat span {
+    font-size: 12px;
+  }
+  .linkRow > button {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+  .field {
+    flex-basis: 100%;
+  }
+}

@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { normalizeReferralCode, REFERRAL_COOKIE } from "@/modules/referrals/service";
 import { NextResponse } from "next/server";
 import { requestContactCode } from "@/modules/auth/contact-code";
 import { errorResponse } from "@/server/api-error";
@@ -31,9 +33,18 @@ export async function POST(request: Request) {
     const challenge = captchaInput.parse(input);
     await verifyContactCaptcha(challenge);
     if (challenge.channel === "sms") await consumeRateLimit("contact-code-sms-budget", 100, 86400);
-    return NextResponse.json(await requestContactCode(input, ip), {
-      headers: { "Cache-Control": "no-store" },
-    });
+    const referralCode =
+      normalizeReferralCode((input as { refCode?: unknown }).refCode) ??
+      normalizeReferralCode((await cookies()).get(REFERRAL_COOKIE)?.value);
+    return NextResponse.json(
+      await requestContactCode(
+        { ...(input as Record<string, unknown>), refCode: referralCode ?? undefined },
+        ip,
+      ),
+      {
+        headers: { "Cache-Control": "no-store" },
+      },
+    );
   } catch (e) {
     return errorResponse(e);
   }

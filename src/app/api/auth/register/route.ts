@@ -1,3 +1,4 @@
+import { normalizeReferralCode, REFERRAL_COOKIE } from "@/modules/referrals/service";
 import { assertSameOrigin } from "@/server/security";
 import { parseJsonBody } from "@/server/validation";
 import { registerSchema } from "@/modules/auth/schemas";
@@ -27,6 +28,10 @@ export async function POST(request: Request) {
     const ip = requestIp(request);
     await consumeRateLimit(`register:${ip}`, 10, 3600);
     const input = registerSchema.parse(await parseJsonBody(request, 4096));
+    input.refCode =
+      normalizeReferralCode(input.refCode) ??
+      normalizeReferralCode((await cookies()).get(REFERRAL_COOKIE)?.value) ??
+      undefined;
     const user = await registerCustomer(input, ip);
     const session = await login(
       { identifier: user.phone, password: input.password },
