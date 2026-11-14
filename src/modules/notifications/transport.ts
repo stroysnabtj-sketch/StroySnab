@@ -36,6 +36,7 @@ export function configuredNotificationTransport(
   const payom = env.NOTIFICATIONS_SMS_PROVIDER === "payom";
   const orderTemplate = env.NOTIFICATIONS_SMS_ORDER_TEMPLATE_ID;
   const adminTemplate = env.NOTIFICATIONS_SMS_ADMIN_TEMPLATE_ID;
+  const requestTemplate = env.NOTIFICATIONS_SMS_REQUEST_TEMPLATE_ID;
   if (payom && (!orderTemplate || !adminTemplate)) return null;
   return {
     retrySafe: !payom,
@@ -55,9 +56,12 @@ export function configuredNotificationTransport(
       : {}),
     async send(message) {
       const admin = message.audience === "admin" && message.event === "ORDER_CREATED";
+      const requestEvent = ["QUOTE_READY", "REQUEST_RECEIVED"].includes(message.event ?? "");
+      const templateId = admin ? adminTemplate : requestEvent ? requestTemplate : orderTemplate;
       if (
         payom &&
-        (!message.orderNumber ||
+        (!templateId ||
+          !message.orderNumber ||
           (!admin && (!message.statusLabel || message.audience !== "customer")))
       )
         throw new Error("unsupported_notification_template");
@@ -73,10 +77,10 @@ export function configuredNotificationTransport(
             ? {
                 telephone: message.recipient,
                 templateMessage: {
-                  templateId: admin ? adminTemplate : orderTemplate,
+                  templateId,
                   variables: admin
-                    ? { order: message.orderNumber }
-                    : { order: message.orderNumber, status: message.statusLabel },
+                    ? { "number-1": message.orderNumber }
+                    : { "number-1": message.orderNumber, "text-1": message.statusLabel },
                 },
                 senderName: sender,
                 type: "SMS",
@@ -100,8 +104,9 @@ export function configuredNotificationTransport(
           Array.isArray(error?.violations) &&
           error.violations.some(
             (v: { propertyPath?: string; message?: string }) =>
-              /^templateMessage\.variables\[(order|status)\]$/.test(v.propertyPath ?? "") &&
-              /запрещена/i.test(v.message ?? ""),
+              /^templateMessage\.variables\[(order|status|number-1|text-1)\]$/.test(
+                v.propertyPath ?? "",
+              ) && /запрещена/i.test(v.message ?? ""),
           )
         )
           throw new Error("sms_template_variables_forbidden");

@@ -76,7 +76,7 @@ it("uses Payom's SMS payload and reads its accepted message ID", async () => {
     telephone: "+992900111224",
     templateMessage: {
       templateId: "66c03e11-d52b-403b-905a-7761080d3d7c",
-      variables: { order: "ORD-001", status: "подтверждён" },
+      variables: { "number-1": "ORD-001", "text-1": "подтверждён" },
     },
     senderName: "Store",
     type: "SMS",
@@ -103,7 +103,7 @@ it("uses the admin template and accepts Payom string IDs without sending private
   });
   expect(JSON.parse(send.mock.calls[0][1]?.body as string).templateMessage).toEqual({
     templateId: "admin",
-    variables: { order: "ORD-2" },
+    variables: { "number-1": "ORD-2" },
   });
   await expect(
     transport.send({

@@ -7,7 +7,7 @@ Automatic file quotations use catalogue-backed matching and label alternatives; 
 Launch hardening adds staff password + email OTP, per-response CSP nonces, HTTPS HSTS, protected database price history and a read-only integrity command. Configuration and migration must be deployed together. See SECURITY.md and superpowers/plans/2026-11-14-launch-hardening.md.
 
 External unresolved items:
-- Payom rejects order/status template variables with HTTP 422 (variables order/status forbidden), despite template approval. Provider must enable these variables. Queue processing alone does not confirm delivery.
+- Payom notifications now use number-1/text-1 and dedicated order/admin/request templates. New IDs supplied on 2026-11-14 are still shown as MODERATION in the owner screenshot; actual delivery remains unverified until approval. Authentication retains the existing working code template. Queue processing alone does not confirm delivery.
 - Apex stroysnab.tj still requires a valid HTTPS endpoint and permanent redirect to www; the previous hosting configuration is separate from Railway www routing.
 - Legal operator details await the owner's information. Do not invent company registration details.
 
