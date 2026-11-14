@@ -1,3 +1,4 @@
+import { enqueueRequestReceivedNotifications } from "@/modules/notifications/events";
 import { enqueueQuotationJob } from "./ai-jobs";
 import { createHash, randomUUID } from "node:crypto";
 import { eq, sql } from "drizzle-orm";
@@ -151,6 +152,12 @@ export async function submitProcurementRequest(
         });
       }
       if (data.autoPrepare) await enqueueQuotationJob(tx, record.id, actor!.id);
+      await enqueueRequestReceivedNotifications(tx, {
+        requestId: record.id,
+        number: record.number,
+        phone: record.contactPhone,
+        email: record.contactEmail,
+      });
       await writeAudit(tx, {
         actorUserId: actor?.id,
         actorRole: actor?.role ?? "GUEST",

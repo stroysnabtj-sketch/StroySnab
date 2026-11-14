@@ -25,6 +25,8 @@ const events: Record<string, string> = {
   PAYMENT_CONFIRMED: "Получена оплата",
   SHOP_STATUS_CHANGED: "Статус магазина",
   QUOTE_READY: "КП готово",
+  REQUEST_RECEIVED: "Заявка принята",
+  QUOTE_RESULT: "Результат подбора",
 };
 type Row = {
   id: string;
@@ -111,6 +113,9 @@ export function NotificationPanel({ connected }: { connected: boolean }) {
                 >
                   {states[row.state] ?? row.state}
                 </Badge>
+                {row.lastError === "sms_template_variables_forbidden" && (
+                  <p className="muted">Payom запрещает переменные order/status в шаблоне</p>
+                )}
               </td>
               <td>{row.attemptCount}</td>
               <td>

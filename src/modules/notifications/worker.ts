@@ -125,6 +125,7 @@ export async function dispatchNotifications(
     });
     if (!claim) break;
     let providerMessageId: string | undefined;
+    let failureCode = "provider_send_failed";
     try {
       let body = claim.body.replace(/https?:\/\/[^\s]+/g, "").trim();
       if (channel === "email" && claim.audience === "admin" && claim.event === "ORDER_CREATED")
@@ -153,13 +154,26 @@ export async function dispatchNotifications(
           body += ` ${new URL(`/orders/${claim.entityId}`, publicSiteOrigin()).href}`;
         }
       }
-      let attachments: Array<{ filename: string; content: string }> | undefined;
-      if (channel === "email" && ["QUOTE_READY", "QUOTE_RESULT"].includes(claim.event)) {
+      let quoteRequestNumber: string | undefined;
+      if (channel === "sms" && ["QUOTE_READY", "REQUEST_RECEIVED"].includes(claim.event)) {
         const [request] = await db
           .select()
           .from(procurementRequests)
           .where(eq(procurementRequests.id, claim.entityId));
-        if (!request || !request.userId) throw new Error("quote_owner_unavailable");
+        if (!request) throw new Error("quote_request_unavailable");
+        quoteRequestNumber = request.number;
+      }
+      let attachments: Array<{ filename: string; content: string }> | undefined;
+      if (
+        channel === "email" &&
+        ["QUOTE_READY", "QUOTE_RESULT", "REQUEST_RECEIVED"].includes(claim.event)
+      ) {
+        const [request] = await db
+          .select()
+          .from(procurementRequests)
+          .where(eq(procurementRequests.id, claim.entityId));
+        if (!request || (!request.userId && claim.event !== "REQUEST_RECEIVED"))
+          throw new Error("quote_owner_unavailable");
         if (claim.event === "QUOTE_READY") {
           const [quote] = await db
             .select()
@@ -196,7 +210,7 @@ export async function dispatchNotifications(
           const pdf = await quotationPdf(
             request.id,
             {
-              id: request.userId,
+              id: request.userId!,
               role: "CUSTOMER",
               phone: request.contactPhone,
               email: request.contactEmail,
@@ -211,7 +225,8 @@ export async function dispatchNotifications(
             },
           ];
         }
-        body += ` ${new URL(`/requests/${claim.entityId}`, publicSiteOrigin()).href}`;
+        if (request.userId)
+          body += ` ${new URL(`/requests/${claim.entityId}`, publicSiteOrigin()).href}`;
       }
       const result = await transport.send({
         recipient: claim.recipient,
@@ -220,13 +235,20 @@ export async function dispatchNotifications(
         idempotencyKey: claim.eventKey,
         event: claim.event,
         audience: claim.audience,
-        orderNumber: order?.orderNumber,
-        statusLabel: notificationStatusLabel(claim.event, order?.vehicleType === "PICKUP"),
+        orderNumber: quoteRequestNumber ?? order?.orderNumber,
+        statusLabel:
+          claim.event === "QUOTE_READY"
+            ? "КП готово"
+            : claim.event === "REQUEST_RECEIVED"
+              ? "заявка принята"
+              : notificationStatusLabel(claim.event, order?.vehicleType === "PICKUP"),
       });
       if (!result.providerMessageId) throw new Error("provider_send_failed");
       providerMessageId = result.providerMessageId;
-    } catch {
-      /* Only a fixed code is logged; gateway errors can contain credentials or personal data. */
+    } catch (error) {
+      // Only explicitly whitelisted codes are stored; provider responses can contain private data.
+      if (error instanceof Error && error.message === "sms_template_variables_forbidden")
+        failureCode = error.message;
     }
     await db.transaction(async (tx) => {
       const completedAt = options.now ?? new Date();
@@ -241,7 +263,7 @@ export async function dispatchNotifications(
               : "queued",
           providerMessageId: providerMessageId ?? null,
           acceptedAt: success ? completedAt : null,
-          lastError: success ? null : "provider_send_failed",
+          lastError: success ? null : failureCode,
           claimToken: null,
           leaseUntil: null,
           availableAt: new Date(
@@ -260,7 +282,7 @@ export async function dispatchNotifications(
           .update(notificationAttempts)
           .set({
             state: success ? "accepted" : "failed",
-            error: success ? null : "provider_send_failed",
+            error: success ? null : failureCode,
             finishedAt: completedAt,
           })
           .where(eq(notificationAttempts.claimToken, claim.claimToken!));

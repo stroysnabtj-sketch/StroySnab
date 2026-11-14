@@ -22,8 +22,13 @@ const normalize = (s: string) =>
 const tokens = (s: string) => normalize(s).split(/\s+/).filter(Boolean);
 /** A ranking score, never a calibrated probability. Numeric dimensions and grades cannot be relaxed. */
 export function materialMatchScore(requested: string, candidate: string): number {
-  const a = normalize(requested),
-    b = normalize(candidate);
+  // Handwritten cement grade Д0 is frequently transcribed as ДО; only repair this known grade context.
+  const cementGrade = (value: string) =>
+    /цемент/iu.test(value)
+      ? value.replace(/(?<![\p{L}\p{N}])[дd][оo](?![\p{L}\p{N}])/giu, "Д0")
+      : value;
+  const a = normalize(cementGrade(requested)),
+    b = normalize(cementGrade(candidate));
   if (a === b) return 100;
   const dimensions = (v: string) =>
     [...v.matchAll(/(\d+(?:\.\d+)?)\s*([\p{L}]+)/gu)].map((m) => `${m[1]}${m[2]}`);

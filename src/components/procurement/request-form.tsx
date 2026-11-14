@@ -2,6 +2,7 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { TajikPhoneInput } from "@/components/tajik-phone-input";
 import { FileUp, Plus, X } from "lucide-react";
 import { api } from "./shared";
 import s from "./procurement.module.css";
@@ -309,15 +310,7 @@ function ContactFields({ name, phone }: { name: string; phone: string }) {
       </label>
       <label className={s.field}>
         Телефон
-        <input
-          name="contactPhone"
-          type="tel"
-          required
-          minLength={8}
-          maxLength={30}
-          defaultValue={phone}
-          autoComplete="tel"
-        />
+        <TajikPhoneInput defaultValue={phone} />
       </label>
     </>
   );

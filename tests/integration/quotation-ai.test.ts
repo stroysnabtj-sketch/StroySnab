@@ -66,7 +66,7 @@ it("queues once, publishes an authoritative quote and hides supplier costs from 
     .select()
     .from(notificationOutbox)
     .where(
-      sql`${notificationOutbox.entityId}=${request.id} and ${notificationOutbox.channel}='email'`,
+      sql`${notificationOutbox.entityId}=${request.id} and ${notificationOutbox.channel}='email' and ${notificationOutbox.event}='QUOTE_READY'`,
     );
   expect(emails).toHaveLength(1);
   const send = vi.fn(async () => ({ providerMessageId: "mock-quote-email" }));
@@ -164,15 +164,13 @@ it("publishes labelled alternatives and excludes repeated demand beyond stock fr
       status: "PUBLISHED",
     })
     .returning();
-  await db
-    .insert(supplierOffers)
-    .values({
-      productId: product.id,
-      supplierId: supplier.id,
-      supplierPriceDirams: 10000n,
-      stockQty: "10",
-      minOrderQty: "1",
-    });
+  await db.insert(supplierOffers).values({
+    productId: product.id,
+    supplierId: supplier.id,
+    supplierPriceDirams: 10000n,
+    stockQty: "10",
+    minOrderQty: "1",
+  });
   const request = await submitProcurementRequest(input, [file], {
     ...buyer,
     role: "CUSTOMER",

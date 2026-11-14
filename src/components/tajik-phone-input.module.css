@@ -1,0 +1,32 @@
+.phone {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #c8d6e6;
+  border-radius: 10px;
+  background: #f7f9fc;
+  padding-inline: 14px;
+  color: #173858;
+}
+.phone:focus-within {
+  border-color: #174e94;
+  outline: 2px solid #174e941c;
+}
+.phone > input[type="tel"] {
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  padding: 12px 0;
+  width: 100%;
+  min-width: 0;
+  font-size: 16px;
+}
+.phone > input::placeholder {
+  color: #96a3b4;
+  opacity: 1;
+}

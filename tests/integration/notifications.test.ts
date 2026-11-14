@@ -1,3 +1,5 @@
+import { submitProcurementRequest } from "@/modules/procurement/submit";
+import type { SessionUser } from "@/modules/auth/session";
 import { randomUUID } from "node:crypto";
 import { eq, inArray } from "drizzle-orm";
 import { expect, it, vi } from "vitest";
@@ -345,5 +347,45 @@ it("keeps published quotation SMS free of links", async () => {
   } finally {
     vi.unstubAllEnvs();
     await db.delete(notificationOutbox).where(eq(notificationOutbox.entityId, requestId));
+  }
+});
+
+it("notifies the customer when a material-list request is received, using status metadata and no SMS link", async () => {
+  const db = await getDb();
+  const [buyer] = await db.select().from(users).where(eq(users.role, "CUSTOMER")).limit(1);
+  const request = await submitProcurementRequest(
+    {
+      submissionKey: randomUUID(),
+      contactName: "Покупатель",
+      contactPhone: "+992900001122",
+      contactEmail: "buyer@example.test",
+      lines: [{ name: "Цемент М500", qty: "1", unit: "мешок" }],
+    },
+    [],
+    { ...buyer, role: "CUSTOMER" } as SessionUser,
+  );
+  const rows = await db
+    .select()
+    .from(notificationOutbox)
+    .where(eq(notificationOutbox.entityId, request.id));
+  expect(rows.map((r) => r.channel).sort()).toEqual(["email", "sms"]);
+  for (const row of rows) {
+    const send = vi.fn(async () => ({ providerMessageId: "mock-request-accepted" }));
+    await dispatchNotifications(
+      db,
+      { send },
+      { channel: row.channel as "sms" | "email", onlyIds: [row.id] },
+    );
+    expect(send).toHaveBeenCalledOnce();
+    const message = (
+      send.mock.calls[0] as unknown as [
+        { body: string; orderNumber?: string; statusLabel?: string },
+      ]
+    )[0];
+    if (row.channel === "sms") {
+      expect(message.orderNumber).toBe(request.number);
+      expect(message.statusLabel).toBe("заявка принята");
+      expect(message.body).not.toContain("https://");
+    } else expect(message.body).toContain(`/requests/${request.id}`);
   }
 });

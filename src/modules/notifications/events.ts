@@ -194,3 +194,24 @@ export async function enqueueQuotationResultEmail(
     body: "Подбор материалов завершён. Для расчёта стоимости необходимо уточнить позиции в заявке.",
   });
 }
+
+/** A material-list request has its own lifecycle, before a customer accepts a quote/order. */
+export async function enqueueRequestReceivedNotifications(
+  tx: DbTransaction,
+  input: {
+    requestId: string;
+    number: string;
+    phone: string;
+    email: string | null;
+  },
+) {
+  const message = {
+    entityId: input.requestId,
+    event: "REQUEST_RECEIVED",
+    version: "1",
+    audience: "customer" as const,
+    body: `Заявка ${safeLabel(input.number)} принята.`,
+  };
+  await enqueue(tx, { ...message, recipient: input.phone });
+  await enqueue(tx, { ...message, recipient: input.email, channel: "email" });
+}

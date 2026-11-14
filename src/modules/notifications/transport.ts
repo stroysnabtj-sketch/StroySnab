@@ -48,6 +48,8 @@ export function configuredNotificationTransport(
             "ORDER_DELIVERED",
             "ORDER_CANCELLED",
             "PAYMENT_CONFIRMED",
+            "QUOTE_READY",
+            "REQUEST_RECEIVED",
           ],
         }
       : {}),
@@ -90,7 +92,21 @@ export function configuredNotificationTransport(
         redirect: "error",
         cache: "no-store",
       });
-      if (!response.ok) throw new Error("provider_send_failed");
+      if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        if (
+          payom &&
+          response.status === 422 &&
+          Array.isArray(error?.violations) &&
+          error.violations.some(
+            (v: { propertyPath?: string; message?: string }) =>
+              /^templateMessage\.variables\[(order|status)\]$/.test(v.propertyPath ?? "") &&
+              /запрещена/i.test(v.message ?? ""),
+          )
+        )
+          throw new Error("sms_template_variables_forbidden");
+        throw new Error("provider_send_failed");
+      }
       const result = await response.json();
       if (payom) {
         const id = typeof result === "string" ? result : result?.id;
@@ -133,7 +149,9 @@ export function configuredNotificationEmail(
               ? "Коммерческое предложение StroySnab"
               : message.event === "QUOTE_RESULT"
                 ? "Результат подбора материалов StroySnab"
-                : "Статус заказа StroySnab",
+                : message.event === "REQUEST_RECEIVED"
+                  ? "Заявка принята — StroySnab"
+                  : "Статус заказа StroySnab",
           text: message.body,
           ...(message.attachments?.length ? { attachments: message.attachments } : {}),
         }),
