@@ -18,6 +18,7 @@ export async function POST(request: Request) {
       ip,
       request.headers.get("user-agent") || "",
     );
+    if (result.requiresLogin) return NextResponse.json({ requiresLogin: true });
     const adopted = await adoptGuestCart(result.userId, (await cookies()).get("kh_cart")?.value);
     const response = withSessionCookie(NextResponse.json({ role: result.role }), result.token);
     if (adopted) response.cookies.delete("kh_cart");

@@ -1,0 +1,9 @@
+# Launch hardening after gaps review — 2026-11-14
+
+Authorized scope: CSP/HSTS, staff authentication review/hardening, append-only price history and read-only financial integrity audit. Preserve single-store product, customer auth, per-product pricing and user files. No referral/store panels or TOTP revival.
+
+1. Add per-request CSP nonce middleware and dynamic root rendering; pass nonce to Turnstile Script. Explicit origins for CAPTCHA/maps; deny frames/objects/base changes, no unsafe-eval in production. HSTS on HTTPS only, without includeSubDomains/preload because legacy root/mail domains are not ready. Browser verify hydration, auth form, map, search, admin.
+2. Require password plus email OTP for staff password login in production. Reuse hashed five-minute login codes with a dedicated purpose bound to authenticated staff identity; no full session before OTP. Ordinary passwordless login codes must not grant staff sessions. Reuse account/IP attempt controls and existing email transport. Preserve customer login/recovery flow and existing staff sessions during rollout.
+3. Add PostgreSQL price_history with triggers on offers/product markup/pricing rules. Record insert/update/delete source snapshots; block UPDATE/DELETE/TRUNCATE history. Capture future changes only, no invented historical timestamps. Integration tests for rollback/import paths and protection.
+4. Add read-only audit:data reporting line totals, order/quote aggregates, payment consistency, aggregate reserved stock and trigger installation. Legacy snapshot semantics distinguished from current per-product rules; report findings without altering records.
+5. Tests, lint/build, rendered desktop/mobile checks, production DB snapshot before migration, Git push, Railway health/runtime checks. Report Payom external template whitelist block unchanged.

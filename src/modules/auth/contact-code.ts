@@ -31,6 +31,7 @@ export async function requestContactCode(
   input: unknown,
   ip: string,
   deliver: CodeDelivery = sendContactCode,
+  staffProof?: { userId: string; passwordHash: string },
 ) {
   const data = requestInput.parse(input),
     identifier =
@@ -75,6 +76,36 @@ export async function requestContactCode(
       )
       .limit(1);
     if (registration && user) throw duplicateContact();
+    if (
+      staffProof &&
+      (!user ||
+        user.id !== staffProof.userId ||
+        user.passwordHash !== staffProof.passwordHash ||
+        user.status !== "ACTIVE" ||
+        user.deletedAt)
+    )
+      throw new ApiError(401, "invalid_credentials", "Войдите заново");
+    if (
+      process.env.STAFF_EMAIL_OTP_REQUIRED === "true" &&
+      user &&
+      user.role !== "CUSTOMER" &&
+      data.purpose === "login" &&
+      !staffProof
+    )
+      throw new ApiError(
+        403,
+        "staff_password_required",
+        "Для входа используйте пароль и код на почту",
+      );
+
+    if (
+      process.env.STAFF_EMAIL_OTP_REQUIRED === "true" &&
+      user &&
+      user.role !== "CUSTOMER" &&
+      data.purpose === "recover" &&
+      data.channel !== "email"
+    )
+      throw new ApiError(403, "staff_email_required", "Восстановите доступ через почту");
     if (user?.role.startsWith("SUPPLIER_"))
       throw new ApiError(403, "account_unavailable", "Вход в этот аккаунт недоступен");
     await tx
@@ -86,7 +117,8 @@ export async function requestContactCode(
       .values({
         identifier,
         channel: data.channel,
-        purpose: data.purpose,
+        purpose: staffProof ? "staff_login" : data.purpose,
+        credentialHash: staffProof ? hashToken(staffProof.passwordHash) : null,
         userId: user?.id,
         registration,
         codeHash,
@@ -137,7 +169,7 @@ export async function verifyContactCode(input: unknown, ip: string, userAgent: s
     }
     let userId = challenge.userId;
     const password = data.password ?? "";
-    if (challenge.purpose !== "login") {
+    if (challenge.purpose === "register" || challenge.purpose === "recover") {
       const passwordError = registrationPasswordError(password, data.passwordConfirmation ?? "");
       if (passwordError)
         return { error: new ApiError(400, "invalid_registration_password", passwordError) };
@@ -198,6 +230,28 @@ export async function verifyContactCode(input: unknown, ip: string, userAgent: s
         : user.phone !== challenge.identifier)
     )
       return invalid();
+    if (
+      process.env.STAFF_EMAIL_OTP_REQUIRED === "true" &&
+      user.role !== "CUSTOMER" &&
+      challenge.purpose !== "recover" &&
+      (challenge.purpose !== "staff_login" ||
+        challenge.channel !== "email" ||
+        challenge.credentialHash !== hashToken(user.passwordHash))
+    )
+      return invalid();
+    if (
+      process.env.STAFF_EMAIL_OTP_REQUIRED === "true" &&
+      user.role !== "CUSTOMER" &&
+      challenge.purpose === "recover" &&
+      challenge.channel !== "email"
+    )
+      return invalid();
+    if (
+      challenge.purpose === "staff_login" &&
+      (challenge.credentialHash !== hashToken(user.passwordHash) ||
+        (user.lockedUntil && user.lockedUntil > new Date()))
+    )
+      return invalid();
     await tx.update(loginCodes).set({ usedAt: new Date() }).where(eq(loginCodes.id, challenge.id));
     const recovering = challenge.purpose === "recover";
     if (recovering) await tx.delete(sessions).where(eq(sessions.userId, userId));
@@ -213,6 +267,17 @@ export async function verifyContactCode(input: unknown, ip: string, userAgent: s
           : { phoneVerifiedAt: new Date() }),
       })
       .where(eq(users.id, userId));
+    if (recovering && process.env.STAFF_EMAIL_OTP_REQUIRED === "true" && user.role !== "CUSTOMER") {
+      await writeAudit(tx, {
+        actorUserId: userId,
+        actorRole: user.role,
+        action: "user.password_recovered",
+        entity: "user",
+        entityId: userId,
+        ip,
+      });
+      return { value: { token: "", userId, role: user.role, requiresLogin: true as const } };
+    }
     await tx.insert(sessions).values({
       userId,
       tokenHash: hashToken(token),

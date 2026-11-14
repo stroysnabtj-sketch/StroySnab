@@ -14,6 +14,7 @@ export default defineRailway(() => {
       DEEPSEEK_API_KEY: preserve(),
       DEEPSEEK_MODEL: "deepseek-flash",
       APP_URL: "https://www.stroysnab.tj",
+      STAFF_EMAIL_OTP_REQUIRED: "true",
       AUTH_ADMIN_PASSWORD_LOGIN: preserve(),
       AUTH_EMAIL_PROVIDER: preserve(),
       AUTH_LEGACY_PASSWORD_LOGIN: preserve(),

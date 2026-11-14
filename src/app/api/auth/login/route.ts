@@ -31,6 +31,8 @@ export async function POST(request: Request) {
       request.headers.get("user-agent") ?? "",
       false,
     );
+    if (result.challenge)
+      return NextResponse.json({ requiresCode: true, challenge: result.challenge });
     const adopted = await adoptGuestCart(result.userId, (await cookies()).get("kh_cart")?.value);
     const response = withSessionCookie(NextResponse.json({ role: result.role }), result.token);
     if (adopted) response.cookies.delete("kh_cart");

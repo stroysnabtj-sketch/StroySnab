@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { cache } from "react";
 import { notFound } from "next/navigation";
@@ -69,7 +70,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           offers={item.offers}
           relatedProducts={item.relatedProducts ?? []}
         />
-        <script
+        <script nonce={(await headers()).get("x-nonce") ?? undefined}
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),

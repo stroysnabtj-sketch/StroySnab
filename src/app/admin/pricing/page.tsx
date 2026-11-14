@@ -1,3 +1,4 @@
+import { PriceHistoryPanel } from "@/components/price-history-panel";
 import { Workspace } from "@/components/workspace";
 import { AdminPricingPanel } from "@/components/admin-pricing-panel";
 import { requirePagePermission } from "@/modules/auth/page";
@@ -14,6 +15,7 @@ export default async function AdminPricingPage() {
         </div>
       </header>
       <AdminPricingPanel />
+      <PriceHistoryPanel />
     </Workspace>
   );
 }

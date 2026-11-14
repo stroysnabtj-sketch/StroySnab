@@ -28,7 +28,16 @@ async function initialize(): Promise<AppDatabase> {
   if (process.env.DATABASE_URL) {
     const pool = new Pool({ connectionString: process.env.DATABASE_URL, max: 10 });
     const database = drizzleNode(pool, { schema });
-    await migrateNode(database, { migrationsFolder });
+    const migrationLock = await pool.connect();
+    try {
+      await migrationLock.query("SELECT pg_advisory_lock(hashtext('stroysnab-schema-migrations'))");
+      await migrateNode(database, { migrationsFolder });
+    } finally {
+      await migrationLock
+        .query("SELECT pg_advisory_unlock(hashtext('stroysnab-schema-migrations'))")
+        .catch(() => {});
+      migrationLock.release();
+    }
     globalDb.__kushoniyonPool = pool;
     return database;
   }

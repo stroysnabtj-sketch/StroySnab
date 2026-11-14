@@ -10,3 +10,5 @@ export * from "./merchandising";
 
 export * from "./notifications";
 export * from "./quotation-jobs";
+
+export * from "./price-history";

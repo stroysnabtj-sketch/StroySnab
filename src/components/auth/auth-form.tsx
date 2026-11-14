@@ -28,6 +28,11 @@ export function AuthForm({
     identifier: "",
     password: "",
   });
+  const [challenge, setChallenge] = useState<{
+    challengeId: string;
+    maskedRecipient: string;
+  } | null>(null);
+  const [staffCode, setStaffCode] = useState("");
   const [terms, setTerms] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
@@ -45,6 +50,24 @@ export function AuthForm({
     if (mode === "register" && !terms) {
       setErrors({ termsAccepted: t("auth.termsRequired") });
       setLoading(false);
+      return;
+    }
+    if (challenge) {
+      try {
+        const response = await fetch("/api/auth/code/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ challengeId: challenge.challengeId, code: staffCode }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error?.message ?? "Не удалось подтвердить вход");
+        const destination = safeAuthDestination(next);
+        window.location.href = destination === "/account" ? "/admin" : destination;
+      } catch (error) {
+        setErrors({ root: (error as Error).message });
+      } finally {
+        setLoading(false);
+      }
       return;
     }
     const endpoint =
@@ -84,6 +107,12 @@ export function AuthForm({
         setErrors(result.error?.fields ?? { root: result.error?.message ?? t("common.error") });
         return;
       }
+      if (result.requiresCode && result.challenge) {
+        setChallenge(result.challenge);
+        setStaffCode("");
+        setForm((old) => ({ ...old, password: "" }));
+        return;
+      }
       if (mode === "forgot") {
         setMessage(t("auth.resetSent"));
         setDevelopmentToken(result.developmentToken ?? "");
@@ -107,6 +136,43 @@ export function AuthForm({
     }
   }
 
+  if (challenge)
+    return (
+      <form className={`auth-form ${styles.form}`} onSubmit={submit} aria-busy={loading}>
+        <p>Код отправлен на {challenge.maskedRecipient}</p>
+        {errors.root && (
+          <div className="form-alert" role="alert">
+            {errors.root}
+          </div>
+        )}
+        <Field label="Код подтверждения">
+          <Input
+            autoFocus
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            pattern="[0-9]{6}"
+            maxLength={6}
+            required
+            value={staffCode}
+            onChange={(event) => setStaffCode(event.target.value.replace(/\D/g, ""))}
+          />
+        </Field>
+        <Button type="submit" disabled={loading || staffCode.length !== 6}>
+          Подтвердить вход
+        </Button>
+        <button
+          type="button"
+          className="auth-secondary-link"
+          disabled={loading}
+          onClick={() => {
+            setChallenge(null);
+            setErrors({});
+          }}
+        >
+          Войти заново
+        </button>
+      </form>
+    );
   return (
     <form className={`auth-form ${styles.form}`} onSubmit={submit} noValidate aria-busy={loading}>
       {errors.root ? (

@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+import { CspNonceProvider } from "@/components/csp-nonce-provider";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Manrope } from "next/font/google";
 import { NavigationProgress } from "@/components/navigation-progress";
@@ -23,12 +25,15 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.svg" },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const nonce = (await headers()).get("x-nonce") ?? "";
   return (
     <html lang="ru" className={`${body.variable} ${mono.variable}`}>
       <body>
-        <NavigationProgress />
-        {children}
+        <CspNonceProvider nonce={nonce}>
+          <NavigationProgress />
+          {children}
+        </CspNonceProvider>
       </body>
     </html>
   );

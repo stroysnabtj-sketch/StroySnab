@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useCspNonce } from "@/components/csp-nonce-provider";
 import Script from "next/script";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button, Checkbox, Field, Input } from "@/components/ui";
@@ -37,6 +38,7 @@ export function ContactAuthForm({
   refCode?: string;
   captchaSiteKey?: string;
 }) {
+  const nonce = useCspNonce();
   const [channel, setChannel] = useState<"sms" | "email">("sms"),
     [identifier, setIdentifier] = useState(""),
     [fullName, setFullName] = useState(""),
@@ -148,6 +150,10 @@ export function ContactAuthForm({
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error?.message || "Не удалось войти");
+      if (result.requiresLogin) {
+        window.location.href = `/auth/password?next=${encodeURIComponent(safeAuthDestination(next))}`;
+        return;
+      }
       const safe = safeAuthDestination(next);
       window.location.href = safe === "/account" && result.role !== "CUSTOMER" ? "/admin" : safe;
     } catch (e) {
@@ -376,6 +382,7 @@ export function ContactAuthForm({
       {needsCaptcha && (
         <>
           <Script
+            nonce={nonce}
             src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
             onReady={() => setCaptchaReady(true)}
             onError={() => setError("Проверка временно недоступна")}

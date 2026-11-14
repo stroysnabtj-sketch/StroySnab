@@ -145,6 +145,7 @@ export const loginCodes = pgTable(
     channel: text("channel").notNull(),
     purpose: text("purpose").notNull(),
     codeHash: text("code_hash").notNull(),
+    credentialHash: text("credential_hash"),
     registration: jsonb("registration").$type<{
       fullName: string;
       refCode?: string;

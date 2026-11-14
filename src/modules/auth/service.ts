@@ -1,3 +1,5 @@
+import { requestContactCode } from "./contact-code";
+import { sendContactCode, type CodeDelivery } from "./code-delivery";
 import { randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { and, eq, gt, isNull, or, sql } from "drizzle-orm";
@@ -83,7 +85,13 @@ export async function registerCustomer(input: unknown, ip: string) {
   }
 }
 
-export async function login(input: unknown, ip: string, userAgent: string, superAdminOnly = false) {
+export async function login(
+  input: unknown,
+  ip: string,
+  userAgent: string,
+  superAdminOnly = false,
+  deliver: CodeDelivery = sendContactCode,
+) {
   const data = loginSchema.parse(input);
   const db = await getDb();
   const identifier = data.identifier.trim();
@@ -140,6 +148,21 @@ export async function login(input: unknown, ip: string, userAgent: string, super
     throw new ApiError(401, "invalid_credentials", "Неверный логин или пароль");
   }
 
+  if (process.env.STAFF_EMAIL_OTP_REQUIRED === "true" && user.role !== "CUSTOMER") {
+    if (!user.email)
+      throw new ApiError(
+        403,
+        "staff_email_required",
+        "Для входа сотрудника необходимо настроить почту",
+      );
+    const challenge = await requestContactCode(
+      { purpose: "login", channel: "email", identifier: user.email },
+      ip,
+      deliver,
+      { userId: user.id, passwordHash: user.passwordHash },
+    );
+    return { token: "", role: user.role, userId: user.id, challenge };
+  }
   const token = newSessionToken();
   await db.transaction(async (tx) => {
     const [current] = await tx.select().from(users).where(eq(users.id, user.id)).for("update");
@@ -149,7 +172,9 @@ export async function login(input: unknown, ip: string, userAgent: string, super
       current.role.startsWith("SUPPLIER_") ||
       (superAdminOnly && current.role !== "SUPER_ADMIN") ||
       current.deletedAt ||
-      current.passwordHash !== user.passwordHash
+      current.passwordHash !== user.passwordHash ||
+      current.role !== user.role ||
+      (process.env.STAFF_EMAIL_OTP_REQUIRED === "true" && current.role !== "CUSTOMER")
     )
       throw new ApiError(401, "invalid_credentials", "Войдите заново");
     if (current.lockedUntil && current.lockedUntil > new Date())
