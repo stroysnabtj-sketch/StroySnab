@@ -86,6 +86,21 @@ test("mobile and desktop home visual baseline", async ({ page }) => {
     ).toBe(true);
   }
 });
+test("Tajik mobile hero keeps compact action labels", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 900 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Ба забони тоҷикӣ", exact: true }).click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "tg");
+  await expect(page.getByRole("link", { name: "Гирифтани КП", exact: true }).first()).toBeVisible();
+  await expect(page).toHaveScreenshot("home-tg-390.png", {
+    animations: "disabled",
+    mask: [page.locator(".home-products-section"), page.locator(".cart-counter")],
+  });
+  const height = await page
+    .locator(".hero-banner-actions")
+    .evaluate((el) => el.getBoundingClientRect().height);
+  expect(height).toBeLessThanOrEqual(56);
+});
 test("map selection, reverse address and Turnstile coexist with CSP", async ({ page }) => {
   const failures: string[] = [];
   page.on("pageerror", (e) => failures.push(e.message));
