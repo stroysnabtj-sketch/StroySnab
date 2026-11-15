@@ -7,17 +7,16 @@ import { AddToCartButton } from "@/components/add-to-cart-button";
 import { formatTJS } from "@/modules/system/money";
 import type { PublicProduct } from "@/modules/catalog/types";
 export function ProductCard({ product }: { product: PublicProduct }) {
-  const { tr } = useLocale();
+  const { tr, locale } = useLocale();
+  const name = locale === "tg" ? product.nameTg?.trim() || product.name : product.name;
+  const categoryName =
+    locale === "tg" ? product.categoryNameTg?.trim() || product.categoryName : product.categoryName;
   const inStock = Number(product.stockQty) >= Number(product.minOrderQty);
   const image =
     (product as PublicProduct & { imageUrl?: string | null }).imageUrl || product.imageKey;
   return (
     <article className="product-card">
-      <Link
-        href={`/product/${product.slug}`}
-        className="product-card-image"
-        aria-label={product.name}
-      >
+      <Link href={`/product/${product.slug}`} className="product-card-image" aria-label={name}>
         {image ? (
           <Image
             src={image}
@@ -42,16 +41,16 @@ export function ProductCard({ product }: { product: PublicProduct }) {
               {product.brand}
             </Link>
           ) : (
-            <span className="product-card-brand">{product.categoryName}</span>
+            <span className="product-card-brand">{tr(categoryName)}</span>
           )}
         </div>
         <Link href={`/product/${product.slug}`} className="product-card-title-link">
-          <h3 className="product-card-title">{product.name}</h3>
+          <h3 className="product-card-title">{name}</h3>
         </Link>
         <div className="price-container">
           <div className="product-card-price-row">
             <strong className="product-card-price">{formatTJS(product.priceDirams)}</strong>
-            <span className="product-card-unit">/ {product.unit}</span>
+            <span className="product-card-unit">/ {tr(product.unit)}</span>
           </div>
         </div>
         <div className="product-card-status" data-stock={inStock}>

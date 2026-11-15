@@ -161,6 +161,7 @@ export async function getProcurementRequest(
       ? {
           id: q.id,
           number: q.number,
+          roundingPolicy: q.roundingPolicy,
           status: q.status,
           version: q.version,
           validUntil: q.validUntil,
@@ -386,6 +387,7 @@ export async function saveQuotation(
       l.priceDirams = prices[index].priceDirams.toString();
     });
     const values = {
+      roundingPolicy: "HALF_UP" as const,
       version: (old?.version ?? 0) + 1,
       status: data.send ? "SENT" : "DRAFT",
       validUntil: new Date(data.validUntil),
@@ -548,6 +550,7 @@ export async function decideQuotation(
         unloadingType: "SELF",
         status: "NEW",
         paymentMethod: "CASH_ON_DELIVERY",
+        roundingPolicy: q.roundingPolicy,
         goodsBaseDirams: q.baseDirams,
         markupPercent: q.markupPercent,
         markupDirams: q.markupDirams,

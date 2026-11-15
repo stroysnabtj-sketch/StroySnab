@@ -8,8 +8,11 @@ import { ApiError } from "@/server/api-error";
 import type { SessionUser } from "@/modules/auth/session";
 import { getProcurementRequest } from "./service";
 import { formatTJS } from "@/modules/system/money";
+import type { Locale } from "@/i18n/types";
+import { documentDate, documentLabels, documentUnit } from "@/modules/system/document-language";
 
-export async function quotationPdf(id: string, actor: SessionUser | null, token: string | null) {
+export async function quotationPdf(id: string, actor: SessionUser | null, token: string | null, locale: Locale = "ru") {
+  const labels = documentLabels(locale);
   const data = await getProcurementRequest(id, actor, token),
     q = data.quotation;
   if (!q) throw new ApiError(404, "no_quote", "КП ещё не отправлено");
@@ -18,7 +21,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
     margins: { top: 38, bottom: 24, left: 38, right: 38 },
     bufferPages: true,
     font: path.join(process.cwd(), "assets/fonts/CourierNew.ttf"),
-    info: { Title: `КП ${q.number}`, Author: "Stroysnab.tj", CreationDate: new Date(q.validUntil) },
+    info: { Title: `${labels.quotation} ${q.number}`, Author: "Stroysnab.tj", CreationDate: new Date(q.validUntil) },
   });
   doc.registerFont("regular", path.join(process.cwd(), "assets/fonts/CourierNew.ttf"));
   doc.registerFont("bold", path.join(process.cwd(), "assets/fonts/CourierNew-Bold.ttf"));
@@ -85,8 +88,8 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
     if (add) doc.addPage();
     doc.rect(0, 0, doc.page.width, doc.page.height).fill(paper);
     text("STROYSNAB.TJ", left, 34, 260, 18, true);
-    text("КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ", left, 65, width, 13, true);
-    text(`№ ${q.number}${q.status === "DRAFT" ? " / ЧЕРНОВИК" : ""}`, left, 89, width, 9);
+    text(labels.quotationHeading, left, 65, width, 13, true);
+    text(`№ ${q.number}${q.status === "DRAFT" ? ` / ${labels.draft}` : ""}`, left, 89, width, 9);
     line(110);
     y = 126;
   };
@@ -98,14 +101,14 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
     }
   };
   page(false);
-  paragraph(`Получатель: ${data.request.contactName}`);
-  paragraph(`Телефон: ${data.request.contactPhone}`);
+  paragraph(`${labels.recipient}: ${data.request.contactName}`);
+  paragraph(`${labels.phone}: ${data.request.contactPhone}`);
   paragraph(
-    `Действительно до: ${new Date(q.validUntil).toLocaleDateString("ru-RU", { timeZone: "Asia/Dushanbe" })}`,
+    `${labels.validUntil}: ${documentDate(q.validUntil, locale)}`,
   );
   y += 18;
   const sizes = [25, 180, 45, 52, 109, width - 411];
-  const headers = ["№", "МАТЕРИАЛ", "КОЛ-ВО", "ЕД.", "ЦЕНА / TJS", "СУММА / TJS"];
+  const headers = ["№", labels.material, labels.quantity, labels.unit, labels.price, labels.amount];
   const tableHeader = () => {
     if (y + 40 > bottom) page();
     line(y);
@@ -123,8 +126,8 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
       String(index + 1),
       publicProductText(item.name),
       item.qty,
-      item.unit,
-      `${lineBase(BigInt(item.priceDirams), item.qty) !== BigInt(item.subtotalDirams) ? "≈ " : ""}${formatTJS(item.priceDirams).replace(" TJS", "")}`,
+      documentUnit(item.unit, locale),
+      `${lineBase(BigInt(item.priceDirams), item.qty, q.roundingPolicy) !== BigInt(item.subtotalDirams) ? "≈ " : ""}${formatTJS(item.priceDirams).replace(" TJS", "")}`,
       formatTJS(item.subtotalDirams).replace(" TJS", ""),
     ];
     const cells = values.map((value, i) => wrap(value, sizes[i] - 10, 8.5));
@@ -158,7 +161,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
   const summaryTop = y;
   const summaryWidth = 290,
     summaryLeft = left;
-  text("Доставка", summaryLeft, y, 118, 9);
+  text(labels.delivery, summaryLeft, y, 118, 9);
   text(formatTJS(q.deliveryDirams), summaryLeft + 118, y, summaryWidth - 118, 9, false, "right");
   y += 21;
   doc
@@ -168,13 +171,13 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
     .strokeColor(rule)
     .stroke();
   y += 9;
-  text("Итого к оплате", summaryLeft, y, 118, 9, true);
+  text(labels.totalPayable, summaryLeft, y, 118, 9, true);
   text(formatTJS(q.totalDirams), summaryLeft + 118, y, summaryWidth - 118, 10, true, "right");
   y += 26;
   if (q.conditions) {
     y += 18;
     if (y + 42 > bottom) page();
-    paragraph("УСЛОВИЯ", 10, true);
+    paragraph(labels.conditions, 10, true);
     y += 6;
     paragraph(q.conditions);
   }
@@ -188,7 +191,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
   if (photos.length) {
     if (y + 220 > bottom) page();
     y += 14;
-    paragraph("ФОТО МАТЕРИАЛОВ", 10, true);
+    paragraph(labels.materialPhotos, 10, true);
     y += 10;
     const photoWidth = (width - 16) / 2;
     for (let i = 0; i < photos.length; i++) {
@@ -201,7 +204,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
         const image = await sharp(raw.bytes).jpeg({ quality: 85 }).toBuffer();
         doc.image(image, x, y, { fit: [photoWidth, 128], align: "center", valign: "center" });
       } catch {
-        text("Фото недоступно", x + 10, y + 56, photoWidth - 20, 8);
+        text(labels.photoUnavailable, x + 10, y + 56, photoWidth - 20, 8);
       }
       wrap(`${photo.index + 1}. ${photo.name}`, photoWidth, 8)
         .slice(0, 2)
@@ -233,9 +236,9 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
   }
   text("QR", qrLeft + 24, y + 29, 24, 10, true);
   const qrTextWidth = compactQr ? left + width - qrLeft - 78 : width - 82;
-  text("ОПЛАТА ПО QR", qrLeft + 78, y + 7, qrTextWidth, 8, true);
-  text("Банковский QR-код", qrLeft + 78, y + 26, qrTextWidth, 7.5);
-  text("Пока недоступен", qrLeft + 78, y + 43, qrTextWidth, 7.5);
+  text(labels.qrPayment, qrLeft + 78, y + 7, qrTextWidth, 8, true);
+  text(labels.bankQr, qrLeft + 78, y + 26, qrTextWidth, 7.5);
+  text(labels.qrUnavailable, qrLeft + 78, y + 43, qrTextWidth, 7.5);
   const range = doc.bufferedPageRange();
   for (let i = range.start; i < range.start + range.count; i++) {
     doc.switchToPage(i);
@@ -244,7 +247,7 @@ export async function quotationPdf(id: string, actor: SessionUser | null, token:
       .font("regular")
       .fontSize(7)
       .fillColor(muted)
-      .text(`STROYSNAB.TJ / КП ${q.number}`, left, 807, { width: width - 90, lineBreak: false });
+      .text(`STROYSNAB.TJ / ${labels.quotation} ${q.number}`, left, 807, { width: width - 90, lineBreak: false });
     doc.text(`${i + 1} / ${range.count}`, left + width - 80, 807, {
       width: 80,
       align: "right",

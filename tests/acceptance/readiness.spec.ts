@@ -91,6 +91,23 @@ for (const role of ["customer", "admin"] as const) {
           })),
         });
       await page.setViewportSize({ width: 390, height: 900 });
+      const mobileAxe = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze();
+      for (const v of mobileAxe.violations.filter((v) =>
+        ["critical", "serious"].includes(v.impact || ""),
+      ))
+        findings.push({
+          path,
+          width: 390,
+          id: v.id,
+          nodes: v.nodes.map((n) => ({
+            html: n.html,
+            target: n.target,
+            summary: n.failureSummary,
+          })),
+        });
+
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
         path,

@@ -16,6 +16,7 @@ export const productInput = z.object({
   nameRu: z.string().min(2).max(300),
   nameTg: z.string().max(300).optional().nullable(),
   descriptionRu: z.string().max(10000).optional().nullable(),
+  descriptionTg: z.string().max(10000).optional().nullable(),
   categoryId: z.string().uuid(),
   brand: z.string().max(120).optional().nullable(),
   unit: z.string().min(1).max(30),
@@ -47,6 +48,7 @@ export async function adminListProducts(q?: string) {
       sku: products.sku,
       slug: products.slug,
       nameRu: products.nameRu,
+      nameTg: products.nameTg,
       categoryId: products.categoryId,
       categoryName: categories.nameRu,
       brand: products.brand,
@@ -55,6 +57,7 @@ export async function adminListProducts(q?: string) {
       status: products.status,
       rejectReason: products.rejectReason,
       descriptionRu: products.descriptionRu,
+      descriptionTg: products.descriptionTg,
       createdBySupplierId: products.createdBySupplierId,
       updatedAt: products.updatedAt,
       supplierNames: sql<

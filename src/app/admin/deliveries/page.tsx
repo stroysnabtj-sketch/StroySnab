@@ -1,14 +1,15 @@
 import Link from "next/link";
-import { and, desc, eq, ilike, ne, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, ne, or, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { orders } from "@/db/schema";
 import { Workspace } from "@/components/workspace";
 import { Badge, DataTable } from "@/components/admin-ui";
 import { DeliveryAssignment } from "@/components/delivery-assignment";
+import { DeliveryDispatchMap } from "@/components/delivery-dispatch-map";
 import { requirePagePermission } from "@/modules/auth/page";
 import { hasPermission } from "@/modules/rbac/permissions";
 import { ORDER_STATUS_LABELS } from "@/modules/orders/status";
-import { VEHICLE_OPTIONS, deliveryDateLabel } from "@/modules/delivery/preferences";
+import { TIME_SLOTS, VEHICLE_OPTIONS, deliveryDateLabel } from "@/modules/delivery/preferences";
 import styles from "@/components/workspace-design.module.css";
 export const dynamic = "force-dynamic";
 export default async function DeliveriesPage({
@@ -35,6 +36,31 @@ export default async function DeliveriesPage({
     .select({ value: sql<number>`count(*)::int` })
     .from(orders)
     .where(and(...conditions));
+  const dispatchLimit = 100;
+  const dispatchConditions = and(
+    ...conditions,
+    inArray(orders.status, ["NEW", "CONFIRMED", "DISPATCHED"]),
+  );
+  const [dispatchCount] = await db
+    .select({ value: sql<number>`count(*)::int` })
+    .from(orders)
+    .where(dispatchConditions);
+  const deliveries = await db
+    .select({
+      id: orders.id,
+      orderNumber: orders.orderNumber,
+      status: orders.status,
+      city: orders.deliveryCity,
+      address: orders.deliveryAddress,
+      lat: orders.deliveryLat,
+      lng: orders.deliveryLng,
+      date: orders.preferredDeliveryDate,
+      timeSlot: orders.preferredTimeSlot,
+    })
+    .from(orders)
+    .where(dispatchConditions)
+    .orderBy(asc(orders.preferredDeliveryDate), desc(orders.createdAt), asc(orders.id))
+    .limit(dispatchLimit);
   const pages = Math.max(1, Math.ceil(count.value / 20)),
     requested = Number(params.page ?? 1),
     page = Number.isSafeInteger(requested) ? Math.min(pages, Math.max(1, requested)) : 1;
@@ -49,6 +75,7 @@ export default async function DeliveriesPage({
       address: orders.deliveryAddress,
       vehicleType: orders.vehicleType,
       date: orders.preferredDeliveryDate,
+      timeSlot: orders.preferredTimeSlot,
       driverName: orders.driverName,
       driverPhone: orders.driverPhone,
       vehiclePlate: orders.vehiclePlate,
@@ -88,6 +115,12 @@ export default async function DeliveriesPage({
         </select>
         <button className="button button-primary">Найти</button>
       </form>
+      <DeliveryDispatchMap
+        canViewOrders={hasPermission(actor.role, "orders:read")}
+        deliveries={deliveries}
+        total={dispatchCount.value}
+        limit={dispatchLimit}
+      />
       <DataTable
         headers={[
           "Заказ",
@@ -101,7 +134,13 @@ export default async function DeliveriesPage({
         {rows.map((order) => (
           <tr key={order.id}>
             <td>
-              <strong>{order.orderNumber}</strong>
+              {hasPermission(actor.role, "orders:read") ? (
+                <Link className="inline-link" href={`/admin/orders/${order.id}`}>
+                  <strong>{order.orderNumber}</strong>
+                </Link>
+              ) : (
+                <strong>{order.orderNumber}</strong>
+              )}
               <br />
               <Badge
                 tone={
@@ -128,7 +167,11 @@ export default async function DeliveriesPage({
               {VEHICLE_OPTIONS.find((row) => row.code === order.vehicleType)?.title ??
                 order.vehicleType}
             </td>
-            <td>{order.date ? deliveryDateLabel(order.date) : "По согласованию"}</td>
+            <td>
+              {order.date ? deliveryDateLabel(order.date) : "По согласованию"}
+              <br />
+              {TIME_SLOTS[order.timeSlot as keyof typeof TIME_SLOTS] ?? "Время по согласованию"}
+            </td>
             <td>
               {order.driverName ? (
                 <>

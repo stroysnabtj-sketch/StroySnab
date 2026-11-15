@@ -218,7 +218,12 @@ export function ProcurementDetail({
         <div className={s.stack}>
           <section className={s.card}>
             <h2>Исходный список</h2>
-            <div className={s.tableWrap}>
+            <div
+              className={s.tableWrap}
+              tabIndex={0}
+              role="region"
+              aria-label="Исходный список материалов"
+            >
               <table className={s.table}>
                 <thead>
                   <tr>
@@ -274,7 +279,12 @@ export function ProcurementDetail({
                 Версия {q.version} · Действует до {new Date(q.validUntil).toLocaleString("ru-RU")}
                 {expired && q.status === "SENT" ? " · Срок истёк" : ""}
               </p>
-              <div className={s.tableWrap}>
+              <div
+                className={s.tableWrap}
+                tabIndex={0}
+                role="region"
+                aria-label="Материалы коммерческого предложения"
+              >
                 <table className={s.table}>
                   <thead>
                     <tr>

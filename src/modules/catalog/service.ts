@@ -74,7 +74,7 @@ export async function listCatalog(query: CatalogQuery) {
   const search = query.q?.trim();
   if (search)
     conditions.push(
-      sql`(to_tsvector('russian', coalesce(${products.nameRu}, '') || ' ' || coalesce(${products.descriptionRu}, '') || ' ' || coalesce(${products.brand}, '')) @@ plainto_tsquery('russian', ${search}) OR similarity(${products.nameRu}, ${search}) > 0.12 OR ${products.nameRu} ILIKE ${`%${search}%`} OR ${products.sku} ILIKE ${`%${search}%`})`,
+      sql`(to_tsvector('russian', coalesce(${products.nameRu}, '') || ' ' || coalesce(${products.descriptionRu}, '') || ' ' || coalesce(${products.brand}, '')) @@ plainto_tsquery('russian', ${search}) OR similarity(${products.nameRu}, ${search}) > 0.12 OR ${products.nameRu} ILIKE ${`%${search}%`} OR ${products.nameTg} ILIKE ${`%${search}%`} OR ${products.descriptionTg} ILIKE ${`%${search}%`} OR ${products.sku} ILIKE ${`%${search}%`})`,
     );
   const rows = await db
     .select({ product: products, category: categories })
@@ -154,6 +154,9 @@ export async function listCatalog(query: CatalogQuery) {
         sku: product.sku,
         slug: product.slug,
         name: publicProductText(product.nameRu),
+        nameTg: product.nameTg ? publicProductText(product.nameTg) : null,
+        descriptionTg: product.descriptionTg ? publicProductText(product.descriptionTg) : null,
+        categoryNameTg: category.nameTg,
         description: product.descriptionRu ? publicProductText(product.descriptionRu) : null,
         categoryId: category.id,
         categorySlug: category.slug,
@@ -384,6 +387,10 @@ export async function getPublicProduct(slug: string, includeRelated = true) {
       sku: row.product.sku,
       slug: row.product.slug,
       nameRu: publicProductText(row.product.nameRu),
+      nameTg: row.product.nameTg ? publicProductText(row.product.nameTg) : null,
+      descriptionTg: row.product.descriptionTg
+        ? publicProductText(row.product.descriptionTg)
+        : null,
       descriptionRu: row.product.descriptionRu
         ? publicProductText(row.product.descriptionRu)
         : null,

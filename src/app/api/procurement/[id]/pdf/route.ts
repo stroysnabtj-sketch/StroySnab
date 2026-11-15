@@ -1,6 +1,7 @@
 import { optionalUser } from "@/modules/auth/session";
 import { quotationPdf } from "@/modules/procurement/pdf";
 import { errorResponse } from "@/server/api-error";
+import { getLocale } from "@/i18n/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -11,6 +12,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       (await params).id,
       await optionalUser(),
       new URL(request.url).searchParams.get("access"),
+      await getLocale(),
     );
     return new Response(new Uint8Array(pdf.bytes), {
       headers: {

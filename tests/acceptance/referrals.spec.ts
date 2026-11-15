@@ -53,3 +53,31 @@ test("referral API and page are private, stats and copy work on mobile", async (
   const redirect = await context.request.get("/r/AB12CD34", { maxRedirects: 0 });
   expect(redirect.headers().location).toBe("/account/referral");
 });
+
+test("dispatcher shows planned order destinations and preserves managed-order navigation", async ({
+  page,
+  context,
+}) => {
+  await context.addCookies([
+    { name: "kh_session", value: fixture().staffToken, url: "http://localhost:24130" },
+  ]);
+  await page.route("https://tile.openstreetmap.org/**", (r) =>
+    r.fulfill({
+      contentType: "image/png",
+      body: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j7l8AAAAASUVORK5CYII=",
+        "base64",
+      ),
+    }),
+  );
+  await page.goto("/admin/deliveries");
+  await expect(
+    page.getByRole("region", { name: "Карта адресов активных доставок", exact: true }),
+  ).toBeVisible();
+  const list = page.getByRole("list", { name: "Адреса и интервалы активных доставок" });
+  await expect(
+    list.getByRole("link", { name: fixture().deliveryOrderNumber, exact: true }),
+  ).toHaveAttribute("href", `/admin/orders/${fixture().deliveryOrderId}`);
+  await expect(list).toContainText("09:00–12:00");
+  await expect(list).toContainText("Демонстрационный объект");
+});

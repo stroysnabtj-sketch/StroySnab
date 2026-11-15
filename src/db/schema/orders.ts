@@ -20,9 +20,13 @@ export const orders = pgTable(
     customerId: uuid("customer_id").references(() => customers.id, { onDelete: "set null" }),
     guestAccessTokenHash: text("guest_access_token_hash"),
     idempotencyKey: text("idempotency_key").unique(),
-    goodsBaseDirams: text("goods_base_dirams"),
+    goodsBaseDirams: numeric("goods_base_dirams", { precision: 38, scale: 0 }),
     markupPercent: integer("markup_percent"),
-    markupDirams: text("markup_dirams"),
+    roundingPolicy: text("rounding_policy")
+      .$type<"LEGACY_FLOOR" | "HALF_UP">()
+      .notNull()
+      .default("LEGACY_FLOOR"),
+    markupDirams: numeric("markup_dirams", { precision: 38, scale: 0 }),
     customerPhone: text("customer_phone").notNull(),
     customerEmail: text("customer_email"),
     customerName: text("customer_name").notNull(),
@@ -37,9 +41,13 @@ export const orders = pgTable(
     preferredTimeSlot: text("preferred_time_slot"),
     status: text("status").notNull().default("CONFIRMED"), // NEW, CONFIRMED, DISPATCHED, DELIVERED, CANCELLED
     paymentMethod: text("payment_method").notNull().default("CASH_ON_DELIVERY"),
-    materialsTotalDirams: text("materials_total_dirams").notNull().default("0"),
-    deliveryTotalDirams: text("delivery_total_dirams").notNull().default("0"),
-    totalDirams: text("total_dirams").notNull().default("0"),
+    materialsTotalDirams: numeric("materials_total_dirams", { precision: 38, scale: 0 })
+      .notNull()
+      .default("0"),
+    deliveryTotalDirams: numeric("delivery_total_dirams", { precision: 38, scale: 0 })
+      .notNull()
+      .default("0"),
+    totalDirams: numeric("total_dirams", { precision: 38, scale: 0 }).notNull().default("0"),
     estimatedWeightKg: numeric("estimated_weight_kg", { precision: 10, scale: 2 }),
     estimatedVolumeM3: numeric("estimated_volume_m3", { precision: 8, scale: 2 }),
     driverName: text("driver_name"),
@@ -66,8 +74,8 @@ export const orderItems = pgTable(
     offerId: uuid("offer_id").references(() => supplierOffers.id, { onDelete: "set null" }),
     supplierId: uuid("supplier_id").references(() => suppliers.id, { onDelete: "set null" }),
     supplierName: text("supplier_name"),
-    supplierPriceDirams: text("supplier_price_dirams"),
-    supplierSubtotalDirams: text("supplier_subtotal_dirams"),
+    supplierPriceDirams: numeric("supplier_price_dirams", { precision: 38, scale: 0 }),
+    supplierSubtotalDirams: numeric("supplier_subtotal_dirams", { precision: 38, scale: 0 }),
     shopStatus: text("shop_status").notNull().default("NEW"),
     shopUpdatedAt: timestamp("shop_updated_at", { withTimezone: true }).notNull().defaultNow(),
     imageIds: jsonb("image_ids").$type<string[]>().notNull().default([]),
@@ -75,8 +83,8 @@ export const orderItems = pgTable(
     sku: text("sku").notNull(),
     unit: text("unit").notNull().default("шт."),
     qty: numeric("qty", { precision: 14, scale: 3 }).notNull(),
-    priceDirams: text("price_dirams").notNull(),
-    subtotalDirams: text("subtotal_dirams").notNull(),
+    priceDirams: numeric("price_dirams", { precision: 38, scale: 0 }).notNull(),
+    subtotalDirams: numeric("subtotal_dirams", { precision: 38, scale: 0 }).notNull(),
   },
   (table) => [
     index("order_items_order_idx").on(table.orderId),

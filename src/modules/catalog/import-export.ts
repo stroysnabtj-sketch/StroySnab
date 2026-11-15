@@ -14,6 +14,8 @@ const headers = [
   "status",
   "descriptionRu",
   "markupPercent",
+  "nameTg",
+  "descriptionTg",
 ] as const;
 type Row = Record<string, string>;
 const maxRows = 5000;
@@ -88,6 +90,8 @@ export async function exportProducts(format: string, template = false) {
         sku: item.sku,
         slug: item.slug,
         nameRu: item.nameRu,
+        nameTg: item.nameTg ?? "",
+        descriptionTg: item.descriptionTg ?? "",
         categorySlug: cats.find((cat) => cat.id === item.categoryId)?.slug ?? "",
         brand: item.brand ?? "",
         unit: item.unit,
@@ -236,6 +240,8 @@ export async function validateImportRows(rows: Row[]) {
       sku: row.sku,
       slug: row.slug,
       nameRu: row.nameRu,
+      ...(row.nameTg?.trim() ? { nameTg: row.nameTg.trim() } : {}),
+      ...(row.descriptionTg?.trim() ? { descriptionTg: row.descriptionTg.trim() } : {}),
       categoryId: category?.id,
       brand: row.brand || null,
       unit: row.unit,

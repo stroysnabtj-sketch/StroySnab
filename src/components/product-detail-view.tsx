@@ -1,4 +1,5 @@
 "use client";
+import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useState, type MouseEvent } from "react";
@@ -33,11 +34,13 @@ interface Props {
     sku: string;
     slug: string;
     nameRu: string;
+    nameTg?: string | null;
+    descriptionTg?: string | null;
     descriptionRu?: string | null;
     brand?: string | null;
     unit: string;
   };
-  category: { id: string; slug: string; nameRu: string };
+  category: { id: string; slug: string; nameRu: string; nameTg?: string | null };
   attributes: { name: string; value: string }[];
   images: { id: string; fileId: string; sort: number }[];
   offers: OfferItem[];
@@ -51,6 +54,14 @@ export function ProductDetailView({
   offers,
   relatedProducts,
 }: Props) {
+  const { locale, tr } = useLocale();
+  const name = locale === "tg" ? product.nameTg?.trim() || product.nameRu : product.nameRu;
+  const description =
+    locale === "tg"
+      ? product.descriptionTg?.trim() || product.descriptionRu
+      : product.descriptionRu;
+  const categoryName =
+    locale === "tg" ? category.nameTg?.trim() || category.nameRu : category.nameRu;
   const [activeTab, setActiveTab] = useState("description");
   const [qty, setQty] = useState(offers[0]?.minOrderQty ?? "1");
   const [activeImage, setActiveImage] = useState(0);
@@ -110,7 +121,7 @@ export function ProductDetailView({
         <Link href="/catalog">Каталог</Link>
         <ChevronRight size={13} />
         <Link href={`/catalog?category=${encodeURIComponent(category.slug)}`}>
-          {category.nameRu}
+          {tr(categoryName)}
         </Link>
       </nav>
       <article className="product-detail">
@@ -119,7 +130,7 @@ export function ProductDetailView({
             {images[activeImage] ? (
               <Image
                 src={`/api/files/${images[activeImage].fileId}`}
-                alt={product.nameRu}
+                alt={name}
                 fill
                 sizes="(max-width: 760px) 100vw, 50vw"
                 className="product-real-image"
@@ -155,8 +166,8 @@ export function ProductDetailView({
               </Link>
             )}
           </div>
-          <h1 className="product-info-title">{product.nameRu}</h1>
-          <p className="product-reference">{category.nameRu}</p>
+          <h1 className="product-info-title">{name}</h1>
+          <p className="product-reference">{tr(categoryName)}</p>
           {offer ? (
             <div className="product-buy">
               <div className="product-price">
@@ -344,7 +355,7 @@ export function ProductDetailView({
           >
             <h2>Описание</h2>
             <p className="product-full-description">
-              {product.descriptionRu || "Описание не добавлено."}
+              {description || tr("Описание не добавлено.")}
             </p>
             <Link
               href={`/catalog/request?product=${encodeURIComponent(product.nameRu)}`}

@@ -1,3 +1,4 @@
+import { roundMoneyRatio } from "@/modules/system/money";
 import { z } from "zod";
 import { lineBase } from "./order-markup";
 
@@ -12,7 +13,7 @@ export function productPrice(base: bigint, percent = "7") {
   if (base < 0n) throw new Error("Negative price");
   const [whole, fraction = ""] = value.split(".");
   const basisPoints = BigInt(whole) * 100n + BigInt(fraction.padEnd(2, "0"));
-  return base + (base * basisPoints) / 10000n;
+  return base + roundMoneyRatio(base * basisPoints, 10000n);
 }
 
 export function productLinePrice(base: bigint, qty: string, percent = "7") {

@@ -7,6 +7,8 @@ import type { SessionUser } from "@/modules/auth/session";
 import { getOrder, getManagedOrder, type FullOrder } from "./service";
 import { hasPermission } from "@/modules/rbac/permissions";
 import { formatTJS } from "@/modules/system/money";
+import type { Locale } from "@/i18n/types";
+import { documentDate, documentLabels, documentUnit } from "@/modules/system/document-language";
 
 export type InvoiceOrder = Pick<
   FullOrder,
@@ -18,6 +20,7 @@ export type InvoiceOrder = Pick<
   | "deliveryAddress"
   | "vehicleType"
 > & {
+  roundingPolicy?: "LEGACY_FLOOR" | "HALF_UP";
   items: Pick<
     FullOrder["items"][number],
     "productName" | "unit" | "qty" | "priceDirams" | "subtotalDirams"
@@ -40,17 +43,18 @@ export async function loadInvoiceOrder(
   return order;
 }
 
-export async function orderPdf(id: string, actor: SessionUser | null, token: string | null) {
-  return renderOrderPdf(await loadInvoiceOrder(id, actor, token));
+export async function orderPdf(id: string, actor: SessionUser | null, token: string | null, locale: Locale = "ru") {
+  return renderOrderPdf(await loadInvoiceOrder(id, actor, token), locale);
 }
 
-export async function renderOrderPdf(order: InvoiceOrder) {
+export async function renderOrderPdf(order: InvoiceOrder, locale: Locale = "ru") {
+  const labels = documentLabels(locale);
   const doc = new PDFDocument({
     size: "A4",
     margins: { top: 38, bottom: 24, left: 38, right: 38 },
     bufferPages: true,
     font: path.join(process.cwd(), "assets/fonts/CourierNew.ttf"),
-    info: { Title: `Накладная ${order.orderNumber}`, Author: "Stroysnab.tj" },
+    info: { Title: `${labels.invoice} ${order.orderNumber}`, Author: "Stroysnab.tj" },
   });
   doc.registerFont("regular", path.join(process.cwd(), "assets/fonts/CourierNew.ttf"));
   doc.registerFont("bold", path.join(process.cwd(), "assets/fonts/CourierNew-Bold.ttf"));
@@ -117,9 +121,9 @@ export async function renderOrderPdf(order: InvoiceOrder) {
     if (add) doc.addPage();
     doc.rect(0, 0, doc.page.width, doc.page.height).fill(paper);
     text("STROYSNAB.TJ", left, 34, 260, 18, true);
-    text("НАКЛАДНАЯ", left, 65, width, 13, true);
+    text(labels.invoiceHeading, left, 65, width, 13, true);
     text(
-      `№ ${order.orderNumber} от ${new Date(order.createdAt).toLocaleDateString("ru-RU", { timeZone: "Asia/Dushanbe" })}`,
+      `№ ${order.orderNumber} ${labels.dateFrom} ${documentDate(order.createdAt, locale)}`,
       left,
       89,
       width,
@@ -136,14 +140,14 @@ export async function renderOrderPdf(order: InvoiceOrder) {
     }
   };
   page(false);
-  paragraph(`Получатель: ${order.customerName}`);
-  paragraph(`Телефон: ${order.customerPhone}`);
+  paragraph(`${labels.recipient}: ${order.customerName}`);
+  paragraph(`${labels.phone}: ${order.customerPhone}`);
   paragraph(
-    `${order.vehicleType === "PICKUP" ? "Самовывоз" : "Адрес доставки"}: ${[order.deliveryCity, order.deliveryAddress].filter(Boolean).join(", ")}`,
+    `${order.vehicleType === "PICKUP" ? labels.pickup : labels.deliveryAddress}: ${[order.deliveryCity, order.deliveryAddress].filter(Boolean).join(", ")}`,
   );
   y += 18;
   const sizes = [25, 190, 45, 40, 109, width - 409];
-  const headers = ["№", "МАТЕРИАЛ", "КОЛ-ВО", "ЕД.", "ЦЕНА / TJS", "СУММА / TJS"];
+  const headers = ["№", labels.material, labels.quantity, labels.unit, labels.price, labels.amount];
   const tableHeader = () => {
     if (y + 40 > bottom) page();
     line(y);
@@ -161,8 +165,8 @@ export async function renderOrderPdf(order: InvoiceOrder) {
       String(index + 1),
       publicProductText(item.productName),
       item.qty,
-      item.unit,
-      `${lineBase(BigInt(item.priceDirams), item.qty) !== BigInt(item.subtotalDirams) ? "≈ " : ""}${formatTJS(item.priceDirams).replace(" TJS", "")}`,
+      documentUnit(item.unit, locale),
+      `${lineBase(BigInt(item.priceDirams), item.qty, order.roundingPolicy ?? "LEGACY_FLOOR") !== BigInt(item.subtotalDirams) ? "≈ " : ""}${formatTJS(item.priceDirams).replace(" TJS", "")}`,
       formatTJS(item.subtotalDirams).replace(" TJS", ""),
     ];
     const cells = values.map((value, i) => wrap(value, sizes[i] - 10, 8.5));
@@ -202,14 +206,14 @@ export async function renderOrderPdf(order: InvoiceOrder) {
     boxWidth = (width - gap) / 2;
   doc.rect(left, y, boxWidth, 44).lineWidth(0.5).strokeColor(rule).stroke();
   doc.rect(left + boxWidth + gap, y, boxWidth, 44).fill(ink);
-  text("ДОСТАВКА", left + 12, y + 8, boxWidth - 24, 7);
+  text(labels.deliveryHeading, left + 12, y + 8, boxWidth - 24, 7);
   text(
     order.deliveryTotalDirams === null
-      ? "Не включена"
+      ? labels.deliveryExcluded
       : order.vehicleType === "PICKUP"
-        ? "Самовывоз"
+        ? labels.pickup
         : BigInt(order.deliveryTotalDirams) === 0n
-          ? "Согласуется отдельно"
+          ? labels.deliverySeparate
           : formatTJS(order.deliveryTotalDirams),
     left + 12,
     y + 24,
@@ -221,7 +225,7 @@ export async function renderOrderPdf(order: InvoiceOrder) {
     .font("regular")
     .fontSize(7)
     .fillColor(paper)
-    .text("ИТОГО", left + boxWidth + gap + 12, y + 8, { lineBreak: false });
+    .text(labels.total, left + boxWidth + gap + 12, y + 8, { lineBreak: false });
   doc
     .font("bold")
     .fontSize(11)
@@ -238,7 +242,7 @@ export async function renderOrderPdf(order: InvoiceOrder) {
       .font("regular")
       .fontSize(7)
       .fillColor(muted)
-      .text(`STROYSNAB.TJ / Накладная ${order.orderNumber}`, left, 807, {
+      .text(`STROYSNAB.TJ / ${labels.invoice} ${order.orderNumber}`, left, 807, {
         width: width - 90,
         lineBreak: false,
       });

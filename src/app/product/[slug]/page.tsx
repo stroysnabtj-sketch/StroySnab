@@ -1,3 +1,4 @@
+import { fromDirams } from "@/modules/system/money";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { cache } from "react";
@@ -50,7 +51,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       "@type": "Offer",
       seller: { "@type": "Organization", name: "StroySnab", url: "https://www.stroysnab.tj" },
       priceCurrency: "TJS",
-      price: best ? (Number(best.priceDirams) / 100).toFixed(2) : "0.00",
+      price: best ? fromDirams(best.priceDirams) : "0.00",
       availability:
         best && Number(best.stockQty) > 0
           ? "https://schema.org/InStock"

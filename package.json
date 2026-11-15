@@ -7,11 +7,11 @@
     "build": "next build",
     "build:noenv": "node scripts/build-noenv.mjs",
     "start": "next start -p 3000",
-    "lint": "eslint . --max-warnings=0",
+    "lint": "eslint . --max-warnings=0 && node scripts/eslint-semantic-colors.cjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "check": "npm run lint && npm run typecheck && npm run test",
+    "check": "npm run lint && npm run test:lint && npm run test:demo && npm run typecheck && npm run test && npm run test:dispatch",
     "format": "prettier --write .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
@@ -23,7 +23,10 @@
     "ui:links": "npm run test:acceptance -- --grep @links",
     "ui:visual": "npm run test:acceptance -- --grep @visual",
     "smoke": "npm run test:acceptance -- --grep \"@roles|@checkout\"",
-    "check:release": "npm run check && npm run build:noenv && npm run test:acceptance"
+    "check:release": "npm run check && npm run build:noenv && npm run test:acceptance",
+    "test:lint": "node --test tests/lint/no-raw-tailwind-colors.test.cjs",
+    "test:demo": "node --test scripts/demo-guard.test.mjs",
+    "test:dispatch": "vitest run --config tests/delivery-dispatch.vitest.config.mts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1164.0",

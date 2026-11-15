@@ -35,5 +35,18 @@ export function applyPercent(value: bigint, percent: number): bigint {
       percent: "percent_invalid",
     });
   }
-  return value + (value * BigInt(percent)) / 100n;
+  return value + roundMoneyRatio(value * BigInt(percent), 100n);
+}
+
+export type RoundingPolicy = "LEGACY_FLOOR" | "HALF_UP";
+/** Exact integer division for nonnegative monetary calculations; never uses floating point. */
+export function roundMoneyRatio(
+  numerator: bigint,
+  denominator: bigint,
+  policy: RoundingPolicy = "HALF_UP",
+) {
+  if (numerator < 0n || denominator <= 0n) throw new Error("Invalid monetary ratio");
+  return policy === "LEGACY_FLOOR"
+    ? numerator / denominator
+    : (numerator + denominator / 2n) / denominator;
 }

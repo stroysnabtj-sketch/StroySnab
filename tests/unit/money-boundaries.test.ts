@@ -11,5 +11,5 @@ it("keeps large money exact through parsing, formatting, JSON and line totals", 
   expect(total.baseDirams + total.markupDirams).toBe(total.totalDirams);
   const saved = JSON.parse(JSON.stringify({ total: total.totalDirams.toString() }));
   expect(BigInt(saved.total)).toBe(total.totalDirams);
-  expect(productLinePrice(101n, "0.333", "0").subtotalDirams).toBe(33n);
+  expect(productLinePrice(101n, "0.333", "0").subtotalDirams).toBe(34n);
 });

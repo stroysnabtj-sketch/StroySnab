@@ -1,3 +1,4 @@
+import { deliveryToday } from "../src/modules/delivery/preferences";
 import { getDb, closeDb } from "../src/db";
 import { users, sessions, supplierOffers, products } from "../src/db/schema";
 import { eq, sql } from "drizzle-orm";
@@ -18,13 +19,11 @@ import type { SessionUser } from "../src/modules/auth/session";
   const tokens: Record<string, string> = {};
   for (const user of [customer, staff]) {
     const token = randomBytes(32).toString("base64url");
-    await db
-      .insert(sessions)
-      .values({
-        userId: user.id,
-        tokenHash: createHash("sha256").update(token).digest("hex"),
-        expiresAt: new Date(Date.now() + 3600000),
-      });
+    await db.insert(sessions).values({
+      userId: user.id,
+      tokenHash: createHash("sha256").update(token).digest("hex"),
+      expiresAt: new Date(Date.now() + 3600000),
+    });
     tokens[user.role] = token;
   }
   const offers = await db
@@ -50,6 +49,21 @@ import type { SessionUser } from "../src/modules/auth/session";
   await changeOrderStatus({ id: staff.id, role: "SUPER_ADMIN" }, order.id, {
     status: "CONFIRMED",
     expectedStatus: "NEW",
+  });
+  await addCartItem({ userId: customer.id, offerId: offers[0].offer.id, qty: "1" });
+  const deliveryOrder = await createOrder({
+    userId: customer.id,
+    idempotencyKey: crypto.randomUUID(),
+    customerName: "Демонстрация доставки",
+    customerPhone: "+992900000000",
+    fulfillment: "DELIVERY",
+    paymentMethod: "CASH_ON_DELIVERY",
+    deliveryCity: "Душанбе",
+    deliveryAddress: "Демонстрационный объект",
+    deliveryLat: 38.57,
+    deliveryLng: 68.79,
+    preferredDeliveryDate: deliveryToday(new Date(Date.now() + 86400000)),
+    preferredTimeSlot: "MORNING",
   });
   const actor = {
     id: customer.id,
@@ -90,6 +104,8 @@ import type { SessionUser } from "../src/modules/auth/session";
       token: tokens.CUSTOMER,
       staffToken: tokens.SUPER_ADMIN,
       orderId: order.id,
+      deliveryOrderId: deliveryOrder.id,
+      deliveryOrderNumber: deliveryOrder.orderNumber,
       requestId: request.id,
     }),
   );

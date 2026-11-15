@@ -8,7 +8,7 @@ export const integrityChecks: Record<string, string> = {
   order_base_markup:
     "select id::text from orders where goods_base_dirams is not null and markup_dirams is not null and goods_base_dirams::numeric+markup_dirams::numeric<>materials_total_dirams::numeric",
   order_line_arithmetic:
-    "select i.id::text from order_items i join orders o on o.id=i.order_id where o.markup_percent=0 and i.subtotal_dirams::numeric<>floor(i.price_dirams::numeric*i.qty)",
+    "select i.id::text from order_items i join orders o on o.id=i.order_id where o.markup_percent=0 and i.subtotal_dirams::numeric<>case when o.rounding_policy='HALF_UP' then floor(i.price_dirams::numeric*i.qty+0.5) else floor(i.price_dirams::numeric*i.qty) end",
   quote_total:
     "select id::text from quotations where total_dirams::numeric<>base_dirams::numeric+markup_dirams::numeric+delivery_dirams::numeric",
   quote_line_sum:
@@ -19,6 +19,8 @@ export const integrityChecks: Record<string, string> = {
     "select id::text from supplier_offers where stock_qty::numeric<0 or reserved_qty::numeric<0 or reserved_qty::numeric>stock_qty::numeric",
   reservation_sum:
     "select f.id::text from supplier_offers f left join (select i.offer_id,sum(i.qty) qty from order_items i join orders o on o.id=i.order_id where o.status not in ('CANCELLED','DELIVERED') and i.offer_id is not null group by i.offer_id) r on r.offer_id=f.id where f.reserved_qty::numeric<>coalesce(r.qty,0)",
+  referral_link_consistency:
+    "select c.id::text from customers c left join referral_bonuses b on b.referred_customer_id=c.id where (c.referred_by_customer_id is not null and (b.id is null or b.referrer_customer_id<>c.referred_by_customer_id)) or (b.id is not null and c.referred_by_customer_id is distinct from b.referrer_customer_id)",
   price_history_protection:
     "select 'price_history_triggers'::text id where (select count(*) from pg_trigger where not tgisinternal and tgenabled='O' and tgname in ('supplier_offers_price_history','products_price_history','pricing_rules_price_history','price_history_protect_rows','price_history_protect_truncate'))<>5",
 };

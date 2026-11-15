@@ -1,5 +1,6 @@
 import {
   pgTable,
+  numeric,
   uuid,
   text,
   integer,
@@ -65,11 +66,15 @@ export const quotations = pgTable("quotations", {
   validUntil: timestamp("valid_until", { withTimezone: true }).notNull(),
   conditions: text("conditions").notNull().default(""),
   lines: jsonb("lines").notNull().$type<QuotationLine[]>(),
-  baseDirams: text("base_dirams").notNull(),
+  baseDirams: numeric("base_dirams", { precision: 38, scale: 0 }).notNull(),
   markupPercent: integer("markup_percent").notNull(),
-  markupDirams: text("markup_dirams").notNull(),
-  deliveryDirams: text("delivery_dirams").notNull().default("0"),
-  totalDirams: text("total_dirams").notNull(),
+  roundingPolicy: text("rounding_policy")
+    .$type<"LEGACY_FLOOR" | "HALF_UP">()
+    .notNull()
+    .default("LEGACY_FLOOR"),
+  markupDirams: numeric("markup_dirams", { precision: 38, scale: 0 }).notNull(),
+  deliveryDirams: numeric("delivery_dirams", { precision: 38, scale: 0 }).notNull().default("0"),
+  totalDirams: numeric("total_dirams", { precision: 38, scale: 0 }).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
@@ -92,7 +97,7 @@ export const orderPayments = pgTable(
       .notNull()
       .references(() => orders.id, { onDelete: "cascade" }),
     kind: text("kind").notNull(),
-    amountDirams: text("amount_dirams").notNull(),
+    amountDirams: numeric("amount_dirams", { precision: 38, scale: 0 }).notNull(),
     reason: text("reason").notNull(),
     reference: text("reference"),
     method: text("method").notNull().default("BANK_TRANSFER"),

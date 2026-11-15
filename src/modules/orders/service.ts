@@ -249,6 +249,7 @@ export async function createOrder(input: OrderInput) {
         preferredTimeSlot:
           body.fulfillment === "DELIVERY" ? (body.preferredTimeSlot ?? null) : null,
         paymentMethod: body.paymentMethod,
+        roundingPolicy: "HALF_UP",
         status: "NEW",
         goodsBaseDirams: calculated.baseDirams,
         markupPercent: calculated.markupPercent,

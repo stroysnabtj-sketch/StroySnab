@@ -17,6 +17,9 @@ export type PublicProduct = {
   sku: string;
   slug: string;
   name: string;
+  nameTg?: string | null;
+  descriptionTg?: string | null;
+  categoryNameTg?: string | null;
   description: string | null;
   categoryId: string;
   categorySlug: string;
