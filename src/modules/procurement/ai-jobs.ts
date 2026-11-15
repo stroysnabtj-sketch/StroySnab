@@ -128,7 +128,16 @@ export async function processQuotationJob(
             b.score - a.score || (BigInt(a.basePriceDirams) < BigInt(b.basePriceDirams) ? -1 : 1),
         );
       if (!matches.length) {
-        lines.push({ ...line, issue: "Подходящий товар не найден" });
+        const candidates = prepared.lines[0].candidates.filter((c) => c.score >= 70);
+        const unitCandidates = candidates.filter((c) => c.unitMatches);
+        const issue = !candidates.length
+          ? "В каталоге нет подходящего товара с указанными характеристиками"
+          : !unitCandidates.length
+            ? "Единица в списке отличается от каталога; требуется уточнение количества"
+            : !unitCandidates.some((c) => c.minimumMet)
+              ? "Количество меньше минимального заказа"
+              : "Недостаточно доступного остатка для указанного количества";
+        lines.push({ ...line, issue });
         continue;
       }
       const selected = matches[0];
@@ -216,7 +225,7 @@ export async function processQuotationJob(
             : []),
           ...lines
             .filter((l) => l.alternative)
-            .map((l) => `Альтернатива: ${publicProductText(l.requestedName ?? "")} → ${l.name}.`),
+            .map((l) => `По запросу «${publicProductText(l.requestedName ?? "")}» подобран товар: ${l.name}.`),
           ...warnings.map((w) => `Примечание: ${w}`),
         ]
           .join("\n")
@@ -231,7 +240,7 @@ export async function processQuotationJob(
             deliveryDirams: "0",
             conditions,
             lines: priced.map((l) => ({
-              name: (l.alternative ? `Альтернатива: ${l.name}` : l.name).slice(0, 300),
+              name: l.name.slice(0, 300),
               qty: l.qty,
               unit: l.unit,
               offerId: l.offerId,
