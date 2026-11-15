@@ -30,7 +30,7 @@ it.each(["QUOTE_READY", "REQUEST_RECEIVED"])(
     expect(JSON.parse(send.mock.calls[0][1]!.body as string)).toMatchObject({
       templateMessage: {
         templateId: "approved-request",
-        variables: { "number-1": "RFQ-0002", "text-1": "КП готово" },
+        variables: { "number-1": "0002", "text-1": "КП готово" },
       },
     });
     expect(JSON.stringify(send.mock.calls[0][1]!.body)).not.toContain("https://");

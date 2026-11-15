@@ -65,6 +65,9 @@ export function configuredNotificationTransport(
           (!admin && (!message.statusLabel || message.audience !== "customer")))
       )
         throw new Error("unsupported_notification_template");
+      // Payom's typed number variable accepts digits, not our document prefixes.
+      const number = message.orderNumber?.match(/^(?:(?:ORD|RFQ|QUO)-)?([0-9]+)$/)?.[1];
+      if (payom && !number) throw new Error("unsupported_notification_template");
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
@@ -79,8 +82,8 @@ export function configuredNotificationTransport(
                 templateMessage: {
                   templateId,
                   variables: admin
-                    ? { "number-1": message.orderNumber }
-                    : { "number-1": message.orderNumber, "text-1": message.statusLabel },
+                    ? { "number-1": number }
+                    : { "number-1": number, "text-1": message.statusLabel },
                 },
                 senderName: sender,
                 type: "SMS",
