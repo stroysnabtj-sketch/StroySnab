@@ -663,6 +663,7 @@ export async function ensureJctopCatalog(
         catCount: sql<number>`(select count(*)::int from ${categories})`,
         jctopCount: sql<number>`(select count(*)::int from ${products} where ${products.brand} = 'JCTOP' and ${products.status} = 'PUBLISHED' and ${products.markupPercent} = 5)`,
         totalProducts: sql<number>`(select count(*)::int from ${products})`,
+        hasSkuInName: sql<boolean>`exists (select 1 from ${products} where ${products.nameRu} ~ 'JCTOP (POLO-|[A-Z0-9]*[0-9][A-Z0-9]*)')`,
       })
       .from(sql`(select 1) as _`);
 
@@ -670,7 +671,8 @@ export async function ensureJctopCatalog(
       state?.hasJctopRoot &&
       state.catCount === CATEGORY_DEFINITIONS.length &&
       state.jctopCount === 1260 &&
-      state.totalProducts === 1260
+      state.totalProducts === 1260 &&
+      !state.hasSkuInName
     ) {
       return { synced: false };
     }
@@ -773,9 +775,13 @@ export async function ensureJctopCatalog(
       const sku = item.duplicateCode ? `${codeClean}-${item.id}` : codeClean;
       const slug = `${slugify(item.name)}-${slugify(codeClean)}-${item.id}`;
       const specText = item.spec ? ` (${item.spec})` : "";
-      const nameRu = `${item.name} JCTOP ${codeClean}${specText}`;
+      const nameRu = /\bJCTOP\b/i.test(item.name)
+        ? `${item.name}${specText}`
+        : `${item.name} JCTOP${specText}`;
       const tgName = PRODUCT_NAME_TG[item.name] || item.name;
-      const nameTg = `${tgName} JCTOP ${codeClean}${specText}`;
+      const nameTg = /\bJCTOP\b/i.test(tgName)
+        ? `${tgName}${specText}`
+        : `${tgName} JCTOP${specText}`;
       const pageInfo = item.printPage ? `каталог стр. ${item.printPage}` : `стр. ${item.page}`;
 
       return {

@@ -656,6 +656,10 @@ select {
   gap: 0;
 }
 .product-card-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   height: auto;
   min-height: 15px;
   margin-bottom: 7px;
@@ -666,6 +670,13 @@ select {
   font-weight: 650;
   text-transform: uppercase;
   color: #7c8796;
+}
+.product-card-sku-inline {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 .product-card-title-link {
   display: block;

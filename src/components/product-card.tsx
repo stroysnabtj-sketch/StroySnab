@@ -43,6 +43,11 @@ export function ProductCard({ product }: { product: PublicProduct }) {
           ) : (
             <span className="product-card-brand">{tr(categoryName)}</span>
           )}
+          {product.sku && (
+            <span className="product-card-sku-inline">
+              {tr("Арт.")} {product.sku}
+            </span>
+          )}
         </div>
         <Link href={`/product/${product.slug}`} className="product-card-title-link">
           <h3 className="product-card-title">{name}</h3>
