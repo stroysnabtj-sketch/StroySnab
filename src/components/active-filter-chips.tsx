@@ -4,6 +4,20 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
 import { useLocale } from "@/i18n/provider";
 
+/** Smoothly scroll up to the catalog results header when the viewport is scrolled below it. */
+export function scrollToCatalogResults() {
+  if (typeof window === "undefined") return;
+  const results = document.querySelector<HTMLElement>(".catalog-results");
+  if (!results) return;
+  const rect = results.getBoundingClientRect();
+  if (rect.top < 88) {
+    window.scrollTo({
+      top: Math.max(0, window.scrollY + rect.top - 96),
+      behavior: "smooth",
+    });
+  }
+}
+
 export function ActiveFilterChips({ currentCategory, facetLabels = {} }: { currentCategory?: string; facetLabels?: Record<string,{label:string;unit?:string}> }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -53,13 +67,15 @@ export function ActiveFilterChips({ currentCategory, facetLabels = {} }: { curre
     next.delete("page");
     currentValues.filter((v) => v !== chipValue).forEach((v) => next.append(chipKey, v));
     router.push(`/catalog?${next.toString()}`, { scroll: false });
+    scrollToCatalogResults();
   };
 
   const clearAll = () => {
     const next = new URLSearchParams();
     const cat = currentCategory ?? searchParams.get("category");
     if (cat) next.set("category", cat);
-    router.push(`/catalog${cat ? `?category=${encodeURIComponent(cat)}` : ""}`);
+    router.push(`/catalog${cat ? `?category=${encodeURIComponent(cat)}` : ""}`, { scroll: false });
+    scrollToCatalogResults();
   };
 
   return (

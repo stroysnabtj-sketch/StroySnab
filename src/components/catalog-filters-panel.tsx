@@ -8,6 +8,7 @@ import { ChevronDown, ChevronUp, RotateCcw, Search, SlidersHorizontal, X } from 
 import type { FilterFacetOption, SmartFilterFacetGroup } from "@/modules/catalog/types";
 
 import { AttributeRangeFilter } from "@/components/attribute-range-filter";
+import { scrollToCatalogResults } from "@/components/active-filter-chips";
 
 interface Props {
   currentCategory?: string;
@@ -73,6 +74,14 @@ export function CatalogFiltersPanel({
       if (previous?.isConnected) previous.focus();
     };
   }, [mobileOpen]);
+  const pushCatalogFilters = (next: URLSearchParams) => {
+    const query = next.toString();
+    startTransition(() => {
+      router.push(query ? `/catalog?${query}` : "/catalog", { scroll: false });
+    });
+    scrollToCatalogResults();
+  };
+
   const applyRange = (key: string, min: string, max: string) => {
     const next = new URLSearchParams(searchParams.toString());
     next.delete("page");
@@ -83,7 +92,7 @@ export function CatalogFiltersPanel({
       if (value) next.set(name, value);
       else next.delete(name);
     }
-    startTransition(() => router.push(`/catalog?${next}`, { scroll: false }));
+    pushCatalogFilters(next);
   };
 
   // Состояние свернутых/развернутых групп
@@ -135,9 +144,7 @@ export function CatalogFiltersPanel({
       [...currentValues, value].forEach((v) => next.append(key, v));
     }
 
-    startTransition(() => {
-      router.push(`/catalog?${next.toString()}`, { scroll: false });
-    });
+    pushCatalogFilters(next);
   };
 
   // Обработка диапазона цен
@@ -155,7 +162,7 @@ export function CatalogFiltersPanel({
     next.delete("page");
     next.delete(key);
     if (value) next.set(key, value);
-    startTransition(() => router.push(`/catalog?${next}`, { scroll: false }));
+    pushCatalogFilters(next);
   };
 
   const applyPrice = () => {
@@ -167,9 +174,7 @@ export function CatalogFiltersPanel({
     if (maxPriceInput.trim()) next.set("maxPrice", maxPriceInput.trim());
     else next.delete("maxPrice");
 
-    startTransition(() => {
-      router.push(`/catalog?${next.toString()}`, { scroll: false });
-    });
+    pushCatalogFilters(next);
   };
 
   // Переключение "Только в наличии"
@@ -180,9 +185,7 @@ export function CatalogFiltersPanel({
     if (checked) next.set("inStock", "1");
     else next.delete("inStock");
 
-    startTransition(() => {
-      router.push(`/catalog?${next.toString()}`, { scroll: false });
-    });
+    pushCatalogFilters(next);
   };
 
   // Сброс всех фильтров
@@ -191,9 +194,7 @@ export function CatalogFiltersPanel({
     if (currentCategory) next.set("category", currentCategory);
     setMinPriceInput("");
     setMaxPriceInput("");
-    startTransition(() => {
-      router.push(`/catalog${currentCategory ? `?category=${currentCategory}` : ""}`);
-    });
+    pushCatalogFilters(next);
   };
 
   return (

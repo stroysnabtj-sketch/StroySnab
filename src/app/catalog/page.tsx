@@ -162,6 +162,24 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
         <SiteFooter />
       </>
     );
+  const filterKey = JSON.stringify({
+    q: query.q ?? "",
+    category: query.category ?? "",
+    brands: query.brands ? [...query.brands].sort() : [],
+    minPrice: query.minPrice ?? "",
+    maxPrice: query.maxPrice ?? "",
+    inStock: query.inStock,
+    attributeName: query.attributeName ?? "",
+    attributeValue: query.attributeValue ?? "",
+    sort: query.sort,
+    page: query.page,
+    attributes: Object.keys(attributes)
+      .sort()
+      .map((key) => [key, attributes[key]]),
+    attributeRanges: Object.keys(attributeRanges)
+      .sort()
+      .map((key) => [key, attributeRanges[key]]),
+  });
   const result = await listCatalog(query);
   const totalPages = Math.max(1, Math.ceil(result.total / result.pageSize));
   const pageUrl = (page: number) => {
@@ -201,9 +219,9 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
               )}
             />
             {result.items.length ? (
-              <div className="product-grid catalog-products-grid">
+              <div key={filterKey} className="product-grid catalog-products-grid">
                 {result.items.map((product, index) => (
-                  <ProductReveal key={product.id} index={index}>
+                  <ProductReveal key={`${filterKey}:${product.id}`} index={index}>
                     <ProductCard product={product} />
                   </ProductReveal>
                 ))}
