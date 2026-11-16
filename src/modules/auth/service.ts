@@ -283,10 +283,27 @@ export async function resetPassword(input: unknown, ip: string) {
 export async function updateProfile(userId: string, input: unknown) {
   const data = profileSchema.parse(input);
   const phone = normalizePhone(data.phone);
+  const companyName =
+    data.companyName !== undefined ? data.companyName.trim() || null : undefined;
+  const taxId = data.taxId !== undefined ? data.taxId.trim() || null : undefined;
   const db = await getDb();
   await db.transaction(async (tx) => {
     await tx.update(users).set({ phone }).where(eq(users.id, userId));
-    await tx.update(customers).set({ fullName: data.fullName }).where(eq(customers.userId, userId));
+    await tx
+      .update(customers)
+      .set({
+        fullName: data.fullName,
+        ...(data.customerType ? { type: data.customerType } : {}),
+        ...(companyName !== undefined ? { companyName } : {}),
+        ...(taxId !== undefined ? { taxId } : {}),
+      })
+      .where(eq(customers.userId, userId));
   });
-  return { phone, fullName: data.fullName };
+  return {
+    phone,
+    fullName: data.fullName,
+    customerType: data.customerType,
+    companyName: companyName ?? null,
+    taxId: taxId ?? null,
+  };
 }

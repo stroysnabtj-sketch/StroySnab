@@ -146,6 +146,12 @@ export default async function AdminOrders({
               <a className="muted" href={`tel:${order.customerPhone}`}>
                 {order.customerPhone}
               </a>
+              <br />
+              <small className="muted">
+                {order.vehicleType === "PICKUP"
+                  ? "Самовывоз"
+                  : `Доставка · ${order.deliveryCity}`}
+              </small>
             </td>
             <td>
               <strong>{formatTJS(order.totalDirams)}</strong>
@@ -175,9 +181,19 @@ export default async function AdminOrders({
               </Badge>
             </td>
             <td>
-              <Link className="button button-secondary" href={`/admin/orders/${order.id}`}>
-                Открыть заказ
-              </Link>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                <Link className="button button-secondary" href={`/admin/orders/${order.id}`}>
+                  Открыть заказ
+                </Link>
+                <a
+                  className="inline-link"
+                  href={`/orders/${order.id}/pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  PDF
+                </a>
+              </div>
             </td>
           </tr>
         ))}

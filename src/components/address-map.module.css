@@ -1,8 +1,73 @@
 .wrap {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background: #fff;
   min-width: 0;
+}
+.searchBox {
+  position: relative;
+  margin-bottom: 10px;
+}
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #dce4ee;
+  border-radius: 9px;
+  background: #f9fbfd;
+  padding: 0 10px;
+  min-height: 42px;
+  color: #5b6b80;
+}
+.searchField:focus-within {
+  border-color: #074089;
+  background: #fff;
+}
+.searchField input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 14px;
+  color: #172b45;
+  padding: 8px 0;
+}
+.searchResults {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 20;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid #dce4ee;
+  border-radius: 10px;
+  box-shadow: 0 12px 28px #102f571c;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.searchResults button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 9px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #172b45;
+}
+.searchResults button:hover {
+  background: #eef4ff;
+  color: #074089;
+}
+.mapStage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
 }
 .controls {
   position: absolute;

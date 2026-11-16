@@ -5,6 +5,7 @@ import { Workspace } from "@/components/workspace";
 import { DataTable, Badge } from "@/components/admin-ui";
 import { OrderStatusControl } from "@/components/order-status-control";
 import { PaymentControls } from "@/components/payment-controls";
+import { DeliveryAssignment } from "@/components/delivery-assignment";
 import {
   getOrderPaymentSummary,
   listOrderPayments,
@@ -21,6 +22,7 @@ import {
   VEHICLE_OPTIONS,
   TIME_SLOTS,
   deliveryDateLabel,
+  mapNavigationLinks,
   type DeliveryTimeSlot,
 } from "@/modules/delivery/preferences";
 import styles from "@/components/workspace-design.module.css";
@@ -254,7 +256,25 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
                 </a>
               </dd>
               <dt>{pickup ? "Город выдачи" : "Адрес"}</dt>
-              <dd>{[order.deliveryCity, order.deliveryAddress].filter(Boolean).join(", ")}</dd>
+              <dd>
+                {[order.deliveryCity, order.deliveryAddress].filter(Boolean).join(", ")}
+                {order.deliveryLat && order.deliveryLng && (() => {
+                  const nav = mapNavigationLinks(order.deliveryLat, order.deliveryLng);
+                  return (
+                    <span style={{ display: "flex", flexWrap: "wrap", gap: "6px 12px", marginTop: 6 }}>
+                      <a className="inline-link" href={nav.osm} target="_blank" rel="noopener noreferrer">
+                        OpenStreetMap
+                      </a>
+                      <a className="inline-link" href={nav.google} target="_blank" rel="noopener noreferrer">
+                        Google Карты
+                      </a>
+                      <a className="inline-link" href={nav.yandex} target="_blank" rel="noopener noreferrer">
+                        Яндекс Карты
+                      </a>
+                    </span>
+                  );
+                })()}
+              </dd>
               {order.deliveryNotes && (
                 <>
                   <dt>Комментарий</dt>
@@ -283,10 +303,30 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
                   : "По согласованию"}
               </dd>
               <dt>Водитель</dt>
-              <dd>{order.driverName ?? "Не назначен"}</dd>
+              <dd>
+                {order.driverName
+                  ? `${order.driverName}${order.driverPhone ? ` · ${order.driverPhone}` : ""}`
+                  : "Не назначен"}
+              </dd>
               <dt>Госномер</dt>
               <dd>{order.vehiclePlate ?? "Не назначен"}</dd>
             </dl>
+            {!pickup &&
+              hasPermission(actor.role, "deliveries:assign") &&
+              ["CONFIRMED", "DISPATCHED"].includes(order.status) && (
+                <div style={{ marginTop: 14 }}>
+                  <DeliveryAssignment
+                    order={{
+                      id: order.id,
+                      orderNumber: order.orderNumber,
+                      driverName: order.driverName,
+                      driverPhone: order.driverPhone,
+                      vehiclePlate: order.vehiclePlate,
+                      updatedAt: order.updatedAt.toISOString(),
+                    }}
+                  />
+                </div>
+              )}
           </section>
         </div>
       </div>

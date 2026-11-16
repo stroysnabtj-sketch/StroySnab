@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import type { Map as LeafletMap } from "leaflet";
+import type { Map as LeafletMap, Marker } from "leaflet";
 import { ORDER_STATUS_LABELS } from "@/modules/orders/status";
 import { deliveryDateLabel, TIME_SLOTS } from "@/modules/delivery/preferences";
 import styles from "./delivery-dispatch-map.module.css";
@@ -41,6 +41,8 @@ export function DeliveryDispatchMap({
   limit: number;
 }) {
   const host = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
+  const markersRef = useRef<Map<string, Marker>>(new Map());
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const mapped = deliveries.filter((delivery) => coordinates(delivery));
   const hasPoints = mapped.length > 0;
@@ -49,11 +51,14 @@ export function DeliveryDispatchMap({
     let disposed = false;
     let map: LeafletMap | undefined;
     let resize: ResizeObserver | undefined;
+    const markerMap = markersRef.current;
+    markerMap.clear();
     setState("loading");
     void import("leaflet")
       .then((L) => {
         if (disposed || !host.current) return;
         map = L.map(host.current, { scrollWheelZoom: false, zoomControl: true });
+        mapRef.current = map;
         const tiles = L.tileLayer(
           process.env.NEXT_PUBLIC_MAP_TILE_URL || "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
           {
@@ -90,7 +95,7 @@ export function DeliveryDispatchMap({
             line.textContent = text;
             popup.append(line);
           }
-          L.marker(point, {
+          const marker = L.marker(point, {
             icon: L.divIcon({
               className: styles.pin,
               html: `<span>${index + 1}</span>`,
@@ -103,6 +108,9 @@ export function DeliveryDispatchMap({
           })
             .addTo(map)
             .bindPopup(popup);
+          const el = marker.getElement();
+          if (el) el.setAttribute("data-status", delivery.status);
+          markerMap.set(delivery.id, marker);
         });
         map.fitBounds(bounds, { padding: [32, 32], maxZoom: 14 });
         resize = new ResizeObserver(() => map?.invalidateSize());
@@ -115,9 +123,17 @@ export function DeliveryDispatchMap({
     return () => {
       disposed = true;
       resize?.disconnect();
+      markerMap.clear();
+      mapRef.current = null;
       map?.remove();
     };
   }, [deliveries, hasPoints, canViewOrders]);
+  function focusDelivery(delivery: DispatchDelivery) {
+    const point = coordinates(delivery);
+    if (!point || !mapRef.current) return;
+    mapRef.current.flyTo(point, 16, { duration: 0.45 });
+    markersRef.current.get(delivery.id)?.openPopup();
+  }
   return (
     <section className={styles.section} aria-labelledby="delivery-dispatch-title">
       <div className={styles.heading}>
@@ -139,6 +155,17 @@ export function DeliveryDispatchMap({
           ? ` Лимит ${limit}; сначала ближайшие даты. Уточните поиск, чтобы увидеть остальные.`
           : ""}
       </p>
+      <div className={styles.legend} aria-label="Обозначение статусов на карте">
+        <span>
+          <i className={styles.legendNew} aria-hidden="true" /> Новый
+        </span>
+        <span>
+          <i className={styles.legendConfirmed} aria-hidden="true" /> Подтверждён
+        </span>
+        <span>
+          <i className={styles.legendDispatched} aria-hidden="true" /> В доставке
+        </span>
+      </div>
       {!deliveries.length ? (
         <p className={styles.empty}>Активных доставок по выбранным условиям нет.</p>
       ) : (
@@ -167,32 +194,46 @@ export function DeliveryDispatchMap({
             )}
           </div>
           <ol className={styles.list} aria-label="Адреса и интервалы активных доставок">
-            {deliveries.map((delivery, index) => (
-              <li key={delivery.id}>
-                <span className={styles.number} aria-hidden="true">
-                  {index + 1}
-                </span>
-                <div>
-                  {canViewOrders ? (
-                    <Link className="inline-link" href={`/admin/orders/${delivery.id}`}>
-                      <strong>{delivery.orderNumber}</strong>
-                    </Link>
+            {deliveries.map((delivery, index) => {
+              const point = coordinates(delivery);
+              return (
+                <li key={delivery.id}>
+                  {point ? (
+                    <button
+                      type="button"
+                      className={`${styles.number} ${styles.numberButton}`}
+                      data-status={delivery.status}
+                      title="Показать на карте"
+                      aria-label={`Показать на карте ${delivery.orderNumber}`}
+                      onClick={() => focusDelivery(delivery)}
+                    >
+                      {index + 1}
+                    </button>
                   ) : (
-                    <strong>{delivery.orderNumber}</strong>
+                    <span className={styles.number} data-status={delivery.status} aria-hidden="true">
+                      {index + 1}
+                    </span>
                   )}
-                  <span className={styles.badge}>
-                    {ORDER_STATUS_LABELS[delivery.status] ?? delivery.status}
-                  </span>
-                  <p>{windowLabel(delivery)}</p>
-                  <p>
-                    {delivery.city}, {delivery.address}
-                  </p>
-                  {!coordinates(delivery) && (
-                    <p className={styles.noPoint}>Координаты не указаны</p>
-                  )}
-                </div>
-              </li>
-            ))}
+                  <div>
+                    {canViewOrders ? (
+                      <Link className="inline-link" href={`/admin/orders/${delivery.id}`}>
+                        <strong>{delivery.orderNumber}</strong>
+                      </Link>
+                    ) : (
+                      <strong>{delivery.orderNumber}</strong>
+                    )}
+                    <span className={styles.badge}>
+                      {ORDER_STATUS_LABELS[delivery.status] ?? delivery.status}
+                    </span>
+                    <p>{windowLabel(delivery)}</p>
+                    <p>
+                      {delivery.city}, {delivery.address}
+                    </p>
+                    {!point && <p className={styles.noPoint}>Координаты не указаны</p>}
+                  </div>
+                </li>
+              );
+            })}
           </ol>
         </div>
       )}

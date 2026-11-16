@@ -88,6 +88,51 @@
   color: oklch(var(--surface));
   font-size: 12px;
   font-weight: 700;
+  border: 0;
+  padding: 0;
+}
+.numberButton {
+  cursor: pointer;
+}
+.pin[data-status="NEW"] > span,
+.number[data-status="NEW"] {
+  background: oklch(var(--warning));
+}
+.pin[data-status="CONFIRMED"] > span,
+.number[data-status="CONFIRMED"] {
+  background: oklch(var(--action));
+}
+.pin[data-status="DISPATCHED"] > span,
+.number[data-status="DISPATCHED"] {
+  background: oklch(var(--success));
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: oklch(var(--muted));
+}
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.legendNew {
+  background: oklch(var(--warning));
+}
+.legendConfirmed {
+  background: oklch(var(--action));
+}
+.legendDispatched {
+  background: oklch(var(--success));
 }
 .badge {
   display: block;

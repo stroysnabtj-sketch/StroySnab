@@ -70,3 +70,12 @@ export function knownCartWeight(items: { qty: string; unit: string }[]): number 
   }
   return total > 0 ? Number(total.toFixed(3)) : null;
 }
+export function mapNavigationLinks(lat: string | number, lng: string | number) {
+  const latStr = encodeURIComponent(String(lat).trim());
+  const lngStr = encodeURIComponent(String(lng).trim());
+  return {
+    osm: `https://www.openstreetmap.org/?mlat=${latStr}&mlon=${lngStr}#map=17/${latStr}/${lngStr}`,
+    google: `https://www.google.com/maps/search/?api=1&query=${latStr},${lngStr}`,
+    yandex: `https://yandex.ru/maps/?pt=${lngStr},${latStr}&z=17&l=map`,
+  };
+}

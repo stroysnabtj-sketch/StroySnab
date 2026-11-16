@@ -65,5 +65,5 @@ describe("phone", () => {
 describe("i18n", () => {
   it("translates available Tajik copy", () => expect(t("common.catalog", "tg")).toBe("Феҳрист"));
   it("falls back only for untranslated copy", () =>
-    expect(t("terms.s1.body", "tg")).toBe(t("terms.s1.body", "ru")));
+    expect(t("common.brand", "tg")).toBe(t("common.brand", "ru")));
 });

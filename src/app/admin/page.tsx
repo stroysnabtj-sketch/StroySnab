@@ -78,7 +78,7 @@ export default async function AdminPage() {
       : Promise.resolve([]),
   ]);
   const [deliveryCount] =
-    can("deliveries:manage") && !can("orders:read")
+    can("deliveries:manage")
       ? await db
           .select({ value: sql<number>`count(*)::int` })
           .from(orders)

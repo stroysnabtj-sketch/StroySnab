@@ -40,7 +40,8 @@ export function AddressFields({
     [message, setMessage] = useState("");
   const manualId = useId();
   const current = useRef(value),
-    change = useRef(onChange);
+    change = useRef(onChange),
+    shouldReverse = useRef(false);
   current.current = value;
   change.current = onChange;
   useEffect(() => {
@@ -56,6 +57,7 @@ export function AddressFields({
           setLabel(first.label);
           setPrimary(first.isDefault);
           setManual(first.lat === null || first.lng === null);
+          shouldReverse.current = first.lat !== null && first.lng !== null && !first.street;
           change.current({
             city: first.city,
             street: first.street,
@@ -74,8 +76,9 @@ export function AddressFields({
   const latitude = value.point?.lat;
   const longitude = value.point?.lng;
   useEffect(() => {
-    if (manual || latitude === undefined || longitude === undefined || current.current.street)
-      return;
+    if (latitude === undefined || longitude === undefined) return;
+    if (!shouldReverse.current && current.current.street) return;
+    shouldReverse.current = false;
     const controller = new AbortController();
     const point = { lat: latitude, lng: longitude };
     const timer = setTimeout(() => {
@@ -91,7 +94,11 @@ export function AddressFields({
             current.current.point?.lat === point.lat &&
             current.current.point?.lng === point.lng
           ) {
-            change.current({ ...current.current, city: address.city, street: address.street });
+            change.current({
+              ...current.current,
+              city: address.city || current.current.city,
+              street: address.street || current.current.street,
+            });
           }
         })
         .catch(() => {
@@ -105,7 +112,7 @@ export function AddressFields({
       clearTimeout(timer);
       controller.abort();
     };
-  }, [latitude, longitude, manual]);
+  }, [latitude, longitude]);
   function choose(id: string) {
     setSelected(id);
     setMessage("");
@@ -115,6 +122,7 @@ export function AddressFields({
       setLabel(item.label);
       setPrimary(item.isDefault);
       setManual(item.lat === null || item.lng === null);
+      shouldReverse.current = item.lat !== null && item.lng !== null && !item.street;
       onChange({
         city: item.city,
         street: item.street,
@@ -124,6 +132,7 @@ export function AddressFields({
       setLabel(tr("Адрес"));
       setPrimary(false);
       setManual(false);
+      shouldReverse.current = false;
       onChange({ city: "", street: "", point: null });
     }
   }
@@ -226,7 +235,8 @@ export function AddressFields({
           value={value.point}
           onChange={(point) => {
             if (!manage) setSelected("");
-            onChange({ city: "", street: "", point });
+            shouldReverse.current = true;
+            onChange({ city: value.city, street: value.street, point });
           }}
         />
       )}
@@ -248,7 +258,6 @@ export function AddressFields({
         onClick={() => {
           setManual(!manual);
           setError("");
-          onChange({ ...value, point: manual ? value.point : null });
         }}
       >
         {manual ? tr("Выбрать на карте") : tr("Указать вручную")}
@@ -266,7 +275,7 @@ export function AddressFields({
                 value={value.city}
                 onChange={(e) => {
                   if (!manage) setSelected("");
-                  onChange({ ...value, city: e.target.value, point: null });
+                  onChange({ ...value, city: e.target.value });
                 }}
               />
             </Field>
@@ -284,6 +293,19 @@ export function AddressFields({
                 }}
               />
             </Field>
+            {value.point && (
+              <p role="status" className={styles.message} style={{ gridColumn: "1 / -1", margin: 0 }}>
+                {tr("Точка на карте сохранена")}: {value.point.lat.toFixed(5)}, {value.point.lng.toFixed(5)}{" "}
+                <button
+                  type="button"
+                  className="inline-link"
+                  style={{ border: 0, background: "transparent", padding: 0 }}
+                  onClick={() => onChange({ ...value, point: null })}
+                >
+                  ({tr("Сбросить точку")})
+                </button>
+              </p>
+            )}
           </>
         )}
       </div>

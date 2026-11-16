@@ -25,6 +25,7 @@ import {
   VEHICLE_OPTIONS,
   TIME_SLOTS,
   deliveryDateLabel,
+  mapNavigationLinks,
   type DeliveryTimeSlot,
 } from "@/modules/delivery/preferences";
 import { PrintButton } from "@/components/print-button";
@@ -462,17 +463,22 @@ export function OrderStatusDashboard({
                   </span>
                   <span className={styles.routePointAddress}>
                     {[order.deliveryCity, order.deliveryAddress].filter(Boolean).join(", ")}
-                    {order.deliveryLat && order.deliveryLng && (
-                      <a
-                        className="inline-link"
-                        style={{ display: "block", marginTop: 6 }}
-                        href={`https://www.openstreetmap.org/?mlat=${encodeURIComponent(order.deliveryLat)}&mlon=${encodeURIComponent(order.deliveryLng)}#map=17/${encodeURIComponent(order.deliveryLat)}/${encodeURIComponent(order.deliveryLng)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {tr("На карте")}
-                      </a>
-                    )}
+                    {order.deliveryLat && order.deliveryLng && (() => {
+                      const nav = mapNavigationLinks(order.deliveryLat, order.deliveryLng);
+                      return (
+                        <span style={{ display: "flex", flexWrap: "wrap", gap: "8px 14px", marginTop: 6 }}>
+                          <a className="inline-link" href={nav.osm} target="_blank" rel="noopener noreferrer">
+                            {tr("На карте")}
+                          </a>
+                          <a className="inline-link" href={nav.google} target="_blank" rel="noopener noreferrer">
+                            Google Карты
+                          </a>
+                          <a className="inline-link" href={nav.yandex} target="_blank" rel="noopener noreferrer">
+                            Яндекс Карты
+                          </a>
+                        </span>
+                      );
+                    })()}
                   </span>
                   <span className={styles.routePointContact}>
                     Получатель: {order.customerName} · {order.customerPhone}

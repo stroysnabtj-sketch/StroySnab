@@ -1,6 +1,17 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { buildContentSecurityPolicy } from "./server/content-security-policy";
 export function middleware(request: NextRequest) {
+  if (process.env.NODE_ENV === "production") {
+    const rawHost = request.headers.get("x-forwarded-host") || request.headers.get("host") || "";
+    const host = rawHost.split(",")[0]?.trim().split(":")[0]?.toLowerCase();
+    if (host === "stroysnab.tj") {
+      const target = new URL(
+        `${request.nextUrl.pathname}${request.nextUrl.search}`,
+        "https://www.stroysnab.tj",
+      );
+      return NextResponse.redirect(target, 308);
+    }
+  }
   const nonce = btoa(crypto.randomUUID());
   const policy = buildContentSecurityPolicy(nonce, process.env.NODE_ENV !== "production");
   const headers = new Headers(request.headers);

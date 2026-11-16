@@ -3,7 +3,7 @@ import { useLocale } from "@/i18n/provider";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Monitor, ShieldCheck, UserRound } from "lucide-react";
-import { Button, Field, Input } from "@/components/ui";
+import { Button, Field, Input, Select } from "@/components/ui";
 import { t, formatDateTime } from "@/i18n";
 import styles from "@/components/account.module.css";
 
@@ -14,17 +14,56 @@ type Session = {
   createdAt: string;
   expiresAt: string;
 };
+
+function formatUserAgent(ua: string | null): string | null {
+  if (!ua) return null;
+  const browser = /Edg\//.test(ua)
+    ? "Microsoft Edge"
+    : /OPR\/|Opera/.test(ua)
+      ? "Opera"
+      : /Chrome\/|CriOS\//.test(ua) && !/Chromium/.test(ua)
+        ? "Google Chrome"
+        : /Firefox\/|FxiOS\//.test(ua)
+          ? "Firefox"
+          : /Safari\//.test(ua) && !/Chrome/.test(ua)
+            ? "Safari"
+            : null;
+  const os = /iPhone|iPad|iPod/.test(ua)
+    ? "iOS"
+    : /Android/.test(ua)
+      ? "Android"
+      : /Windows/.test(ua)
+        ? "Windows"
+        : /Macintosh|Mac OS X/.test(ua)
+          ? "macOS"
+          : /Linux/.test(ua)
+            ? "Linux"
+            : null;
+  if (browser && os) return `${browser} · ${os}`;
+  if (browser || os) return browser || os;
+  return ua;
+}
+
 export function ProfilePanel({
   initialName,
   initialPhone,
+  initialType = "PERSON",
+  initialCompanyName = "",
+  initialTaxId = "",
 }: {
   initialName: string;
   initialPhone: string;
+  initialType?: "PERSON" | "COMPANY";
+  initialCompanyName?: string;
+  initialTaxId?: string;
 }) {
   const { tr } = useLocale();
   const router = useRouter();
   const [fullName, setFullName] = useState(initialName);
   const [phone, setPhone] = useState(initialPhone);
+  const [customerType, setCustomerType] = useState<"PERSON" | "COMPANY">(initialType);
+  const [companyName, setCompanyName] = useState(initialCompanyName);
+  const [taxId, setTaxId] = useState(initialTaxId);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -66,7 +105,13 @@ export function ProfilePanel({
               const response = await fetch("/api/account/profile", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ fullName, phone }),
+                body: JSON.stringify({
+                  fullName,
+                  phone,
+                  customerType,
+                  companyName: customerType === "COMPANY" ? companyName : "",
+                  taxId: customerType === "COMPANY" ? taxId : "",
+                }),
               });
               const result = await response.json();
               setMessage(
@@ -82,6 +127,17 @@ export function ProfilePanel({
             }
           }}
         >
+          <Field label={tr("Тип покупателя")}>
+            <Select
+              value={customerType}
+              onChange={(event) =>
+                setCustomerType(event.target.value === "COMPANY" ? "COMPANY" : "PERSON")
+              }
+            >
+              <option value="PERSON">{tr("Частное лицо")}</option>
+              <option value="COMPANY">{tr("Организация (ООО, ИП)")}</option>
+            </Select>
+          </Field>
           <Field label={tr(t("auth.fullName"))}>
             <Input
               autoComplete="name"
@@ -99,6 +155,26 @@ export function ProfilePanel({
               required
             />
           </Field>
+          {customerType === "COMPANY" && (
+            <>
+              <Field label={tr("Название организации")}>
+                <Input
+                  maxLength={160}
+                  placeholder={tr("ООО или ИП")}
+                  value={companyName}
+                  onChange={(event) => setCompanyName(event.target.value)}
+                />
+              </Field>
+              <Field label={tr("ИНН / РМА")}>
+                <Input
+                  maxLength={40}
+                  placeholder={tr("Налоговый номер")}
+                  value={taxId}
+                  onChange={(event) => setTaxId(event.target.value)}
+                />
+              </Field>
+            </>
+          )}
           <Button type="submit" loading={saving}>
             {saving ? tr("Сохраняем…") : tr(t("account.saveProfile"))}
           </Button>
@@ -136,7 +212,7 @@ export function ProfilePanel({
                 <Monitor size={20} aria-hidden="true" />
                 <div>
                   <strong title={session.userAgent ?? undefined}>
-                    {session.userAgent || tr("Неизвестное устройство")}
+                    {formatUserAgent(session.userAgent) || tr("Неизвестное устройство")}
                   </strong>
                   <span>
                     {tr("Вход:")}

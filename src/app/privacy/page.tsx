@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { getTranslator } from "@/i18n/server";
+
 export const metadata = { title: "Политика конфиденциальности — Stroysnab.tj" };
 const sections = [
   {
@@ -21,7 +23,7 @@ const sections = [
   },
   {
     title: "5. Файлы и коммерческие предложения",
-    text: "Загруженные документы используются для разбора списка и подготовки КП. Сейчас Excel и CSV могут преобразовываться в строки заявки, а PDF и изображения обрабатывает менеджер. Автоматический анализ документов внешним ИИ-сервисом в текущей версии не подключён. При его подключении политика должна быть дополнена сведениями о передаваемых данных и условиях такой обработки до начала передачи файлов.",
+    text: "Загруженные документы, таблицы Excel/CSV, PDF и фотографии смет используются исключительно для разбора перечня материалов и подготовки коммерческого предложения (КП). Для первичного распознавания товарных позиций может применяться AI-ассистент с обязательной проверкой и утверждением менеджером. Персональные контактные данные не передаются сторонним сервисам для рекламных целей.",
   },
   {
     title: "6. Cookies и сеансы",
@@ -41,33 +43,34 @@ const sections = [
   },
   {
     title: "10. Изменения политики",
-    text: "Актуальная редакция размещается на этой странице. Если появятся новые способы обработки, в том числе автоматический анализ документов, описание должно быть обновлено до их использования. Дата редакции: 6 ноября 2026 года.",
+    text: "Актуальная редакция размещается на этой странице. Если появятся новые способы обработки, описание обновляется до их использования. Дата редакции: 16 ноября 2026 года.",
   },
 ];
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const tr = await getTranslator();
   return (
     <>
       <SiteHeader />
       <main className="shell">
         <header className="page-head">
-          <span className="eyebrow">Документы</span>
-          <h1>Политика конфиденциальности</h1>
-          <p>Ваши данные при работе с заявками, предложениями и заказами.</p>
+          <span className="eyebrow">{tr("Документы")}</span>
+          <h1>{tr("Политика конфиденциальности")}</h1>
+          <p>{tr("Ваши данные при работе с заявками, предложениями и заказами.")}</p>
         </header>
         <section className="content-section prose" style={{ maxWidth: 840, paddingBottom: 64 }}>
           {sections.map((section) => (
             <section key={section.title} style={{ marginBottom: 28 }}>
-              <h2>{section.title}</h2>
-              <p>{section.text}</p>
+              <h2>{tr(section.title)}</h2>
+              <p>{tr(section.text)}</p>
             </section>
           ))}
           <p>
             <Link href="/contacts" className="inline-link">
-              Связаться с Stroysnab.tj
+              {tr("Связаться с Stroysnab.tj")}
             </Link>{" "}
             ·{" "}
             <Link href="/account/profile" className="inline-link">
-              Настройки профиля
+              {tr("Настройки профиля")}
             </Link>
           </p>
         </section>

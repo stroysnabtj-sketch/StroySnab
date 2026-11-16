@@ -5,8 +5,11 @@ import path from "node:path";
 import { ApiError } from "@/server/api-error";
 import type { SessionUser } from "@/modules/auth/session";
 import { getOrder, getManagedOrder, type FullOrder } from "./service";
+import { getOrderPaymentSummary } from "./payment-service";
 import { hasPermission } from "@/modules/rbac/permissions";
 import { formatTJS } from "@/modules/system/money";
+import { publicSiteOrigin } from "@/modules/system/site-url";
+import { generateQrMatrix } from "@/modules/system/qr";
 import type { Locale } from "@/i18n/types";
 import { documentDate, documentLabels, documentUnit } from "@/modules/system/document-language";
 
@@ -20,11 +23,19 @@ export type InvoiceOrder = Pick<
   | "deliveryAddress"
   | "vehicleType"
 > & {
+  id?: string;
+  driverName?: string | null;
+  driverPhone?: string | null;
+  vehiclePlate?: string | null;
+  deliveryNotes?: string | null;
+  paymentMethod?: string | null;
+  paidDirams?: string | null;
+  balanceDirams?: string | null;
   roundingPolicy?: "LEGACY_FLOOR" | "HALF_UP";
-  items: Pick<
+  items: (Pick<
     FullOrder["items"][number],
     "productName" | "unit" | "qty" | "priceDirams" | "subtotalDirams"
-  >[];
+  > & { sku?: string | null })[];
   totalDirams: string;
   deliveryTotalDirams: string | null;
 };
@@ -44,7 +55,14 @@ export async function loadInvoiceOrder(
 }
 
 export async function orderPdf(id: string, actor: SessionUser | null, token: string | null, locale: Locale = "ru") {
-  return renderOrderPdf(await loadInvoiceOrder(id, actor, token), locale);
+  const order = await loadInvoiceOrder(id, actor, token);
+  const payment = order.id ? await getOrderPaymentSummary(order.id).catch(() => null) : null;
+  return renderOrderPdf(
+    payment
+      ? { ...order, paidDirams: payment.paidDirams, balanceDirams: payment.balanceDirams }
+      : order,
+    locale,
+  );
 }
 
 export async function renderOrderPdf(order: InvoiceOrder, locale: Locale = "ru") {
@@ -145,15 +163,31 @@ export async function renderOrderPdf(order: InvoiceOrder, locale: Locale = "ru")
   paragraph(
     `${order.vehicleType === "PICKUP" ? labels.pickup : labels.deliveryAddress}: ${[order.deliveryCity, order.deliveryAddress].filter(Boolean).join(", ")}`,
   );
-  y += 18;
-  const sizes = [25, 190, 45, 40, 109, width - 409];
-  const headers = ["№", labels.material, labels.quantity, labels.unit, labels.price, labels.amount];
+  if (order.driverName || order.vehiclePlate) {
+    paragraph(
+      `${labels.driver}: ${[order.driverName, order.driverPhone, order.vehiclePlate].filter(Boolean).join(" / ")}`,
+    );
+  }
+  if (order.deliveryNotes) {
+    paragraph(`${labels.notes}: ${order.deliveryNotes}`);
+  }
+  y += 14;
+  const sizes = [22, 56, 142, 42, 38, 102, width - 402];
+  const headers = [
+    "№",
+    labels.sku,
+    labels.material,
+    labels.quantity,
+    labels.unit,
+    labels.price,
+    labels.amount,
+  ];
   const tableHeader = () => {
     if (y + 40 > bottom) page();
     line(y);
     let x = left;
     headers.forEach((label, i) => {
-      text(label, x + 5, y + 10, sizes[i] - 10, 8, true, i > 3 ? "right" : "left");
+      text(label, x + 5, y + 10, sizes[i] - 10, 8, true, i > 4 ? "right" : "left");
       x += sizes[i];
     });
     y += 30;
@@ -163,6 +197,7 @@ export async function renderOrderPdf(order: InvoiceOrder, locale: Locale = "ru")
   for (const [index, item] of order.items.entries()) {
     const values = [
       String(index + 1),
+      item.sku?.trim() || "-",
       publicProductText(item.productName),
       item.qty,
       documentUnit(item.unit, locale),
@@ -191,7 +226,7 @@ export async function renderOrderPdf(order: InvoiceOrder, locale: Locale = "ru")
         cell
           .slice(offset, offset + rows)
           .forEach((value, n) =>
-            text(value, x + 5, y + 6 + n * 12, sizes[i] - 10, 8.5, false, i > 3 ? "right" : "left"),
+            text(value, x + 5, y + 6 + n * 12, sizes[i] - 10, 8.5, false, i > 4 ? "right" : "left"),
           );
         x += sizes[i];
       });
@@ -200,8 +235,14 @@ export async function renderOrderPdf(order: InvoiceOrder, locale: Locale = "ru")
       offset += rows;
     }
   }
-  if (y + 78 > bottom) page();
-  y += 20;
+  const hasPaymentSummary =
+    order.paidDirams !== undefined &&
+    order.paidDirams !== null &&
+    order.balanceDirams !== undefined &&
+    order.balanceDirams !== null;
+  const footerBlockHeight = (hasPaymentSummary ? 86 : 64) + 92;
+  if (y + footerBlockHeight > bottom) page();
+  y += 16;
   const gap = 12,
     boxWidth = (width - gap) / 2;
   doc.rect(left, y, boxWidth, 44).lineWidth(0.5).strokeColor(rule).stroke();
@@ -234,6 +275,50 @@ export async function renderOrderPdf(order: InvoiceOrder, locale: Locale = "ru")
       width: boxWidth - 24,
       lineBreak: false,
     });
+  y += 54;
+  if (hasPaymentSummary) {
+    text(
+      `${labels.paidLabel}: ${formatTJS(order.paidDirams!)}   |   ${labels.balanceLabel}: ${formatTJS(order.balanceDirams!)}`,
+      left,
+      y,
+      width,
+      8.5,
+      true,
+    );
+    y += 18;
+  }
+  y += 10;
+  const qrReserve = order.id ? 78 : 0;
+  const signAreaWidth = width - qrReserve;
+  const signColWidth = (signAreaWidth - 20) / 3;
+  const signLabels = [labels.releasedBy, labels.deliveredBy, labels.receivedBy];
+  signLabels.forEach((label, idx) => {
+    const sx = left + idx * (signColWidth + 10);
+    text(label, sx, y, signColWidth, 7.5, true);
+    doc
+      .moveTo(sx, y + 28)
+      .lineTo(sx + signColWidth - 6, y + 28)
+      .lineWidth(0.5)
+      .strokeColor(rule)
+      .stroke();
+    text(labels.stampPlace, sx, y + 33, signColWidth, 7);
+  });
+  if (order.id) {
+    const qrBox = 58;
+    const qrX = left + width - qrBox;
+    const qrY = y - 4;
+    const matrix = generateQrMatrix(`${publicSiteOrigin()}/orders/${order.id}`);
+    const cell = (qrBox - 6) / matrix.length;
+    doc.rect(qrX, qrY, qrBox, qrBox).lineWidth(0.5).fillAndStroke("#ffffff", rule);
+    for (let r = 0; r < matrix.length; r++) {
+      for (let c = 0; c < matrix.length; c++) {
+        if (matrix[r][c]) {
+          doc.rect(qrX + 3 + c * cell, qrY + 3 + r * cell, cell + 0.15, cell + 0.15).fill(ink);
+        }
+      }
+    }
+    text(labels.orderQrLabel, qrX - 10, qrY + qrBox + 4, qrBox + 20, 6.5, false, "right");
+  }
   const range = doc.bufferedPageRange();
   for (let i = range.start; i < range.start + range.count; i++) {
     doc.switchToPage(i);

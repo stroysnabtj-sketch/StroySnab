@@ -16,7 +16,13 @@ export default async function AccountProfilePage() {
     .limit(1);
   return (
     <CustomerWorkspace title="Профиль" identity={user.phone || user.email || undefined}>
-      <ProfilePanel initialName={customer?.fullName ?? ""} initialPhone={user.phone ?? ""} />
+      <ProfilePanel
+        initialName={customer?.fullName ?? ""}
+        initialPhone={user.phone ?? ""}
+        initialType={customer?.type === "COMPANY" ? "COMPANY" : "PERSON"}
+        initialCompanyName={customer?.companyName ?? ""}
+        initialTaxId={customer?.taxId ?? ""}
+      />
     </CustomerWorkspace>
   );
 }

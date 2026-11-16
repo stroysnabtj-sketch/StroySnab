@@ -19,4 +19,7 @@ export const resetSchema = z.object({ token: z.string().min(20), password: passw
 export const profileSchema = z.object({
   fullName: z.string().trim().min(2).max(120),
   phone: z.string().min(8),
+  customerType: z.enum(["PERSON", "COMPANY"]).optional(),
+  companyName: z.string().trim().max(160).optional(),
+  taxId: z.string().trim().max(40).optional(),
 });
