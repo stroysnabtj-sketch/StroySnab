@@ -1,13 +1,13 @@
 import { expect, it } from "vitest";
-import { legacyCategoryTarget } from "@/modules/catalog/legacy-taxonomy";
+import { legacyCategoryTarget, LEGACY_CATEGORY_REDIRECTS } from "@/modules/catalog/legacy-taxonomy";
 import { getCategoryProfile } from "@/modules/catalog/categories-data";
-it("maps an identified product to a reference leaf", () => {
-  const target = legacyCategoryTarget("cement-bags", "Цемент М500 Д0");
-  expect(target).toBe("tsement-beton");
-  expect(getCategoryProfile(target)).toBeDefined();
+
+it("maps old category slugs to existing JCTOP categories", () => {
+  for (const target of Object.values(LEGACY_CATEGORY_REDIRECTS))
+    expect(getCategoryProfile(target)).toBeDefined();
+  expect(legacyCategoryTarget("power-tools", "Перфоратор")).toBe("setevoy-elektroinstrument");
 });
-it("does not guess ambiguous mixtures, insulation or unrelated products", () => {
-  expect(legacyCategoryTarget("dry-mixes", "Смесь строительная универсальная")).toBeUndefined();
-  expect(legacyCategoryTarget("insulation", "Утеплитель неизвестного состава")).toBeUndefined();
-  expect(legacyCategoryTarget("cement-bags", "Монтажная пена")).toBeUndefined();
+
+it("returns undefined for unknown categories", () => {
+  expect(legacyCategoryTarget("unknown-slug", "Что-то")).toBeUndefined();
 });

@@ -30,7 +30,15 @@ class LocalStorageDriver implements StorageDriver {
     await writeFile(target, data);
   }
   async get(key: string) {
-    return readFile(this.resolve(key));
+    try {
+      return await readFile(this.resolve(key));
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code === "ENOENT" && key.startsWith("products/2026/jctop-photo-")) {
+        const bundled = path.resolve(process.cwd(), "public", "images", "jctop", path.basename(key));
+        return readFile(bundled);
+      }
+      throw e;
+    }
   }
   async delete(key: string) {
     try {

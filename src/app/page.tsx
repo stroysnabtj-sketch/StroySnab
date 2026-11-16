@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { unstable_cache } from "next/cache";
 import { connection } from "next/server";
-import { ArrowRight, Package, Truck } from "lucide-react";
+import { ArrowRight, Package, Sparkles, Truck } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CategoryTile } from "@/components/category-tile";
@@ -74,9 +74,11 @@ export default async function HomePage() {
                   className="button hero-quote-button"
                   aria-label={tr(content.hero.secondaryLabel)}
                 >
+                  <Sparkles size={16} aria-hidden="true" />
                   <span className="button-label" data-label={tr(content.hero.secondaryLabel)}>
                     {tr(content.hero.secondaryLabel)}
                   </span>
+                  <span className="ai-quote-badge">AI</span>
                 </Link>
               </div>
             </div>

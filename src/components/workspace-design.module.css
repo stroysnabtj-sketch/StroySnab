@@ -62,8 +62,8 @@
   margin: 0;
   padding: 0;
 }
-.workspace .sidebar nav > a,
-.mobileMenu nav > a {
+.workspace .sidebar nav a,
+.mobileMenu nav a {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -77,26 +77,59 @@
   text-decoration: none;
   background: transparent;
 }
-.workspace .sidebar nav > a svg,
-.mobileMenu nav > a svg {
+.workspace .sidebar nav a svg,
+.mobileMenu nav a svg {
   flex-shrink: 0;
   color: #a8c1df;
 }
-.workspace .sidebar nav > a:hover,
-.mobileMenu nav > a:hover {
+.workspace .sidebar nav a:hover,
+.mobileMenu nav a:hover {
   background: #ffffff0c;
   color: white;
 }
-.workspace .sidebar nav > a[aria-current="page"],
-.mobileMenu nav > a[aria-current="page"] {
+.workspace .sidebar nav a[aria-current="page"],
+.mobileMenu nav a[aria-current="page"] {
   background: #fff;
   color: #102f57;
   box-shadow: 0 2px 8px #04162c12;
   font-weight: 700;
 }
-.workspace .sidebar nav > a[aria-current="page"] svg,
-.mobileMenu nav > a[aria-current="page"] svg {
+.workspace .sidebar nav a[aria-current="page"] svg,
+.mobileMenu nav a[aria-current="page"] svg {
   color: #074089;
+}
+.workspace .sidebar nav :global(.workspace-nav-more),
+.mobileMenu nav :global(.workspace-nav-more) {
+  margin-top: 6px;
+  border-top: 1px solid #ffffff1a;
+  padding-top: 6px;
+}
+.workspace .sidebar nav :global(.workspace-nav-more) summary,
+.mobileMenu nav :global(.workspace-nav-more) summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  min-height: 44px;
+  border-radius: 9px;
+  color: #b7cae2;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+.workspace .sidebar nav :global(.workspace-nav-more) summary:hover,
+.mobileMenu nav :global(.workspace-nav-more) summary:hover {
+  background: #ffffff0c;
+  color: #ffffff;
+}
+.workspace .sidebar nav :global(.workspace-nav-more-list),
+.mobileMenu nav :global(.workspace-nav-more-list) {
+  display: grid;
+  gap: 4px;
+  margin-top: 4px;
 }
 .workspace .sidebar nav :global(.badge) {
   margin-left: auto;
@@ -290,6 +323,25 @@
   gap: 10px;
   flex-wrap: wrap;
   margin: 0 0 22px;
+}
+.workspace .content :global(details.import-bar) {
+  display: block;
+}
+.workspace .content :global(details.import-bar) > summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 650;
+  color: #172b45;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+}
+.workspace .content :global(.import-bar-body) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
 }
 .workspace .content :global(.import-bar) > input {
   flex: 1;

@@ -714,6 +714,34 @@
   color: #1557ae;
   box-shadow: none;
 }
+.navMore {
+  margin-top: 4px;
+  border-top: 1px solid #e8eef5;
+  padding-top: 4px;
+}
+.navMore summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  min-height: 44px;
+  border-radius: 9px;
+  color: #4b607b;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  list-style: none;
+}
+.navMore summary:hover {
+  background: #f0f5fc;
+  color: #144fa5;
+}
+.navMoreList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
 .sidebarBottom {
   display: grid;
   gap: 12px;

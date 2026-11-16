@@ -8,7 +8,7 @@ export const markupPercentInput = z
   .regex(/^\d{1,4}(?:\.\d{1,2})?$/)
   .refine((v) => Number(v) <= 1000, "Наценка от 0 до 1000%");
 
-export function productPrice(base: bigint, percent = "7") {
+export function productPrice(base: bigint, percent = "5") {
   const value = markupPercentInput.parse(percent);
   if (base < 0n) throw new Error("Negative price");
   const [whole, fraction = ""] = value.split(".");
@@ -16,7 +16,7 @@ export function productPrice(base: bigint, percent = "7") {
   return base + roundMoneyRatio(base * basisPoints, 10000n);
 }
 
-export function productLinePrice(base: bigint, qty: string, percent = "7") {
+export function productLinePrice(base: bigint, qty: string, percent = "5") {
   const priceDirams = productPrice(base, percent);
   const baseDirams = lineBase(base, qty);
   const subtotalDirams = lineBase(priceDirams, qty);

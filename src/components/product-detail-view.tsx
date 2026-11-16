@@ -10,9 +10,9 @@ import {
   Minus,
   Plus,
   ShoppingCart,
+  Sparkles,
   Truck,
   Package,
-  FileText,
 } from "lucide-react";
 import { ProductArt, getArtVariant } from "@/components/product-art";
 import { ProductCard } from "@/components/product-card";
@@ -253,10 +253,11 @@ export function ProductDetailView({
                 href={`/catalog/request?product=${encodeURIComponent(product.nameRu)}`}
                 className={`button button-secondary ${styles.quoteAction}`}
               >
-                <FileText size={18} />
-                <span className="button-label" data-label="Получить КП">
-                  Получить КП
+                <Sparkles size={17} aria-hidden="true" />
+                <span className="button-label" data-label={tr("Получить КП")}>
+                  {tr("Получить КП")}
                 </span>
+                <span className="ai-quote-badge">AI</span>
               </Link>
               {qty && !validAmount && (
                 <p className={styles.quantityHint} role="status">

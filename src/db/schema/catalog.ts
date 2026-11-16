@@ -44,7 +44,7 @@ export const products = pgTable(
       .references(() => categories.id),
     brand: text("brand"),
     unit: text("unit").notNull(),
-    markupPercent: numeric("markup_percent", { precision: 7, scale: 2 }).notNull().default("7"),
+    markupPercent: numeric("markup_percent", { precision: 7, scale: 2 }).notNull().default("5"),
     status: text("status").notNull().default("DRAFT"),
     createdBySupplierId: uuid("created_by_supplier_id").references(() => suppliers.id, {
       onDelete: "set null",

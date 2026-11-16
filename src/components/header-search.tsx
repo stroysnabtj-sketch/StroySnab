@@ -4,9 +4,9 @@ import Link from "next/link";
 import { Search, ArrowUpRight } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-type Suggestion = { name: string; slug: string };
+type Suggestion = { name: string; nameTg?: string | null; sku?: string; slug: string };
 export function HeaderSearch() {
-  const { tr } = useLocale();
+  const { tr, locale } = useLocale();
   const [q, setQ] = useState("");
   const [items, setItems] = useState<Suggestion[]>([]);
   const [open, setOpen] = useState(false);
@@ -104,10 +104,19 @@ export function HeaderSearch() {
               onClick={() => setOpen(false)}
             >
               <Search size={15} />
-              <span>{item.name}</span>
+              <span>{locale === "tg" ? item.nameTg || item.name : item.name}</span>
+              {item.sku && <small className="search-suggestion-sku">{item.sku}</small>}
               <ArrowUpRight size={14} />
             </Link>
           ))}
+          <Link
+            className="search-suggestions-all"
+            href={`/catalog?q=${encodeURIComponent(q.trim())}`}
+            onClick={() => setOpen(false)}
+          >
+            <span>{tr("Все результаты поиска")}</span>
+            <ArrowUpRight size={14} />
+          </Link>
         </div>
       )}
     </div>

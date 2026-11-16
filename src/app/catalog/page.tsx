@@ -18,8 +18,8 @@ import { EmptyState } from "@/components/ui";
 import { listCatalog, listCategories } from "@/modules/catalog/service";
 import { toDirams } from "@/modules/system/money";
 export const metadata: Metadata = {
-  title: "Каталог строительных материалов | Stroysnab.tj",
-  description: "Строительные материалы: цены, характеристики и наличие.",
+  title: "Каталог инструментов и оборудования JCTOP | Stroysnab.tj",
+  description: "Официальный каталог JCTOP 2026: электроинструмент, ручной инструмент, силовое оборудование и оснастка в Душанбе.",
   alternates: { canonical: "/catalog" },
 };
 type Params = Record<string, string | string[] | undefined>;
@@ -96,14 +96,14 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
     <nav className="breadcrumbs" aria-label="Хлебные крошки">
       <Link href="/">{tr("Главная")}</Link>
       <span>/</span>
-      <Link href="/catalog">Каталог</Link>
+      <Link href="/catalog">{tr("Каталог")}</Link>
       {ancestors.map((c) => (
         <span key={c.id}>
           {" "}
-          / <Link href={`/catalog?category=${encodeURIComponent(c.slug)}`}>{c.nameRu}</Link>
+          / <Link href={`/catalog?category=${encodeURIComponent(c.slug)}`}>{tr(c.nameRu)}</Link>
         </span>
       ))}
-      {current && <span aria-current="page"> / {current.nameRu}</span>}
+      {current && <span aria-current="page"> / {tr(current.nameRu)}</span>}
     </nav>
   );
   const roots = categories.filter((category) => !category.parentId);
@@ -130,7 +130,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
         <SiteHeader />
         <main className="shell catalog-browse-page">
           {breadcrumb}
-          <h1 className="sr-only">{current?.nameRu ?? "Каталог"}</h1>
+          <h1 className="sr-only">{current ? tr(current.nameRu) : tr("Каталог")}</h1>
           <section className="catalog-category-grid" aria-label="Категории каталога">
             {children.map((category, index) => (
               <CategoryReveal key={category.id} index={index} columns={4}>
@@ -190,7 +190,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
           </aside>
           <section className="catalog-results" aria-live="polite">
             <div className="catalog-toolbar">
-              <h1 className="toolbar-title">Товары</h1>
+              <h1 className="toolbar-title">{current ? tr(current.nameRu) : tr("Товары")}</h1>
               <span className="catalog-price-caption">{tr("Цены в сомони")}</span>
               <CatalogSortSelect currentSort={query.sort} currentCategory={categorySlug} />
             </div>

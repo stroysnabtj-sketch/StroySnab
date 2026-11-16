@@ -20,7 +20,7 @@ export const productInput = z.object({
   categoryId: z.string().uuid(),
   brand: z.string().max(120).optional().nullable(),
   unit: z.string().min(1).max(30),
-  markupPercent: markupPercentInput.default("7"),
+  markupPercent: markupPercentInput.default("5"),
   status: z.enum(["DRAFT", "PENDING", "PUBLISHED", "REJECTED", "ARCHIVED"]).default("DRAFT"),
   createdBySupplierId: z.string().uuid().optional().nullable(),
   rejectReason: z.string().trim().max(2000).optional().nullable(),

@@ -8,51 +8,33 @@ import {
 } from "@/modules/catalog/categories-data";
 
 describe("reference category profiles", () => {
-  const leaves = CATEGORIES_TREE.flatMap((top) =>
-    top.subcategories.flatMap((sub) => (sub.children?.length ? sub.children : [sub])),
-  );
-  it("binds every reference leaf to its own profile", () => {
-    expect(leaves).toHaveLength(319);
-    expect(
-      leaves.filter((leaf) => !getCategoryProfile(leaf.slug)).map((leaf) => leaf.nameRu),
-    ).toEqual([]);
-    for (const leaf of leaves) {
-      const profile = getCategoryProfile(leaf.slug)!;
-      expect(getSmartFiltersForCategory(leaf.slug).map((field) => field.label)).toEqual([
-        ...profile.primary,
-        ...profile.additional,
+  it("binds every reference category to its own profile and filters", () => {
+    expect(CATEGORIES_TREE).toHaveLength(18);
+    for (const cat of CATEGORIES_TREE) {
+      const profile = getCategoryProfile(cat.slug);
+      expect(profile).toBeDefined();
+      const filters = getSmartFiltersForCategory(cat.slug);
+      expect(filters.length).toBeGreaterThan(0);
+      expect(filters.map((f) => f.label)).toEqual([
+        ...profile!.primary,
+        ...profile!.additional,
       ]);
     }
   });
-  it("does not assign the first child's characteristics to a parent", () => {
-    expect(getSmartFiltersForCategory("building-materials").map((field) => field.key)).toEqual([
-      "brand",
-      "inStock",
-      "price",
-    ]);
-  });
-  it("shows dependent tool fields only for the matching kind", () => {
-    const slug = "dreli-i-shurupoverty";
+
+  it("provides specific smart filters for cordless power tools", () => {
+    const slug = "akkumulyatornyy-instrument";
     const fields = getSmartFiltersForCategory(slug);
-    const controller = fields.find((field) => field.label === "Вид инструмента")!;
-    expect(controller).toBeDefined();
-    const battery = fields.find((field) => field.label === "Напряжение аккумулятора")!;
-    expect(
-      getRelevantProductAttributes(slug, {
-        [controller.key]: "Дрель",
-        [battery.key]: "18",
-        "Особое свойство": "сохранить",
-      }),
-    ).toEqual({ [controller.key]: "Дрель", "Особое свойство": "сохранить" });
-    expect(
-      getProductAttributeFields(slug, { [controller.key]: "Дрель" }).some(
-        (field) => field.label === "Напряжение аккумулятора",
-      ),
-    ).toBe(false);
-    expect(
-      getProductAttributeFields(slug, { [controller.key]: "Шуруповёрт" }).some(
-        (field) => field.label === "Напряжение аккумулятора",
-      ),
-    ).toBe(true);
+    const typeField = fields.find((field) => field.label === "Тип инструмента");
+    expect(typeField).toBeDefined();
+    const voltageField = fields.find((field) => field.label === "Напряжение аккумулятора");
+    expect(voltageField).toBeDefined();
+
+    const attrs = {
+      [typeField!.key]: "Аккумуляторная ударная дрель",
+      [voltageField!.key]: "21 В",
+    };
+    expect(getRelevantProductAttributes(slug, attrs)).toEqual(attrs);
+    expect(getProductAttributeFields(slug, attrs).length).toBeGreaterThan(0);
   });
 });

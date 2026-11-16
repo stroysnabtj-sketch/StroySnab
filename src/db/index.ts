@@ -10,6 +10,7 @@ import { drizzle as drizzlePglite } from "drizzle-orm/pglite";
 import { migrate as migratePglite } from "drizzle-orm/pglite/migrator";
 import { Pool } from "pg";
 import * as schema from "./schema";
+import { ensureJctopCatalog } from "../modules/catalog/jctop-sync";
 
 export type AppDatabase = NodePgDatabase<typeof schema>;
 export type DbTransaction = Parameters<Parameters<AppDatabase["transaction"]>[0]>[0];
@@ -32,6 +33,14 @@ async function initialize(): Promise<AppDatabase> {
     try {
       await migrationLock.query("SELECT pg_advisory_lock(hashtext('stroysnab-schema-migrations'))");
       await migrateNode(database, { migrationsFolder });
+      if (!process.env.VITEST) {
+        const result = await ensureJctopCatalog(database);
+        if (result.synced) {
+          console.log(
+            `Synchronized JCTOP catalog (${result.categories} categories, ${result.products} products)`,
+          );
+        }
+      }
     } finally {
       await migrationLock
         .query("SELECT pg_advisory_unlock(hashtext('stroysnab-schema-migrations'))")

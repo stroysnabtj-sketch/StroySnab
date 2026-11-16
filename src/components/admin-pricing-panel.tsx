@@ -7,7 +7,7 @@ import { toDirams, formatTJS } from "@/modules/system/money";
 import styles from "@/components/workspace-design.module.css";
 export function AdminPricingPanel() {
   const [base, setBase] = useState("100"),
-    [percent, setPercent] = useState("7");
+    [percent, setPercent] = useState("5");
   let total: bigint | null = null;
   try {
     total = productPrice(toDirams(base), percent.replace(",", "."));

@@ -89,7 +89,7 @@ describe("catalog facet intersection", () => {
     expect(
       result.items.every(
         (item) =>
-          item.priceDirams === "10701" && !item.oldPriceDirams && !item.isHit && !item.isNew,
+          item.priceDirams === "10501" && !item.oldPriceDirams && !item.isHit && !item.isNew,
       ),
     ).toBe(true);
     expect(result.facets.find((f) => f.key === "Color")?.options).toEqual(

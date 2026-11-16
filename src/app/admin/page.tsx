@@ -7,9 +7,6 @@ import {
   ClipboardList,
   ShoppingBag,
   Truck,
-  FolderTree,
-  Users,
-  History,
 } from "lucide-react";
 import { Workspace } from "@/components/workspace";
 import { requirePageUser } from "@/modules/auth/page";
@@ -149,38 +146,6 @@ export default async function AdminPage() {
         ]
       : []),
   ];
-  const shortcuts = [
-    {
-      href: "/admin/deliveries",
-      label: "Очередь доставок",
-      permission: "deliveries:manage" as const,
-      icon: Truck,
-    },
-    {
-      href: "/admin/categories",
-      label: "Категории и характеристики",
-      permission: "catalog:manage" as const,
-      icon: FolderTree,
-    },
-    {
-      href: "/admin/users",
-      label: "Пользователи и доступы",
-      permission: "users:manage" as const,
-      icon: Users,
-    },
-    {
-      href: "/admin/audit",
-      label: "Журнал действий",
-      permission: "audit:read" as const,
-      icon: History,
-    },
-    {
-      href: "/admin/suppliers",
-      label: "Поставщики",
-      permission: "suppliers:manage" as const,
-      icon: Store,
-    },
-  ].filter((row) => can(row.permission));
   return (
     <Workspace kind="admin" newRequestsCount={requestStats[0]?.value}>
       <header className={styles.pageHeading}>
@@ -259,23 +224,7 @@ export default async function AdminPage() {
             </div>
           </section>
         )}
-        {shortcuts.length > 0 && (
-          <section className={styles.panel}>
-            <div className={styles.panelHead}>
-              <h2>Быстрые переходы</h2>
-            </div>
-            <div className={styles.quickLinks}>
-              {shortcuts.map((row) => (
-                <Link href={row.href} key={row.href}>
-                  <row.icon size={20} />
-                  {row.label}
-                  <ArrowRight size={16} />
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-        {!cards.length && !shortcuts.length && (
+        {!cards.length && (
           <section className={styles.panel}>
             <h2>Доступ к рабочим разделам</h2>
             <p className={styles.emptyText}>

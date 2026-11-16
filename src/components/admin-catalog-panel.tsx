@@ -53,7 +53,7 @@ const blank = {
   categoryId: "",
   brand: "",
   unit: "шт.",
-  markupPercent: "7",
+  markupPercent: "5",
   status: "DRAFT",
   descriptionRu: "",
   rejectReason: "",
@@ -314,6 +314,23 @@ export function AdminCatalogPanel() {
           </Select>
         </div>
         <div className="admin-actions">
+          <Button
+            onClick={() => {
+              editRequest.current++;
+              setAttributesLoading(false);
+              setError("");
+              setEditing(null);
+              setForm({ ...blank, categoryId: "" });
+              setOpen(true);
+            }}
+          >
+            Добавить товар
+          </Button>
+        </div>
+      </div>
+      <details className="import-bar">
+        <summary>Импорт и экспорт (CSV / XLSX)</summary>
+        <div className="import-bar-body">
           <Link
             className="button button-secondary"
             href="/api/admin/catalog/products/export?format=csv&template=1"
@@ -335,42 +352,28 @@ export function AdminCatalogPanel() {
           >
             XLSX
           </Link>
+          <Input
+            type="file"
+            accept=".csv,.xlsx"
+            onChange={(event) => setImportFile(event.target.files?.[0] ?? null)}
+            aria-label="Файл импорта"
+          />
           <Button
-            onClick={() => {
-              editRequest.current++;
-              setAttributesLoading(false);
-              setError("");
-              setEditing(null);
-              setForm({ ...blank, categoryId: "" });
-              setOpen(true);
-            }}
+            variant="secondary"
+            onClick={() => importProducts(true)}
+            disabled={!importFile || pending}
           >
-            Добавить товар
+            Проверить файл
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => importProducts(false)}
+            disabled={!importFile || pending}
+          >
+            Импортировать
           </Button>
         </div>
-      </div>
-      <div className="import-bar">
-        <Input
-          type="file"
-          accept=".csv,.xlsx"
-          onChange={(event) => setImportFile(event.target.files?.[0] ?? null)}
-          aria-label="Файл импорта"
-        />
-        <Button
-          variant="secondary"
-          onClick={() => importProducts(true)}
-          disabled={!importFile || pending}
-        >
-          Проверить файл
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={() => importProducts(false)}
-          disabled={!importFile || pending}
-        >
-          Импортировать
-        </Button>
-      </div>
+      </details>
       <ResourceState
         loading={loading}
         error={loadError}

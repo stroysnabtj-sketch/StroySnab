@@ -72,10 +72,28 @@ export async function listCatalog(query: CatalogQuery) {
     conditions.push(ids.size ? inArray(products.categoryId, [...ids]) : sql`false`);
   }
   const search = query.q?.trim();
-  if (search)
-    conditions.push(
-      sql`(to_tsvector('russian', coalesce(${products.nameRu}, '') || ' ' || coalesce(${products.descriptionRu}, '') || ' ' || coalesce(${products.brand}, '')) @@ plainto_tsquery('russian', ${search}) OR similarity(${products.nameRu}, ${search}) > 0.12 OR ${products.nameRu} ILIKE ${`%${search}%`} OR ${products.nameTg} ILIKE ${`%${search}%`} OR ${products.descriptionTg} ILIKE ${`%${search}%`} OR ${products.sku} ILIKE ${`%${search}%`})`,
-    );
+  const tokens = search ? search.split(/\s+/).filter(Boolean).slice(0, 6) : [];
+  if (search) {
+    if (tokens.length > 1) {
+      for (const token of tokens) {
+        const pattern = `%${token}%`;
+        conditions.push(
+          or(
+            ilike(products.nameRu, pattern),
+            ilike(products.nameTg, pattern),
+            ilike(products.sku, pattern),
+            ilike(products.descriptionRu, pattern),
+            ilike(products.descriptionTg, pattern),
+            ilike(products.brand, pattern),
+          )!,
+        );
+      }
+    } else {
+      conditions.push(
+        sql`(to_tsvector('russian', coalesce(${products.nameRu}, '') || ' ' || coalesce(${products.descriptionRu}, '') || ' ' || coalesce(${products.brand}, '')) @@ plainto_tsquery('russian', ${search}) OR similarity(${products.nameRu}, ${search}) > 0.12 OR ${products.nameRu} ILIKE ${`%${search}%`} OR ${products.nameTg} ILIKE ${`%${search}%`} OR ${products.descriptionRu} ILIKE ${`%${search}%`} OR ${products.descriptionTg} ILIKE ${`%${search}%`} OR ${products.sku} ILIKE ${`%${search}%`})`,
+      );
+    }
+  }
   const rows = await db
     .select({ product: products, category: categories })
     .from(products)
@@ -275,7 +293,20 @@ export async function listCatalog(query: CatalogQuery) {
         : 0;
   if (query.sort === "price_asc") items.sort(priceCompare);
   else if (query.sort === "price_desc") items.sort((a, b) => priceCompare(b, a));
-  else if (query.sort === "name") items.sort((a, b) => a.name.localeCompare(b.name, "ru"));
+  else if (search) {
+    const qLower = search.toLocaleLowerCase("ru");
+    const rank = (item: PublicProduct) => {
+      const skuLower = item.sku.toLocaleLowerCase("ru");
+      const nameLower = item.name.toLocaleLowerCase("ru");
+      if (skuLower === qLower) return 0;
+      if (skuLower.startsWith(qLower)) return 1;
+      if (nameLower.startsWith(qLower)) return 2;
+      if (nameLower.includes(qLower)) return 3;
+      const tokenHits = tokens.filter((t) => nameLower.includes(t.toLocaleLowerCase("ru"))).length;
+      return 10 - tokenHits;
+    };
+    items.sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name, "ru"));
+  } else if (query.sort === "name") items.sort((a, b) => a.name.localeCompare(b.name, "ru"));
   if (query.diverse) {
     const groups = new Map<string, PublicProduct[]>();
     for (const item of items) {
@@ -421,21 +452,63 @@ export async function getPublicProduct(slug: string, includeRelated = true) {
 }
 
 export async function searchSuggestions(q: string) {
-  if (q.trim().length < 2) return [];
+  const query = q.trim();
+  if (query.length < 2) return [];
   const db = await getDb();
+  const tokens = query.split(/\s+/).filter(Boolean).slice(0, 5);
+  const matchCondition =
+    tokens.length > 1
+      ? and(
+          ...tokens.map(
+            (token) =>
+              or(
+                ilike(products.nameRu, `%${token}%`),
+                ilike(products.nameTg, `%${token}%`),
+                ilike(products.sku, `%${token}%`),
+                ilike(products.descriptionRu, `%${token}%`),
+              )!,
+          ),
+        )
+      : or(
+          ilike(products.sku, `%${query}%`),
+          ilike(products.nameRu, `%${query}%`),
+          ilike(products.nameTg, `%${query}%`),
+          ilike(products.descriptionRu, `%${query}%`),
+          sql`similarity(${products.nameRu}, ${query}) > 0.12`,
+        );
+
   const items = await db
-    .select({ name: products.nameRu, slug: products.slug })
+    .select({
+      name: products.nameRu,
+      nameTg: products.nameTg,
+      sku: products.sku,
+      slug: products.slug,
+    })
     .from(products)
     .where(
       and(
         eq(products.status, "PUBLISHED"),
         sql`${products.categoryId} in (${visibleCategoryIds})`,
-        or(ilike(products.nameRu, `%${q}%`), sql`similarity(${products.nameRu}, ${q}) > 0.12`),
+        matchCondition,
       ),
     )
-    .orderBy(desc(sql`similarity(${products.nameRu}, ${q})`))
+    .orderBy(
+      sql`case
+        when lower(${products.sku}) = lower(${query}) then 0
+        when ${products.sku} ilike ${`${query}%`} then 1
+        when ${products.nameRu} ilike ${`${query}%`} then 2
+        when ${products.nameRu} ilike ${`%${query}%`} then 3
+        else 4
+      end`,
+      desc(sql`similarity(${products.nameRu}, ${query})`),
+      asc(products.nameRu),
+    )
     .limit(7);
-  return items.map((item) => ({ ...item, name: publicProductText(item.name) }));
+  return items.map((item) => ({
+    ...item,
+    name: publicProductText(item.name),
+    nameTg: item.nameTg ? publicProductText(item.nameTg) : null,
+  }));
 }
 
 export async function listCategories(options: { includeInactive?: boolean } = {}) {

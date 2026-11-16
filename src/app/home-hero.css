@@ -1,5 +1,6 @@
 .storefront-home .home-hero-wrap {
   display: block;
+  padding-top: clamp(18px, 2.4vw, 30px);
 }
 .storefront-home .store-hero {
   display: block;
@@ -82,6 +83,12 @@
 .storefront-home .store-hero .hero-quote-button {
   background: #ffffff0d;
   border: 1px solid #ffffff73;
+  gap: 8px;
+}
+.storefront-home .store-hero .hero-quote-button .ai-quote-badge {
+  background: #ffffff29;
+  border: 1px solid #ffffff52;
+  color: #ffffff;
 }
 .storefront-home .store-hero .hero-shop-button:focus-visible,
 .storefront-home .store-hero .hero-quote-button:focus-visible {
@@ -100,6 +107,9 @@
   }
 }
 @media (max-width: 600px) {
+  .storefront-home .home-hero-wrap {
+    padding-top: 14px;
+  }
   .storefront-home .store-hero {
     min-height: 478px;
     border-radius: 20px;

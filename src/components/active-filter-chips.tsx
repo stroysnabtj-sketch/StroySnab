@@ -2,10 +2,12 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { X } from "lucide-react";
+import { useLocale } from "@/i18n/provider";
 
 export function ActiveFilterChips({ currentCategory, facetLabels = {} }: { currentCategory?: string; facetLabels?: Record<string,{label:string;unit?:string}> }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { tr } = useLocale();
 
   // Игнорируемые системные параметры
   const ignoredKeys = new Set(["page", "sort", "pageSize", "category", "attributeName"]);
@@ -15,27 +17,28 @@ export function ActiveFilterChips({ currentCategory, facetLabels = {} }: { curre
   searchParams.forEach((value, key) => {
     if (ignoredKeys.has(key)) return;
     if (key === "q" && value) {
-      activeChips.push({ key, value, label: `Поиск: ${value}` });
+      activeChips.push({ key, value, label: `${tr("Поиск")}: ${value}` });
     } else if (key === "category" && value) {
-      // Категория отображается в хлебных крошках и шапке, но можно дать сбросить
-      activeChips.push({ key, value, label: `Категория: ${value}` });
+      activeChips.push({ key, value, label: `${tr("Категория")}: ${value}` });
     } else if (key === "brand" && value) {
-      activeChips.push({ key, value, label: `Бренд: ${value}` });
+      activeChips.push({ key, value, label: `${tr("Бренд")}: ${value}` });
     } else if (key === "inStock" && value === "1") {
-      activeChips.push({ key, value, label: "В наличии" });
+      activeChips.push({ key, value, label: tr("В наличии") });
     } else if (key === "minPrice" && value) {
-      activeChips.push({ key, value, label: `От ${value} TJS` });
+      activeChips.push({ key, value, label: `${tr("От")} ${value} TJS` });
     } else if (key === "maxPrice" && value) {
-      activeChips.push({ key, value, label: `До ${value} TJS` });
+      activeChips.push({ key, value, label: `${tr("До")} ${value} TJS` });
     } else if (value) {
       const range = key.match(/^range(Min|Max)\.(.+)$/);
       const field = facetLabels[range?.[2] ?? key];
+      const fieldName = tr(field?.label ?? range?.[2] ?? key);
+      const valName = tr(value);
       activeChips.push({
         key,
         value,
         label: range
-          ? `${field?.label ?? range[2]} ${range[1] === "Min" ? "от" : "до"} ${value}${field?.unit ? ` ${field.unit}` : ""}`
-          : `${field?.label ?? key}: ${value}`,
+          ? `${fieldName} ${range[1] === "Min" ? tr("От").toLowerCase() : tr("До").toLowerCase()} ${value}${field?.unit ? ` ${field.unit}` : ""}`
+          : `${fieldName}: ${valName}`,
       });
     }
   });
@@ -61,7 +64,7 @@ export function ActiveFilterChips({ currentCategory, facetLabels = {} }: { curre
 
   return (
     <div className="active-filters-bar" aria-label="Применённые фильтры">
-      <span className="active-filters-label">Выбрано:</span>
+      <span className="active-filters-label">{tr("Выбрано")}:</span>
       <div className="active-chips-list">
         {activeChips.map((chip, idx) => (
           <button
@@ -77,7 +80,7 @@ export function ActiveFilterChips({ currentCategory, facetLabels = {} }: { curre
         ))}
         {activeChips.length > 1 && (
           <button type="button" className="filter-clear-all-btn" onClick={clearAll}>
-            Очистить все
+            {tr("Очистить все")}
           </button>
         )}
       </div>

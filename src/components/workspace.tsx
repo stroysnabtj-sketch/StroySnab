@@ -79,18 +79,36 @@ export async function Workspace({
     { href: "/admin/audit", label: "Журнал действий", permission: "audit:read", icon: History },
   ];
   const links = adminLinks.filter((l) => user && hasPermission(user.role, l.permission));
+  const primaryHrefs = new Set([
+    "/admin",
+    "/admin/orders",
+    "/admin/procurement",
+    "/admin/deliveries",
+    "/admin/catalog",
+    "/admin/categories",
+    "/admin/product-requests",
+  ]);
+  const primaryLinks = links.filter((link) => primaryHrefs.has(link.href));
+  const secondaryLinks = links.filter((link) => !primaryHrefs.has(link.href));
   const role = user ? ROLE_LABELS[user.role] : "Сотрудник";
+  const renderLink = (link: (typeof links)[number]) => (
+    <WorkspaceNavLink key={link.href} href={link.href}>
+      <link.icon size={18} />
+      <span>{link.label}</span>
+      {link.href === "/admin/product-requests" && Boolean(newRequestsCount) && (
+        <span className="badge">{newRequestsCount}</span>
+      )}
+    </WorkspaceNavLink>
+  );
   const menu = (
     <nav aria-label={"Управление магазином"}>
-      {links.map((link) => (
-        <WorkspaceNavLink key={link.href} href={link.href}>
-          <link.icon size={18} />
-          <span>{link.label}</span>
-          {link.href === "/admin/product-requests" && Boolean(newRequestsCount) && (
-            <span className="badge">{newRequestsCount}</span>
-          )}
-        </WorkspaceNavLink>
-      ))}
+      {primaryLinks.map(renderLink)}
+      {secondaryLinks.length > 0 && (
+        <details className="workspace-nav-more">
+          <summary>Ещё разделы</summary>
+          <div className="workspace-nav-more-list">{secondaryLinks.map(renderLink)}</div>
+        </details>
+      )}
     </nav>
   );
   return (

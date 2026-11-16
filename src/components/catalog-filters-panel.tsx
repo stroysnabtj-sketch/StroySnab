@@ -396,7 +396,7 @@ export function CatalogFiltersPanel({
                   onClick={() => toggleGroup(facet.key)}
                   aria-expanded={openGroups[facet.key] ?? true}
                 >
-                  <span>{facet.label}</span>
+                  <span>{tr(facet.label)}</span>
                   {(openGroups[facet.key] ?? true) ? (
                     <ChevronUp size={16} />
                   ) : (
@@ -430,14 +430,14 @@ export function CatalogFiltersPanel({
                         value={searchParams.get(facet.key) ?? ""}
                         onChange={(event) => selectFilter(facet.key, event.target.value)}
                       >
-                        <option value="">Все</option>
+                        <option value="">{tr("Все")}</option>
                         {facet.options.map((option) => (
                           <option
                             key={option.value}
                             value={option.value}
                             disabled={option.count === 0 && !isSelected(facet.key, option.value)}
                           >
-                            {option.value} ({option.count})
+                            {tr(option.value)} ({option.count})
                           </option>
                         ))}
                       </CustomSelect>
@@ -454,7 +454,7 @@ export function CatalogFiltersPanel({
                                 onChange={() => toggleFilter(facet.key, opt.value)}
                               />
                               <span className="checkbox-custom" />
-                              <span className="filter-option-label">{opt.value}</span>
+                              <span className="filter-option-label">{tr(opt.value)}</span>
                               {<span className="filter-count-badge">{opt.count}</span>}
                             </label>
                           );

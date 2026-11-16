@@ -218,6 +218,13 @@
       "when": 1794580006000,
       "tag": "0030_exact_money_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1794580007000,
+      "tag": "0031_product_markup_five",
+      "breakpoints": true
     }
   ]
 }

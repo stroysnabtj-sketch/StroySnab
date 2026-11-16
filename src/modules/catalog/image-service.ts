@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import sharp from "sharp";
 import { z } from "zod";
 import { and, eq, sql } from "drizzle-orm";
@@ -125,5 +127,19 @@ export async function readProductFile(fileId: string, previewActor?: SessionUser
     .where(and(eq(files.id, fileId), access))
     .limit(1);
   if (!file) return null;
-  return { mime: file.mime, data: await getStorage().get(file.storageKey) };
+  try {
+    return { mime: file.mime, data: await getStorage().get(file.storageKey) };
+  } catch (error) {
+    if (file.storageKey.startsWith("products/2026/jctop-photo-")) {
+      const bundled = path.resolve(
+        process.cwd(),
+        "public",
+        "images",
+        "jctop",
+        path.basename(file.storageKey),
+      );
+      return { mime: file.mime, data: await readFile(bundled) };
+    }
+    throw error;
+  }
 }
