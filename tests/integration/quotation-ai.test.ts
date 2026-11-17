@@ -1,6 +1,7 @@
+import { randomInt } from "node:crypto";
 import { notificationOutbox } from "@/db/schema/notifications";
 import { dispatchNotifications } from "@/modules/notifications/worker";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeEach, expect, it, vi } from "vitest";
 import { eq, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
@@ -16,6 +17,14 @@ import { processQuotationJob, retryQuotationJob } from "@/modules/procurement/ai
 import { getProcurementRequest } from "@/modules/procurement/service";
 import type { SessionUser } from "@/modules/auth/session";
 afterEach(() => vi.unstubAllEnvs());
+beforeEach(async () => {
+  const db = await getDb();
+  await db.delete(quotationJobs);
+});
+afterAll(async () => {
+  const db = await getDb();
+  await db.delete(quotationJobs);
+});
 async function setup() {
   vi.stubEnv("AI_QUOTATION_ENABLED", "true");
   vi.stubEnv("DEEPSEEK_API_KEY", "fake-test-key");
@@ -150,48 +159,56 @@ it("publishes labelled alternatives and excludes repeated demand beyond stock fr
     .where(eq(suppliers.status, "ACTIVE"))
     .limit(1);
   const sku = `AUTO-${crypto.randomUUID()}`;
+  const tag = String(randomInt(100000, 999999));
   const [product] = await db
     .insert(products)
     .values({
       sku,
       slug: sku.toLowerCase(),
-      nameRu: "Материалтестовый М500 стандарт",
+      nameRu: `Материалтестовый М${tag} стандарт`,
       categoryId: base.categoryId,
       unit: "мешок",
       status: "PUBLISHED",
     })
     .returning();
-  await db.insert(supplierOffers).values({
-    productId: product.id,
-    supplierId: supplier.id,
-    supplierPriceDirams: 10000n,
-    stockQty: "10",
-    minOrderQty: "1",
-  });
-  const request = await submitProcurementRequest(input, [file], {
-    ...buyer,
-    role: "CUSTOMER",
-  } as SessionUser);
-  await processQuotationJob({
-    name: "test",
-    extract: async () => ({
-      lines: [
-        { name: "Материалтестовый М500", qty: "6", unit: "меш." },
-        { name: "Материалтестовый М500", qty: "6", unit: "меш." },
-      ],
-      warnings: [],
-    }),
-  });
-  const view = await getProcurementRequest(request.id, {
-    ...buyer,
-    role: "CUSTOMER",
-  } as SessionUser);
-  expect(view.quotation?.status).toBe("SENT");
-  expect(view.quotation?.lines).toHaveLength(1);
-  expect(view.quotation?.lines[0].name).toContain("Альтернатива:");
-  expect(view.quotation?.conditions).toContain("Не включены в стоимость (1)");
-  expect(view.quotation?.totalDirams).toBe("64200");
-  expect(view.preparation?.lines?.filter((l) => l.issue)).toHaveLength(1);
+  try {
+    await db.insert(supplierOffers).values({
+      productId: product.id,
+      supplierId: supplier.id,
+      supplierPriceDirams: 10000n,
+      stockQty: "10",
+      minOrderQty: "1",
+    });
+    const request = await submitProcurementRequest(input, [file], {
+      ...buyer,
+      role: "CUSTOMER",
+    } as SessionUser);
+    await processQuotationJob({
+      name: "test",
+      extract: async () => ({
+        lines: [
+          { name: `Материалтестовый М${tag}`, qty: "6", unit: "меш." },
+          { name: `Материалтестовый М${tag}`, qty: "6", unit: "меш." },
+        ],
+        warnings: [],
+      }),
+    });
+    const view = await getProcurementRequest(request.id, {
+      ...buyer,
+      role: "CUSTOMER",
+    } as SessionUser);
+    expect(view.quotation?.status).toBe("SENT");
+    expect(view.quotation?.lines).toHaveLength(1);
+    expect(view.quotation?.lines[0].name).toBe(`Материалтестовый М${tag} стандарт`);
+    expect(view.quotation?.conditions).toContain(
+      `По запросу «Материалтестовый М${tag}» подобран товар:`,
+    );
+    expect(view.quotation?.conditions).toContain("Не включены в стоимость (1)");
+    expect(view.quotation?.totalDirams).toBe("63000");
+    expect(view.preparation?.lines?.filter((l) => l.issue)).toHaveLength(1);
+  } finally {
+    await db.delete(products).where(eq(products.id, product.id));
+  }
 });
 
 it("allows more than the former per-customer and global AI quotas", async () => {

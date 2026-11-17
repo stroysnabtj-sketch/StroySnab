@@ -2,10 +2,19 @@ import { afterAll, expect, it } from "vitest";
 import { randomInt } from "node:crypto";
 import { eq, sql } from "drizzle-orm";
 import { closeDb, getDb } from "@/db";
-import { customers, users } from "@/db/schema";
+import { customers, settings, supplierOffers, users } from "@/db/schema";
 import { registerCustomer } from "@/modules/auth/service";
-import { getReferralSummary, linkReferral } from "@/modules/referrals/service";
+import {
+  getReferralBonusPercent,
+  getReferralSummary,
+  linkReferral,
+  listAdminReferrals,
+  REFERRAL_BONUS_SETTING_KEY,
+  updateReferralBonusPercent,
+} from "@/modules/referrals/service";
 import { requestContactCode, verifyContactCode } from "@/modules/auth/contact-code";
+import { addCartItem } from "@/modules/cart/service";
+import { changeOrderStatus, createOrder } from "@/modules/orders/service";
 afterAll(closeDb);
 async function buyer(refCode?: string) {
   const suffix = crypto.randomUUID();
@@ -159,4 +168,107 @@ it("enforces unique referral codes and rejects self links and duplicate invitati
       sql`insert into referral_bonuses (referrer_customer_id,referred_customer_id,bonus_amount_dirams) values (${a.customerId},${b.customerId},-1)`,
     ),
   ).rejects.toThrow();
+});
+
+it("credits configurable 2% referral bonus once when referred friend's order is delivered", async () => {
+  const db = await getDb();
+  const [admin] = await db.select().from(users).where(eq(users.role, "SUPER_ADMIN")).limit(1);
+  expect(admin).toBeTruthy();
+
+  try {
+    expect(await getReferralBonusPercent()).toBe("2");
+    const updated = await updateReferralBonusPercent(
+      { id: admin.id, role: "SUPER_ADMIN" },
+      { bonusPercent: "2" },
+      "test-referral",
+    );
+    expect(updated.bonusPercent).toBe("2");
+
+    const owner = await buyer();
+    const { code } = await getReferralSummary(owner.id);
+    const friend = await buyer(code);
+
+    const [offer] = await db
+      .select()
+      .from(supplierOffers)
+      .where(sql`stock_qty::numeric - reserved_qty::numeric >= 200 AND min_order_qty::numeric <= 1`)
+      .limit(1);
+    expect(offer).toBeTruthy();
+
+    await addCartItem({ offerId: offer.id, qty: "100", userId: friend.id });
+    const created = await createOrder({
+      userId: friend.id,
+      idempotencyKey: crypto.randomUUID(),
+      customerName: "Реферальный друг",
+      customerPhone: "+992900001199",
+      deliveryCity: "Душанбе",
+      deliveryAddress: "ул. Рудаки 10",
+      fulfillment: "PICKUP",
+      paymentMethod: "CASH_ON_DELIVERY",
+    });
+
+    await changeOrderStatus(
+      { id: admin.id, role: "SUPER_ADMIN" },
+      created.id,
+      { status: "CONFIRMED", expectedStatus: "NEW" },
+    );
+    await changeOrderStatus(
+      { id: admin.id, role: "SUPER_ADMIN" },
+      created.id,
+      { status: "DISPATCHED", expectedStatus: "CONFIRMED" },
+    );
+    await changeOrderStatus(
+      { id: admin.id, role: "SUPER_ADMIN" },
+      created.id,
+      { status: "DELIVERED", expectedStatus: "DISPATCHED" },
+    );
+
+    const summary = await getReferralSummary(owner.id);
+    expect(summary.bonusPercent).toBe("2");
+    expect(summary.stats).toEqual({ invited: 1, pending: 0, credited: 1 });
+    expect(BigInt(summary.creditedDirams) > 0n).toBe(true);
+
+    // Changing percent later + second delivered order does not double-credit the same friend
+    await updateReferralBonusPercent(
+      { id: admin.id, role: "SUPER_ADMIN" },
+      { bonusPercent: "5" },
+      "test-referral",
+    );
+    await addCartItem({ offerId: offer.id, qty: "10", userId: friend.id });
+    const secondOrder = await createOrder({
+      userId: friend.id,
+      idempotencyKey: crypto.randomUUID(),
+      customerName: "Реферальный друг",
+      customerPhone: "+992900001199",
+      deliveryCity: "Душанбе",
+      deliveryAddress: "ул. Рудаки 10",
+      fulfillment: "PICKUP",
+      paymentMethod: "CASH_ON_DELIVERY",
+    });
+    await changeOrderStatus(
+      { id: admin.id, role: "SUPER_ADMIN" },
+      secondOrder.id,
+      { status: "CONFIRMED", expectedStatus: "NEW" },
+    );
+    await changeOrderStatus(
+      { id: admin.id, role: "SUPER_ADMIN" },
+      secondOrder.id,
+      { status: "DISPATCHED", expectedStatus: "CONFIRMED" },
+    );
+    await changeOrderStatus(
+      { id: admin.id, role: "SUPER_ADMIN" },
+      secondOrder.id,
+      { status: "DELIVERED", expectedStatus: "DISPATCHED" },
+    );
+
+    const afterSecond = await getReferralSummary(owner.id);
+    expect(afterSecond.stats).toEqual({ invited: 1, pending: 0, credited: 1 });
+    expect(afterSecond.creditedDirams).toBe(summary.creditedDirams);
+
+    const adminList = await listAdminReferrals();
+    expect(adminList.bonusPercent).toBe("5");
+    expect(adminList.summary.creditedCount).toBeGreaterThanOrEqual(1);
+  } finally {
+    await db.delete(settings).where(eq(settings.key, REFERRAL_BONUS_SETTING_KEY));
+  }
 });

@@ -2,13 +2,22 @@
 import { useRef, useState } from "react";
 import { Copy, Check, Share2, UsersRound, Link2, Clock3, Gift } from "lucide-react";
 import { useLocale } from "@/i18n/provider";
+import { formatTJS } from "@/modules/system/money";
 import styles from "./referral.module.css";
 type Summary = {
   code: string;
   link: string;
   stats: { invited: number; pending: number; credited: number };
+  bonusPercent?: string;
+  creditedDirams?: string;
 };
-export function ReferralPanel({ code, link, stats }: Summary) {
+export function ReferralPanel({
+  code,
+  link,
+  stats,
+  bonusPercent = "2",
+  creditedDirams = "0",
+}: Summary) {
   const { tr, locale } = useLocale();
   const field = useRef<HTMLInputElement>(null);
   const [copied, setCopied] = useState(false);
@@ -113,11 +122,13 @@ export function ReferralPanel({ code, link, stats }: Summary) {
         <ol>
           <li>{tr("Отправьте ссылку другу или коллеге.")}</li>
           <li>{tr("После регистрации приглашение появится в вашей статистике.")}</li>
+          <li>
+            {tr("При первом доставленном заказе друга вам начисляется бонус")}{" "}
+            <strong>{bonusPercent}%</strong> {tr("от суммы материалов заказа.")}
+          </li>
         </ol>
         <p>
-          {tr(
-            "Начисление бонусов пока не запущено. Правила и условия будут объявлены дополнительно.",
-          )}
+          {tr("Начислено бонусов за всё время")}: <strong>{formatTJS(creditedDirams)}</strong>
         </p>
       </section>
     </div>

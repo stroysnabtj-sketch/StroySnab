@@ -1,10 +1,23 @@
-import { expect, it, vi, afterEach } from "vitest";
+import { randomInt } from "node:crypto";
+import { beforeEach, expect, it, vi, afterEach } from "vitest";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
-import { users, sessions } from "@/db/schema";
+import { loginCodes, rateLimits, sessions, users } from "@/db/schema";
 import { login } from "@/modules/auth/service";
+import { hashToken } from "@/modules/auth/session";
 import { requestContactCode, verifyContactCode } from "@/modules/auth/contact-code";
 afterEach(() => vi.unstubAllEnvs());
+beforeEach(async () => {
+  const db = await getDb();
+  await db.delete(loginCodes).where(eq(loginCodes.identifier, "admin@stroyhub.tj"));
+  await db
+    .delete(rateLimits)
+    .where(eq(rateLimits.key, `contact-code-send:${hashToken("admin@stroyhub.tj")}`));
+  await db
+    .update(users)
+    .set({ failedLoginAttempts: 0, lockedUntil: null })
+    .where(eq(users.email, "admin@stroyhub.tj"));
+});
 it("requires password plus email code for staff and creates no full session after password", async () => {
   vi.stubEnv("STAFF_EMAIL_OTP_REQUIRED", "true");
   const db = await getDb();
@@ -101,41 +114,46 @@ it("staff recovery changes password without granting a session and rejects SMS r
   vi.stubEnv("STAFF_EMAIL_OTP_REQUIRED", "true");
   const db = await getDb();
   const [seed] = await db.select().from(users).where(eq(users.email, "admin@stroyhub.tj"));
+  const uniquePhone = `+9929${randomInt(10000000, 99999999)}`;
   const [staff] = await db
     .insert(users)
     .values({
       email: `recover-staff-${crypto.randomUUID()}@example.test`,
-      phone: "+992900123489",
+      phone: uniquePhone,
       passwordHash: seed.passwordHash,
       role: "ADMIN",
     })
     .returning();
-  await expect(
-    requestContactCode(
-      { purpose: "recover", channel: "sms", identifier: staff.phone },
+  try {
+    await expect(
+      requestContactCode(
+        { purpose: "recover", channel: "sms", identifier: staff.phone! },
+        "staff-recover",
+        async () => {},
+      ),
+    ).rejects.toMatchObject({ code: "staff_email_required" });
+    let code = "";
+    const pending = await requestContactCode(
+      { purpose: "recover", channel: "email", identifier: staff.email! },
       "staff-recover",
-      async () => {},
-    ),
-  ).rejects.toMatchObject({ code: "staff_email_required" });
-  let code = "";
-  const pending = await requestContactCode(
-    { purpose: "recover", channel: "email", identifier: staff.email },
-    "staff-recover",
-    async (m) => {
-      code = m.code;
-    },
-  );
-  const result = await verifyContactCode(
-    {
-      challengeId: pending.challengeId,
-      code,
-      password: "ChangedPassword1!",
-      passwordConfirmation: "ChangedPassword1!",
-    },
-    "staff-recover",
-    "test",
-  );
-  expect(result.token).toBe("");
-  expect(result.requiresLogin).toBe(true);
-  expect(await db.select().from(sessions).where(eq(sessions.userId, staff.id))).toHaveLength(0);
+      async (m) => {
+        code = m.code;
+      },
+    );
+    const result = await verifyContactCode(
+      {
+        challengeId: pending.challengeId,
+        code,
+        password: "ChangedPassword1!",
+        passwordConfirmation: "ChangedPassword1!",
+      },
+      "staff-recover",
+      "test",
+    );
+    expect(result.token).toBe("");
+    expect(result.requiresLogin).toBe(true);
+    expect(await db.select().from(sessions).where(eq(sessions.userId, staff.id))).toHaveLength(0);
+  } finally {
+    await db.delete(users).where(eq(users.id, staff.id));
+  }
 });

@@ -4,6 +4,10 @@ import { renderOrderPdf, type InvoiceOrder } from "@/modules/orders/pdf";
 import { generateQrMatrix } from "@/modules/system/qr";
 import { mapNavigationLinks } from "@/modules/delivery/preferences";
 import { profileSchema } from "@/modules/auth/schemas";
+import {
+  calculateReferralBonusDirams,
+  normalizeReferralBonusPercent,
+} from "@/modules/referrals/service";
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -95,5 +99,17 @@ describe("invoice PDF enhancements, QR, map links, and B2B profile schema", () =
       companyName: "ООО Сохтмон",
       taxId: "010012345",
     });
+  });
+
+  it("normalizes editable referral bonus percent and calculates HALF_UP dirams", () => {
+    expect(normalizeReferralBonusPercent("2")).toBe("2");
+    expect(normalizeReferralBonusPercent("2,50")).toBe("2.5");
+    expect(() => normalizeReferralBonusPercent("-1")).toThrow();
+    expect(() => normalizeReferralBonusPercent("101")).toThrow();
+    expect(calculateReferralBonusDirams("10000", "2")).toBe(200n);
+    expect(calculateReferralBonusDirams("105", "2")).toBe(2n);
+    expect(calculateReferralBonusDirams("125", "2")).toBe(3n);
+    expect(calculateReferralBonusDirams("10000", "2.5")).toBe(250n);
+    expect(calculateReferralBonusDirams("10000", "0")).toBe(0n);
   });
 });

@@ -3,6 +3,7 @@ import { enqueueOrderNotifications } from "@/modules/notifications/events";
 import { visibleCategoryIds } from "@/modules/catalog/category-visibility";
 import { VEHICLE_CODES, validDeliveryDate, knownCartWeight } from "@/modules/delivery/preferences";
 import { writeAudit } from "@/modules/audit/service";
+import { creditReferralBonusForOrder } from "@/modules/referrals/service";
 import { ORDER_STATUS_TRANSITIONS } from "./status";
 import { createHash } from "node:crypto";
 import { and, eq, sql } from "drizzle-orm";
@@ -512,6 +513,15 @@ export async function changeOrderStatus(
           updatedAt: new Date(),
         })
         .where(eq(procurementRequests.orderId, id));
+    if (body.status === "DELIVERED" && before.customerId)
+      await creditReferralBonusForOrder(tx, {
+        orderId: before.id,
+        orderNumber: before.orderNumber,
+        customerId: before.customerId,
+        materialsTotalDirams: before.materialsTotalDirams,
+        actorUserId: actor.id,
+        actorRole: actor.role,
+      });
     await writeAudit(tx, {
       actorUserId: actor.id,
       actorRole: actor.role,

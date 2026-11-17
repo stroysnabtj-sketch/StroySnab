@@ -38,7 +38,7 @@ describe("public catalog and pricing", () => {
       categoryId: "00000000-0000-0000-0000-000000000000",
       supplierPriceDirams: 10001n,
     });
-    expect(price).toBe(10701n);
+    expect(price).toBe(10501n);
   });
   it("round-trips XLSX exports and validates every row", async () => {
     const exported = await exportProducts("xlsx", true);

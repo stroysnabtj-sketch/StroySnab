@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { and, eq } from "drizzle-orm";
 import { closeDb, getDb } from "@/db";
-import { supplierInvitations, supplierOffers, supplierUsers, users } from "@/db/schema";
+import { products, supplierInvitations, supplierOffers, supplierUsers, users } from "@/db/schema";
 import type { SessionUser } from "@/modules/auth/session";
 import { getPublicProduct } from "@/modules/catalog/service";
 import { calculateCustomerPrice } from "@/modules/pricing/service";
@@ -46,21 +46,48 @@ describe("supplier isolation and pricing", () => {
   });
   it("reflects procurement price changes publicly without leaking them", async () => {
     const admin = await actor("admin@stroyhub.tj");
-    const [offer] = await listOffers();
-    const original = offer.supplierPriceDirams;
-    await updateOffer(admin, offer.id, offer.supplierId, { supplierPriceDirams: "10000" }, "test");
     const db = await getDb();
-    const [product] = await db
-      .select({ slug: (await import("@/db/schema")).products.slug })
-      .from((await import("@/db/schema")).products)
-      .where(eq((await import("@/db/schema")).products.id, offer.productId));
-    const publicProduct = await getPublicProduct(product.slug);
-    const publicOffer = publicProduct!.offers.find((item) => item.id === offer.id)!;
-    expect(publicOffer.priceDirams).toBe("10700");
-    expect(publicOffer).not.toHaveProperty("supplierPriceDirams");
-    await updateOffer(admin, offer.id, offer.supplierId, { supplierPriceDirams: original }, "test");
+    const candidates = await listOffers();
+    let offer: (typeof candidates)[number] | undefined;
+    let productSlug = "";
+    let originalMarkup = "5";
+    for (const candidate of candidates) {
+      if (candidate.isActive !== "true") continue;
+      const [row] = await db
+        .select({ slug: products.slug, markupPercent: products.markupPercent })
+        .from(products)
+        .where(eq(products.id, candidate.productId));
+      if (!row) continue;
+      const pub = await getPublicProduct(row.slug, false);
+      if (pub?.offers.some((item) => item.id === candidate.id)) {
+        offer = candidate;
+        productSlug = row.slug;
+        originalMarkup = row.markupPercent;
+        break;
+      }
+    }
+    if (!offer) throw new Error("Expected at least one active public offer");
+    const original = offer.supplierPriceDirams;
+    try {
+      if (Number(originalMarkup) !== 5) {
+        await db.update(products).set({ markupPercent: "5" }).where(eq(products.id, offer.productId));
+      }
+      await updateOffer(admin, offer.id, offer.supplierId, { supplierPriceDirams: "10000" }, "test");
+      const publicProduct = await getPublicProduct(productSlug, false);
+      const publicOffer = publicProduct!.offers.find((item) => item.id === offer.id)!;
+      expect(publicOffer.priceDirams).toBe("10500");
+      expect(publicOffer).not.toHaveProperty("supplierPriceDirams");
+    } finally {
+      await updateOffer(admin, offer.id, offer.supplierId, { supplierPriceDirams: original }, "test");
+      if (Number(originalMarkup) !== 5) {
+        await db
+          .update(products)
+          .set({ markupPercent: originalMarkup })
+          .where(eq(products.id, offer.productId));
+      }
+    }
   }, 20000);
-  it("uses the published 7% display rate for product price estimates", async () => {
+  it("uses the published 5% display rate for product price estimates", async () => {
     const [offer] = await listOffers();
     const db = await getDb();
     const product = await db.query.products.findFirst({
@@ -72,7 +99,7 @@ describe("supplier isolation and pricing", () => {
       categoryId: product!.categoryId,
       supplierPriceDirams: 10001n,
     });
-    expect(price).toBe(10701n);
+    expect(price).toBe(10501n);
   });
   it("creates a single-use supplier invitation", async () => {
     const admin = await actor("admin@stroyhub.tj");

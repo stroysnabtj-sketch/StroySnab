@@ -23,9 +23,14 @@ export function AdminPricingPanel() {
         <p className={styles.emptyText}>
           У каждого товара своя наценка. Изменить её можно в карточке товара в каталоге.
         </p>
-        <Link className="button button-primary" href="/admin/catalog">
-          Открыть товары
-        </Link>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          <Link className="button button-primary" href="/admin/catalog">
+            Открыть товары
+          </Link>
+          <Link className="button button-secondary" href="/admin/referrals">
+            Реферальный бонус (%)
+          </Link>
+        </div>
       </section>
       <section className={styles.panel}>
         <div className={styles.panelHead}>

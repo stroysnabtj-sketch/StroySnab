@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { and, eq } from "drizzle-orm";
 import { closeDb, getDb } from "@/db";
-import { supplierUsers, userRoles, users } from "@/db/schema";
+import { supplierUsers, suppliers, userRoles, users } from "@/db/schema";
 import { forgotPassword, registerCustomer, resetPassword } from "@/modules/auth/service";
 import { assignSupplierOwner, getSupplierForUser } from "@/modules/suppliers/service";
 import { updateUser } from "@/modules/auth/admin-service";
@@ -127,8 +127,27 @@ describe("auth concurrency and role consistency", () => {
       role: adminUser.role as Role,
     };
 
-    const [sellerUser] = await db.select().from(users).where(eq(users.email, "seller@stroyhub.tj"));
-    const membership = await getSupplierForUser(sellerUser.id);
+    const key = crypto.randomUUID();
+    const [shop] = await db
+      .insert(suppliers)
+      .values({ name: `Тест поставщик ${key}`, phone: `+992900${Date.now().toString().slice(-6)}`, status: "ACTIVE" })
+      .returning();
+    const [oldOwner] = await db
+      .insert(users)
+      .values({
+        phone: `old-owner-${key}`,
+        email: `old-owner-${key}@example.com`,
+        emailVerifiedAt: new Date(),
+        passwordHash: "test-hash",
+        role: "SUPPLIER_OWNER",
+        status: "ACTIVE",
+      })
+      .returning();
+    await db.insert(userRoles).values({ userId: oldOwner.id, role: "SUPPLIER_OWNER" });
+    await db
+      .insert(supplierUsers)
+      .values({ supplierId: shop.id, userId: oldOwner.id, role: "OWNER" });
+    const membership = await getSupplierForUser(oldOwner.id);
 
     // Create a new staff candidate user
     const staffPhone = `93${Date.now().toString().slice(-7)}`;
@@ -138,44 +157,38 @@ describe("auth concurrency and role consistency", () => {
       "test",
     );
 
-    // Attempting to assign SUPER_ADMIN as supplier owner must fail
-    await expect(
-      assignSupplierOwner(adminActor, membership.supplier.id, "admin@stroyhub.tj", "ip"),
-    ).rejects.toThrow("Нельзя назначить суперадминистратора");
+    try {
+      // Attempting to assign SUPER_ADMIN as supplier owner must fail
+      await expect(
+        assignSupplierOwner(adminActor, membership.supplier.id, "admin@stroyhub.tj", "ip"),
+      ).rejects.toThrow("Нельзя назначить суперадминистратора");
 
-    await db
-      .update(users)
-      .set({ emailVerifiedAt: new Date() })
-      .where(eq(users.id, newOwnerReg.id));
-    // Transfer ownership to new candidate
-    await assignSupplierOwner(adminActor, membership.supplier.id, staffEmail, "ip");
+      await db
+        .update(users)
+        .set({ emailVerifiedAt: new Date() })
+        .where(eq(users.id, newOwnerReg.id));
+      // Transfer ownership to new candidate
+      await assignSupplierOwner(adminActor, membership.supplier.id, staffEmail, "ip");
 
-    // New candidate is now OWNER in supplierUsers and SUPPLIER_OWNER in users and user_roles
-    const [newCandidateUser] = await db.select().from(users).where(eq(users.id, newOwnerReg.id));
-    expect(newCandidateUser.role).toBe("SUPPLIER_OWNER");
-    const [newMembership] = await db
-      .select()
-      .from(supplierUsers)
-      .where(and(eq(supplierUsers.supplierId, membership.supplier.id), eq(supplierUsers.userId, newOwnerReg.id)));
-    expect(newMembership.role).toBe("OWNER");
+      // New candidate is now OWNER in supplierUsers and SUPPLIER_OWNER in users and user_roles
+      const [newCandidateUser] = await db.select().from(users).where(eq(users.id, newOwnerReg.id));
+      expect(newCandidateUser.role).toBe("SUPPLIER_OWNER");
+      const [newMembership] = await db
+        .select()
+        .from(supplierUsers)
+        .where(and(eq(supplierUsers.supplierId, membership.supplier.id), eq(supplierUsers.userId, newOwnerReg.id)));
+      expect(newMembership.role).toBe("OWNER");
 
-    // Previous owner was demoted to STAFF in supplierUsers
-    const [oldMembership] = await db
-      .select()
-      .from(supplierUsers)
-      .where(and(eq(supplierUsers.supplierId, membership.supplier.id), eq(supplierUsers.userId, sellerUser.id)));
-    expect(oldMembership.role).toBe("STAFF");
-
-    // Restore original owner
-    await db
-      .update(users)
-      .set({ emailVerifiedAt: new Date() })
-      .where(eq(users.id, sellerUser.id));
-    await assignSupplierOwner(adminActor, membership.supplier.id, "seller@stroyhub.tj", "ip");
-    await db
-      .update(users)
-      .set({ emailVerifiedAt: sellerUser.emailVerifiedAt })
-      .where(eq(users.id, sellerUser.id));
-    await db.delete(users).where(eq(users.id, newOwnerReg.id));
+      // Previous owner was demoted to STAFF in supplierUsers
+      const [oldMembership] = await db
+        .select()
+        .from(supplierUsers)
+        .where(and(eq(supplierUsers.supplierId, membership.supplier.id), eq(supplierUsers.userId, oldOwner.id)));
+      expect(oldMembership.role).toBe("STAFF");
+    } finally {
+      await db.delete(suppliers).where(eq(suppliers.id, shop.id));
+      await db.delete(users).where(eq(users.id, oldOwner.id));
+      await db.delete(users).where(eq(users.id, newOwnerReg.id));
+    }
   });
 });

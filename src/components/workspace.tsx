@@ -11,6 +11,7 @@ import {
   History,
   Truck,
   Bell,
+  Gift,
 } from "lucide-react";
 import { getCurrentUser } from "@/modules/auth/session";
 import { hasPermission, type Permission } from "@/modules/rbac/permissions";
@@ -68,6 +69,12 @@ export async function Workspace({
       label: "Правила цен",
       permission: "pricing:manage",
       icon: SlidersHorizontal,
+    },
+    {
+      href: "/admin/referrals",
+      label: "Рефералы и бонусы",
+      permission: "settings:manage",
+      icon: Gift,
     },
     {
       href: "/admin/product-requests",
