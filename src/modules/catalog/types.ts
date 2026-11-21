@@ -26,11 +26,11 @@ export type PublicProduct = {
   categoryName: string;
   brand: string | null;
   unit: string;
-  priceDirams: string;
+  priceDirams: string | null;
   minOrderQty: string;
   oldPriceDirams?: string | null;
   stockQty: string;
-  offerId: string;
+  offerId: string | null;
   offerCount: number;
   leadTimeDays: number;
   isHit?: boolean;

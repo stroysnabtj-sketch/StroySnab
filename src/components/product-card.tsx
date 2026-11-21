@@ -54,7 +54,7 @@ export function ProductCard({ product }: { product: PublicProduct }) {
         </Link>
         <div className="price-container">
           <div className="product-card-price-row">
-            <strong className="product-card-price">{formatTJS(product.priceDirams)}</strong>
+            <strong className="product-card-price">{product.priceDirams === null ? tr("Цена уточняется") : formatTJS(product.priceDirams)}</strong>
             <span className="product-card-unit">/ {tr(product.unit)}</span>
           </div>
         </div>
@@ -63,7 +63,7 @@ export function ProductCard({ product }: { product: PublicProduct }) {
           <span>{inStock ? tr("В наличии") : tr("Под заказ")}</span>
         </div>
         <div className="product-card-action-bar">
-          {inStock ? (
+          {inStock && product.offerId ? (
             <AddToCartButton offerId={product.offerId} minOrderQty={product.minOrderQty} />
           ) : (
             <Link

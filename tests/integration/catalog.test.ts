@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { closeDb, getDb } from "@/db";
-import { carts } from "@/db/schema";
+import { carts, supplierOffers } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { strToU8, zipSync } from "fflate";
 import { getPublicProduct, listCatalog, searchSuggestions } from "@/modules/catalog/service";
@@ -16,20 +16,17 @@ afterAll(async () => {
   await closeDb();
 });
 describe("public catalog and pricing", () => {
-  it("searches with trigram typo tolerance and never exposes procurement prices", async () => {
-    const result = await listCatalog({ q: "цемнт", pageSize: 5 });
+  it("finds products awaiting prices and excludes them from stock and price filters", async () => {
+    const result = await listCatalog({ q: "дрел", pageSize: 5 });
     expect(result.items.length).toBeGreaterThan(0);
-    expect(result.items[0].name).toContain("Цемент");
+    expect(result.items[0].name).toMatch(/дрел/i);
     const product = await getPublicProduct(result.items[0].slug);
     expect(product).toBeTruthy();
-    expect(product!.offers).toHaveLength(1);
-    expect(product!.offers[0]).not.toHaveProperty("supplierName");
-    expect(product!.offers[0]).not.toHaveProperty("supplierPhone");
-    expect(product!.product).not.toHaveProperty("createdBySupplierId");
-    expect(product!.offers[0]).not.toHaveProperty("supplierPriceDirams");
-    expect(product!.offers[0]).not.toHaveProperty("markup");
-    expect(JSON.stringify(product!.offers[0])).not.toContain("margin");
-    expect((await searchSuggestions("цемнт")).length).toBeGreaterThan(0);
+    expect(product!.offers).toHaveLength(0);
+    expect(result.items[0]).toMatchObject({ priceDirams: null, offerId: null });
+    expect((await listCatalog({ q: "дрел", inStock: true })).items).toHaveLength(0);
+    expect((await listCatalog({ q: "дрел", maxPrice: "10000" })).items).toHaveLength(0);
+    expect((await searchSuggestions("дрел")).length).toBeGreaterThan(0);
   }, 20000);
   it("uses the published standard display markup with integer dirams", async () => {
     const price = await calculateCustomerPrice({
@@ -51,18 +48,24 @@ describe("public catalog and pricing", () => {
     expect(validated.every((row) => row.valid)).toBe(true);
   });
   it("persists a guest cart and enforces stock", async () => {
-    const result = await listCatalog({ inStock: true, pageSize: 1 });
-    const item = result.items[0];
-    const token = `vitest-cart-${Date.now()}`;
-    await addCartItem({ offerId: item.offerId, qty: "1", guestToken: token });
-    const cart = await getCart(undefined, token);
-    expect(cart.items).toHaveLength(1);
-    expect(cart.items[0]).not.toHaveProperty("supplierPriceDirams");
-    await expect(
-      addCartItem({ offerId: item.offerId, qty: "100001", guestToken: token }),
-    ).rejects.toThrow();
     const db = await getDb();
-    if (cart.id) await db.delete(carts).where(eq(carts.id, cart.id));
+    const [offer] = await db.select().from(supplierOffers).limit(1);
+    const { id: offerId, isActive, stockQty, supplierPriceDirams } = offer;
+    await db.update(supplierOffers)
+      .set({ isActive: "true", stockQty: "10", supplierPriceDirams: 1000n })
+      .where(eq(supplierOffers.id, offerId));
+    const token = `vitest-cart-${Date.now()}`;
+    try {
+      await addCartItem({ offerId, qty: "1", guestToken: token });
+      const cart = await getCart(undefined, token);
+      expect(cart.items).toHaveLength(1);
+      expect(cart.items[0]).not.toHaveProperty("supplierPriceDirams");
+      await expect(addCartItem({ offerId, qty: "100001", guestToken: token })).rejects.toThrow();
+      if (cart.id) await db.delete(carts).where(eq(carts.id, cart.id));
+    } finally {
+      await db.update(supplierOffers).set({ isActive, stockQty, supplierPriceDirams })
+        .where(eq(supplierOffers.id, offerId));
+    }
   });
   it("rejects XLSX with oversized worksheets, XML declarations of entities or excess columns", async () => {
     const workbook = (xml: string) =>

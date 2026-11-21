@@ -164,7 +164,6 @@ export async function listCatalog(query: CatalogQuery) {
     const best =
       offers.find((o) => Number(o.stockQty) - Number(o.reservedQty) >= Number(o.minOrderQty)) ??
       offers[0];
-    if (!best) return [];
     const image = images.find((i) => i.productId === product.id);
     return [
       {
@@ -181,12 +180,12 @@ export async function listCatalog(query: CatalogQuery) {
         categoryName: category.nameRu,
         brand: publicProductBrand(product.brand),
         unit: product.unit,
-        priceDirams: best.customerPriceDirams.toString(),
-        minOrderQty: best.minOrderQty,
-        stockQty: Math.max(0, Number(best.stockQty) - Number(best.reservedQty)).toString(),
-        offerId: best.id,
-        offerCount: 1,
-        leadTimeDays: best.leadTimeDays,
+        priceDirams: best?.customerPriceDirams.toString() ?? null,
+        minOrderQty: best?.minOrderQty ?? "1",
+        stockQty: best ? Math.max(0, Number(best.stockQty) - Number(best.reservedQty)).toString() : "0",
+        offerId: best?.id ?? null,
+        offerCount: best ? 1 : 0,
+        leadTimeDays: best?.leadTimeDays ?? 0,
         keyAttributes: attrs
           .filter((a) => a.productId === product.id)
           .slice(0, 3)
@@ -211,10 +210,11 @@ export async function listCatalog(query: CatalogQuery) {
   const max = query.maxPrice && /^\d+$/.test(query.maxPrice) ? BigInt(query.maxPrice) : null;
   const matches = (item: PublicProduct, exclude?: string) => {
     if (query.inStock && Number(item.stockQty) < Number(item.minOrderQty)) return false;
-    if (
+    if (item.priceDirams === null && (min !== null || max !== null)) return false;
+    if (item.priceDirams !== null && (
       (min !== null && BigInt(item.priceDirams) < min) ||
       (max !== null && BigInt(item.priceDirams) > max)
-    )
+    ))
       return false;
     if (exclude !== "brand" && brands.length && (!item.brand || !brands.includes(item.brand)))
       return false;
@@ -285,14 +285,14 @@ export async function listCatalog(query: CatalogQuery) {
     ];
   });
   const items = candidates.filter((i) => matches(i));
-  const priceCompare = (a: PublicProduct, b: PublicProduct) =>
-    BigInt(a.priceDirams) < BigInt(b.priceDirams)
-      ? -1
-      : BigInt(a.priceDirams) > BigInt(b.priceDirams)
-        ? 1
-        : 0;
-  if (query.sort === "price_asc") items.sort(priceCompare);
-  else if (query.sort === "price_desc") items.sort((a, b) => priceCompare(b, a));
+  const priceCompare = (a: PublicProduct, b: PublicProduct) => {
+    if (a.priceDirams === null) return b.priceDirams === null ? 0 : 1;
+    if (b.priceDirams === null) return -1;
+    const x = BigInt(a.priceDirams);
+    const y = BigInt(b.priceDirams);
+    return (x < y ? -1 : x > y ? 1 : 0) * (query.sort === "price_desc" ? -1 : 1);
+  };
+  if (query.sort === "price_asc" || query.sort === "price_desc") items.sort(priceCompare);
   else if (search) {
     const qLower = search.toLocaleLowerCase("ru");
     const rank = (item: PublicProduct) => {
