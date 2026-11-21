@@ -232,6 +232,13 @@
       "when": 1794580008000,
       "tag": "0032_quarantine_placeholder_offers",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1794580009000,
+      "tag": "0033_materials_catalog",
+      "breakpoints": true
     }
   ]
 }

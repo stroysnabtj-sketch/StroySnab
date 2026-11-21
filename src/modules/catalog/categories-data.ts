@@ -38,6 +38,15 @@ export interface TopCategoryNode {
 }
 
 export const CATEGORIES_TREE: TopCategoryNode[] = [
+  {"slug": "tile-adhesives", "nameRu": "Плиточный и монтажный клей", "nameTg": "Ширеш барои сафол ва васлкунӣ", "icon": "Layers", "description": "Плиточный и монтажный клей", "subcategories": []},
+  {"slug": "primers", "nameRu": "Грунтовки", "nameTg": "Грунтовкаҳо", "icon": "PaintRoller", "description": "Грунтовки", "subcategories": []},
+  {"slug": "grouts-sealants", "nameRu": "Затирки и герметики", "nameTg": "Маводи пуркунии дарз ва герметикҳо", "icon": "Droplet", "description": "Затирки и герметики", "subcategories": []},
+  {"slug": "plasters-putties", "nameRu": "Штукатурки и шпаклёвки", "nameTg": "Андова ва шпаклёвкаҳо", "icon": "Construction", "description": "Штукатурки и шпаклёвки", "subcategories": []},
+  {"slug": "floor-compounds", "nameRu": "Смеси для пола", "nameTg": "Омехтаҳо барои фарш", "icon": "Layers", "description": "Смеси для пола", "subcategories": []},
+  {"slug": "waterproofing", "nameRu": "Гидроизоляция", "nameTg": "Обногузаронӣ", "icon": "ShieldCheck", "description": "Гидроизоляция", "subcategories": []},
+  {"slug": "facade-coatings", "nameRu": "Фасадные и защитные покрытия", "nameTg": "Рӯйпӯшҳои фасадӣ ва муҳофизатӣ", "icon": "PaintRoller", "description": "Фасадные и защитные покрытия", "subcategories": []},
+  {"slug": "eps-insulation", "nameRu": "Пенополистирол и блоки", "nameTg": "Пенополистирол ва блокҳо", "icon": "Layers", "description": "Пенополистирол и блоки", "subcategories": []},
+
   {
     slug: "akkumulyatornyy-instrument",
     nameRu: "Аккумуляторный инструмент",
@@ -248,6 +257,44 @@ export const CATEGORY_SMART_FILTERS: Record<string, SmartFilterDefinition[]> = {
     { key: "Размер", label: "Диаметр / Размер", type: "checkbox", recommended: true },
     { key: "Зернистость", label: "Зернистость", type: "checkbox" },
     { key: "Характеристика", label: "Характеристика", type: "checkbox" },
+  ],
+  "tile-adhesives": [
+    {"key": "Фасовка", "label": "Фасовка", "type": "checkbox"},
+    {"key": "Формат плитки", "label": "Формат плитки", "type": "checkbox"},
+    {"key": "Водостойкость", "label": "Водостойкость", "type": "checkbox"},
+    {"key": "Морозостойкость", "label": "Морозостойкость", "type": "checkbox"},
+  ],
+  "primers": [
+    {"key": "Фасовка", "label": "Фасовка", "type": "checkbox"},
+  ],
+  "grouts-sealants": [
+    {"key": "Фасовка", "label": "Фасовка", "type": "checkbox"},
+    {"key": "Цвет", "label": "Цвет", "type": "checkbox"},
+    {"key": "Ширина шва", "label": "Ширина шва", "type": "checkbox"},
+  ],
+  "plasters-putties": [
+    {"key": "Фасовка", "label": "Фасовка", "type": "checkbox"},
+    {"key": "Зерно", "label": "Зерно", "type": "checkbox"},
+    {"key": "Фактура", "label": "Фактура", "type": "checkbox"},
+    {"key": "Основа", "label": "Основа", "type": "checkbox"},
+  ],
+  "floor-compounds": [
+    {"key": "Фасовка", "label": "Фасовка", "type": "checkbox"},
+    {"key": "Толщина слоя", "label": "Толщина слоя", "type": "checkbox"},
+    {"key": "Основа", "label": "Основа", "type": "checkbox"},
+    {"key": "Для тёплого пола", "label": "Для тёплого пола", "type": "checkbox"},
+  ],
+  "waterproofing": [
+    {"key": "Фасовка", "label": "Фасовка", "type": "checkbox"},
+  ],
+  "facade-coatings": [
+    {"key": "Фасовка", "label": "Фасовка", "type": "checkbox"},
+    {"key": "База", "label": "База", "type": "checkbox"},
+  ],
+  "eps-insulation": [
+    {"key": "Тип", "label": "Тип", "type": "checkbox"},
+    {"key": "Марка", "label": "Марка", "type": "checkbox"},
+    {"key": "Толщина", "label": "Толщина", "type": "range", "unit": "мм"},
   ],
   "germetiki-i-kleyevye-prinadlezhnosti": [
     { key: "Тип", label: "Тип материала", type: "checkbox", recommended: true },

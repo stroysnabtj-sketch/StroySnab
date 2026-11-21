@@ -127,6 +127,10 @@ export async function readProductFile(fileId: string, previewActor?: SessionUser
     .where(and(eq(files.id, fileId), access))
     .limit(1);
   if (!file) return null;
+  if (/^bundled\/materials\/sammix-[a-z0-9-]+\.jpeg$/.test(file.storageKey)) {
+    const bundled = path.join(process.cwd(), "public", "images", "materials", path.basename(file.storageKey));
+    return { mime: file.mime, data: await readFile(bundled) };
+  }
   try {
     return { mime: file.mime, data: await getStorage().get(file.storageKey) };
   } catch (error) {
