@@ -304,7 +304,8 @@ export function ProductDetailView({
           ) : (
             <div className="card">
               <Package size={24} />
-              <h2>Цена уточняется</h2>
+              <h2>{tr("1 сомони")} / {tr(product.unit)}</h2>
+              <p>{tr("Предварительная цена")}</p>
               <Link href={`/catalog/request?product=${encodeURIComponent(product.nameRu)}`} className="button button-primary">
                 Оставить заявку
               </Link>

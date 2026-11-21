@@ -54,9 +54,14 @@ export function ProductCard({ product }: { product: PublicProduct }) {
         </Link>
         <div className="price-container">
           <div className="product-card-price-row">
-            <strong className="product-card-price">{product.priceDirams === null ? tr("Цена уточняется") : formatTJS(product.priceDirams)}</strong>
+            <strong className="product-card-price">
+              {product.priceDirams === null ? tr("1 сомони") : formatTJS(product.priceDirams)}
+            </strong>
             <span className="product-card-unit">/ {tr(product.unit)}</span>
           </div>
+          {product.priceDirams === null && (
+            <span className="product-card-unit">{tr("Предварительная цена")}</span>
+          )}
         </div>
         <div className="product-card-status" data-stock={inStock}>
           <span className="status-indicator" />
