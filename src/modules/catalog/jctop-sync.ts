@@ -1,13 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { like, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import type { AppDatabase } from "../../db";
 import {
-  cartItems,
   categories,
   files,
-  homeCollectionItems,
   productAttributes,
   productImages,
   products,
@@ -38,151 +36,151 @@ export const CATEGORY_DEFINITIONS: Array<{
   description: string;
   representativePhoto: number;
 }> = [
-  {
-    slug: "akkumulyatornyy-instrument",
-    nameRu: "Аккумуляторный инструмент",
-    nameTg: "Асбобҳои барқии аккумулаторӣ",
-    icon: "BatteryCharging",
-    description: "Дрели, шуруповёрты, гайковёрты, УШМ, перфораторы и пилы JCTOP",
-    representativePhoto: 0,
-  },
-  {
-    slug: "setevoy-elektroinstrument",
-    nameRu: "Сетевой электроинструмент",
-    nameTg: "Асбобҳои барқии шабакавӣ",
-    icon: "Zap",
-    description: "Угловые шлифмашины, перфораторы, отбойные молотки и пилы",
-    representativePhoto: 40,
-  },
-  {
-    slug: "silovoe-oborudovanie",
-    nameRu: "Силовое оборудование",
-    nameTg: "Таҷҳизоти барқдиҳӣ ва муҳаррикҳо",
-    icon: "Cpu",
-    description: "Бензиновые и дизельные генераторы, мотопомпы и вибраторы",
-    representativePhoto: 101,
-  },
-  {
-    slug: "ruletki-i-izmeritelnye-pribory",
-    nameRu: "Рулетки и измерительные приборы",
-    nameTg: "Ченакҳо ва асбобҳои ченкунӣ",
-    icon: "Ruler",
-    description: "Строительные рулетки, уровни, мультиметры и весы",
-    representativePhoto: 113,
-  },
-  {
-    slug: "klyuchi-i-nabory-golovok",
-    nameRu: "Ключи и наборы головок",
-    nameTg: "Калидҳо ва маҷмӯи саракҳо",
-    icon: "Wrench",
-    description: "Комбинированные, накидные, разводные ключи и торцевые головки",
-    representativePhoto: 135,
-  },
-  {
-    slug: "ploskogubtsy-i-kleshchi",
-    nameRu: "Плоскогубцы и клещи",
-    nameTg: "Анбӯрҳо ва кандворҳо",
-    icon: "Scissors",
-    description: "Плоскогубцы, длинногубцы, болторезы и переставные клещи",
-    representativePhoto: 183,
-  },
-  {
-    slug: "molotki-i-kuvaldy",
-    nameRu: "Молотки и кувалды",
-    nameTg: "Болғаҳо ва гурзҳо",
-    icon: "Hammer",
-    description: "Молотки-гвоздодёры, кувалды, киянки и топорики",
-    representativePhoto: 206,
-  },
-  {
-    slug: "stroitelnyy-ruchnoy-instrument",
-    nameRu: "Строительный ручной инструмент",
-    nameTg: "Асбобҳои дастии сохтмонӣ",
-    icon: "Construction",
-    description: "Шпатели, кельмы, стамески, заклёпочники и правила",
-    representativePhoto: 211,
-  },
-  {
-    slug: "rezhushchiy-ruchnoy-instrument",
-    nameRu: "Режущий ручной инструмент",
-    nameTg: "Асбобҳои дастии буранда",
-    icon: "PenTool",
-    description: "Строительные ножи, лезвия, ножовки по металлу и дереву",
-    representativePhoto: 249,
-  },
-  {
-    slug: "sadovyy-instrument",
-    nameRu: "Садовый инструмент",
-    nameTg: "Асбобҳои боғдорӣ",
-    icon: "Trees",
-    description: "Секаторы, кусторезы, садовые пилы и опрыскиватели",
-    representativePhoto: 279,
-  },
-  {
-    slug: "otvyortki-i-nabory-bit",
-    nameRu: "Отвёртки и наборы бит",
-    nameTg: "Бурғуҳо (отвёрткаҳо) ва маҷмӯи битҳо",
-    icon: "Crosshair",
-    description: "Крестовые, шлицевые отвёртки и наборы бит",
-    representativePhoto: 303,
-  },
-  {
-    slug: "osnastka-i-raskhodniki",
-    nameRu: "Оснастка и расходники",
-    nameTg: "Таҷҳизот ва маводи истеъмолӣ",
-    icon: "Disc",
-    description: "Отрезные диски, буры SDS-Plus, свёрла по металлу и бетону",
-    representativePhoto: 310,
-  },
-  {
-    slug: "germetiki-i-kleyevye-prinadlezhnosti",
-    nameRu: "Герметики и клеевые принадлежности",
-    nameTg: "Герметикҳо ва лавозимоти ширешӣ",
-    icon: "Droplet",
-    description: "Силиконовые герметики, монтажная пена и пистолеты",
-    representativePhoto: 358,
-  },
-  {
-    slug: "avtoinstrument-i-remont",
-    nameRu: "Автоинструмент и ремонт",
-    nameTg: "Асбобҳои худрав ва таъмир",
-    icon: "Car",
-    description: "Гидравлические домкраты, подставки и маслёнки",
-    representativePhoto: 370,
-  },
-  {
-    slug: "zashchitnaya-ekipirovka-i-bezopasnost",
-    nameRu: "Защитная экипировка и безопасность",
-    nameTg: "Либоси муҳофизатӣ ва бехатарӣ",
-    icon: "ShieldCheck",
-    description: "Рабочая обувь, перчатки, респираторы, очки и маски",
-    representativePhoto: 390,
-  },
-  {
-    slug: "svarochnye-prinadlezhnosti",
-    nameRu: "Сварочные принадлежности",
-    nameTg: "Лавозимоти кафшергарӣ",
-    icon: "Flame",
-    description: "Сварочные электроды, держатели и паяльники для труб",
-    representativePhoto: 410,
-  },
-  {
-    slug: "strubtsiny-i-prisoski",
-    nameRu: "Струбцины и присоски",
-    nameTg: "Гирандаҳо (струбсинаҳо) ва макандаҳо",
-    icon: "Anchor",
-    description: "G-образные струбцины, тиски и вакуумные присоски",
-    representativePhoto: 414,
-  },
-  {
-    slug: "reklamnaya-produktsiya",
-    nameRu: "Рекламная продукция",
-    nameTg: "Маҳсулоти таблиғотӣ",
-    icon: "Sparkles",
-    description: "Фирменные стенды JCTOP, рекламные поло и баннеры",
-    representativePhoto: 422,
-  },
-];
+    {
+      slug: "akkumulyatornyy-instrument",
+      nameRu: "Аккумуляторный инструмент",
+      nameTg: "Асбобҳои барқии аккумулаторӣ",
+      icon: "BatteryCharging",
+      description: "Дрели, шуруповёрты, гайковёрты, УШМ, перфораторы и пилы JCTOP",
+      representativePhoto: 0,
+    },
+    {
+      slug: "setevoy-elektroinstrument",
+      nameRu: "Сетевой электроинструмент",
+      nameTg: "Асбобҳои барқии шабакавӣ",
+      icon: "Zap",
+      description: "Угловые шлифмашины, перфораторы, отбойные молотки и пилы",
+      representativePhoto: 40,
+    },
+    {
+      slug: "silovoe-oborudovanie",
+      nameRu: "Силовое оборудование",
+      nameTg: "Таҷҳизоти барқдиҳӣ ва муҳаррикҳо",
+      icon: "Cpu",
+      description: "Бензиновые и дизельные генераторы, мотопомпы и вибраторы",
+      representativePhoto: 101,
+    },
+    {
+      slug: "ruletki-i-izmeritelnye-pribory",
+      nameRu: "Рулетки и измерительные приборы",
+      nameTg: "Ченакҳо ва асбобҳои ченкунӣ",
+      icon: "Ruler",
+      description: "Строительные рулетки, уровни, мультиметры и весы",
+      representativePhoto: 113,
+    },
+    {
+      slug: "klyuchi-i-nabory-golovok",
+      nameRu: "Ключи и наборы головок",
+      nameTg: "Калидҳо ва маҷмӯи саракҳо",
+      icon: "Wrench",
+      description: "Комбинированные, накидные, разводные ключи и торцевые головки",
+      representativePhoto: 135,
+    },
+    {
+      slug: "ploskogubtsy-i-kleshchi",
+      nameRu: "Плоскогубцы и клещи",
+      nameTg: "Анбӯрҳо ва кандворҳо",
+      icon: "Scissors",
+      description: "Плоскогубцы, длинногубцы, болторезы и переставные клещи",
+      representativePhoto: 183,
+    },
+    {
+      slug: "molotki-i-kuvaldy",
+      nameRu: "Молотки и кувалды",
+      nameTg: "Болғаҳо ва гурзҳо",
+      icon: "Hammer",
+      description: "Молотки-гвоздодёры, кувалды, киянки и топорики",
+      representativePhoto: 206,
+    },
+    {
+      slug: "stroitelnyy-ruchnoy-instrument",
+      nameRu: "Строительный ручной инструмент",
+      nameTg: "Асбобҳои дастии сохтмонӣ",
+      icon: "Construction",
+      description: "Шпатели, кельмы, стамески, заклёпочники и правила",
+      representativePhoto: 211,
+    },
+    {
+      slug: "rezhushchiy-ruchnoy-instrument",
+      nameRu: "Режущий ручной инструмент",
+      nameTg: "Асбобҳои дастии буранда",
+      icon: "PenTool",
+      description: "Строительные ножи, лезвия, ножовки по металлу и дереву",
+      representativePhoto: 249,
+    },
+    {
+      slug: "sadovyy-instrument",
+      nameRu: "Садовый инструмент",
+      nameTg: "Асбобҳои боғдорӣ",
+      icon: "Trees",
+      description: "Секаторы, кусторезы, садовые пилы и опрыскиватели",
+      representativePhoto: 279,
+    },
+    {
+      slug: "otvyortki-i-nabory-bit",
+      nameRu: "Отвёртки и наборы бит",
+      nameTg: "Бурғуҳо (отвёрткаҳо) ва маҷмӯи битҳо",
+      icon: "Crosshair",
+      description: "Крестовые, шлицевые отвёртки и наборы бит",
+      representativePhoto: 303,
+    },
+    {
+      slug: "osnastka-i-raskhodniki",
+      nameRu: "Оснастка и расходники",
+      nameTg: "Таҷҳизот ва маводи истеъмолӣ",
+      icon: "Disc",
+      description: "Отрезные диски, буры SDS-Plus, свёрла по металлу и бетону",
+      representativePhoto: 310,
+    },
+    {
+      slug: "germetiki-i-kleyevye-prinadlezhnosti",
+      nameRu: "Герметики и клеевые принадлежности",
+      nameTg: "Герметикҳо ва лавозимоти ширешӣ",
+      icon: "Droplet",
+      description: "Силиконовые герметики, монтажная пена и пистолеты",
+      representativePhoto: 358,
+    },
+    {
+      slug: "avtoinstrument-i-remont",
+      nameRu: "Автоинструмент и ремонт",
+      nameTg: "Асбобҳои худрав ва таъмир",
+      icon: "Car",
+      description: "Гидравлические домкраты, подставки и маслёнки",
+      representativePhoto: 370,
+    },
+    {
+      slug: "zashchitnaya-ekipirovka-i-bezopasnost",
+      nameRu: "Защитная экипировка и безопасность",
+      nameTg: "Либоси муҳофизатӣ ва бехатарӣ",
+      icon: "ShieldCheck",
+      description: "Рабочая обувь, перчатки, респираторы, очки и маски",
+      representativePhoto: 390,
+    },
+    {
+      slug: "svarochnye-prinadlezhnosti",
+      nameRu: "Сварочные принадлежности",
+      nameTg: "Лавозимоти кафшергарӣ",
+      icon: "Flame",
+      description: "Сварочные электроды, держатели и паяльники для труб",
+      representativePhoto: 410,
+    },
+    {
+      slug: "strubtsiny-i-prisoski",
+      nameRu: "Струбцины и присоски",
+      nameTg: "Гирандаҳо (струбсинаҳо) ва макандаҳо",
+      icon: "Anchor",
+      description: "G-образные струбцины, тиски и вакуумные присоски",
+      representativePhoto: 414,
+    },
+    {
+      slug: "reklamnaya-produktsiya",
+      nameRu: "Рекламная продукция",
+      nameTg: "Маҳсулоти таблиғотӣ",
+      icon: "Sparkles",
+      description: "Фирменные стенды JCTOP, рекламные поло и баннеры",
+      representativePhoto: 422,
+    },
+  ];
 
 export const PRODUCT_NAME_TG: Record<string, string> = {
   "Автоинструмент и ремонт": "Асбобҳои худрав ва таъмир",
@@ -562,20 +560,7 @@ function inferMissingSpec(item: JctopItem, allItems: JctopItem[]): string {
   const cleaned = cleanItemSpec(item.spec || "");
   if (cleaned) return cleaned;
 
-  const exact = EXACT_CODE_SPECS[item.code.trim()];
-  if (exact) return exact;
-
-  const baseCode = item.code.replace(/SH$/i, "");
-  const sibling = allItems.find(
-    (other) =>
-      other.id !== item.id &&
-      other.spec &&
-      other.spec.trim() &&
-      other.code.replace(/SH$/i, "") === baseCode,
-  );
-  if (sibling) return cleanItemSpec(sibling.spec);
-
-  return `${item.code.trim()} Pro`;
+  return "";
 }
 
 export function cleanAndEnrichItems(rawItems: JctopItem[]): JctopItem[] {
@@ -656,27 +641,8 @@ export async function ensureJctopCatalog(
   db: AppDatabase,
   options: { force?: boolean; items?: JctopItem[]; photos?: Buffer[] } = {},
 ) {
-  if (!options.force) {
-    const [state] = await db
-      .select({
-        hasJctopRoot: sql<boolean>`exists (select 1 from ${categories} where ${categories.slug} = 'akkumulyatornyy-instrument')`,
-        catCount: sql<number>`(select count(*)::int from ${categories})`,
-        jctopCount: sql<number>`(select count(*)::int from ${products} where ${products.brand} = 'JCTOP' and ${products.status} = 'PUBLISHED' and ${products.markupPercent} = 5)`,
-        totalProducts: sql<number>`(select count(*)::int from ${products})`,
-        hasSkuInName: sql<boolean>`exists (select 1 from ${products} where ${products.nameRu} ~ 'JCTOP (POLO-|[A-Z0-9]*[0-9][A-Z0-9]*)')`,
-      })
-      .from(sql`(select 1) as _`);
-
-    if (
-      state?.hasJctopRoot &&
-      state.catCount === CATEGORY_DEFINITIONS.length &&
-      state.jctopCount === 1260 &&
-      state.totalProducts === 1260 &&
-      !state.hasSkuInName
-    ) {
-      return { synced: false };
-    }
-  }
+  // Import is an explicit bootstrap operation; never replace a working catalogue.
+  if (!options.force) return { synced: false };
 
   const assetsItemsPath = path.resolve(process.cwd(), "assets", "jctop-2026-items.json");
   const publicPhotosDir = path.resolve(process.cwd(), "public", "images", "jctop");
@@ -712,6 +678,10 @@ export async function ensureJctopCatalog(
   const photoFileIds = photoSizes.map(() => crypto.randomUUID());
 
   await db.transaction(async (tx) => {
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtext('stroysnab-catalog-bootstrap'))`);
+    const [existing] = await tx.select({ count: sql<number>`count(*)::int` }).from(products);
+    if (existing.count > 0) throw new Error("catalog_not_empty: import cannot replace existing products");
+
     let supplierRows = await tx.select().from(suppliers).orderBy(suppliers.name);
     if (!supplierRows.length) {
       supplierRows = await tx
@@ -729,15 +699,6 @@ export async function ensureJctopCatalog(
     }
     const defaultSupplier = supplierRows[0];
 
-    await tx.delete(homeCollectionItems);
-    await tx.delete(cartItems);
-    await tx.delete(productImages);
-    await tx.delete(files).where(like(files.storageKey, "products/2026/jctop-photo-%"));
-    await tx.delete(productAttributes);
-    await tx.delete(supplierOffers);
-    await tx.delete(products);
-    await tx.update(categories).set({ parentId: null });
-    await tx.delete(categories);
 
     for (let offset = 0; offset < photoFileIds.length; offset += 100) {
       const chunk = photoFileIds.slice(offset, offset + 100).map((id, idx) => ({
@@ -842,12 +803,12 @@ export async function ensureJctopCatalog(
     const offerValues = productRows.map((p) => ({
       productId: p.id,
       supplierId: defaultSupplier.id,
-      supplierPriceDirams: 100n,
-      stockQty: "100",
+      supplierPriceDirams: 0n,
+      stockQty: "0",
       reservedQty: "0",
       minOrderQty: "1",
       leadTimeDays: 1,
-      isActive: "true",
+      isActive: "false",
     }));
     for (let offset = 0; offset < offerValues.length; offset += 500) {
       await tx.insert(supplierOffers).values(offerValues.slice(offset, offset + 500));
@@ -857,7 +818,7 @@ export async function ensureJctopCatalog(
   // Ensure DB column default matches 5% markup
   await db
     .execute(sql`ALTER TABLE products ALTER COLUMN markup_percent SET DEFAULT 5`)
-    .catch(() => {});
+    .catch(() => { });
 
   return { synced: true, products: items.length, categories: CATEGORY_DEFINITIONS.length };
 }
