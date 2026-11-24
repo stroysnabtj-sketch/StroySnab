@@ -1,4 +1,5 @@
 "use client";
+import { publicContacts } from "@/modules/system/public-contacts";
 import { useLocale } from "@/i18n/provider";
 
 import { useEffect, useTransition } from "react";
@@ -622,8 +623,8 @@ export function OrderStatusDashboard({
             <p style={{ margin: 0, color: "#6a717e" }}>
               По вопросам изменения рейса, времени подачи или разгрузки обращайтесь к диспетчеру:
             </p>
-            <a href="tel:+992446000000" className={styles.supportPhone}>
-              +992 (44) 600-00-00
+            <a href={publicContacts.phoneHref} className={styles.supportPhone}>
+              {publicContacts.phone}
             </a>
             <span style={{ fontSize: "11px", color: "#53657c" }}>
               Пн–Сб, 08:00–18:00 (время Душанбе)

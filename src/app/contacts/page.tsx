@@ -1,3 +1,4 @@
+import { publicContacts } from "@/modules/system/public-contacts";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getTranslator } from "@/i18n/server";
@@ -18,15 +19,22 @@ export default async function ContactsPage() {
         <section className="content-section prose">
           <h2>{tr("Отдел продаж и диспетчерская")}</h2>
           <p>
-            <a className="text-link" href="tel:+992446000000">
-              +992 44 600 00 00
+            <a className="text-link" href={publicContacts.phoneHref}>
+              {publicContacts.phone}
             </a>
           </p>
           <p>
-            <a className="text-link" href="mailto:salom@stroysnab.tj">
-              salom@stroysnab.tj
+            <a className="text-link" href={`mailto:${publicContacts.officeEmail}`}>
+              {publicContacts.officeEmail}
             </a>
           </p>
+          <p>
+            {tr("Поддержка")}{" "}
+            <a className="text-link" href={`mailto:${publicContacts.supportEmail}`}>
+              {publicContacts.supportEmail}
+            </a>
+          </p>
+          <p>{tr(publicContacts.address)}</p>
           <p>{tr("Приём заявок и расчёт коммерческих предложений на платформе работает круглосуточно.")}</p>
         </section>
       </main>

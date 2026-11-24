@@ -1,4 +1,5 @@
 "use client";
+import { publicContacts } from "@/modules/system/public-contacts";
 import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import { t } from "@/i18n";
@@ -31,8 +32,10 @@ export function SiteFooter() {
         </div>
         <div>
           <strong>{tr("Связаться")}</strong>
-          <a href="tel:+992446000000">+992 44 600 00 00</a>
-          <a href="mailto:salom@stroysnab.tj">salom@stroysnab.tj</a>
+          <a href={publicContacts.phoneHref}>{publicContacts.phone}</a>
+          <a href={`mailto:${publicContacts.officeEmail}`}>{publicContacts.officeEmail}</a>
+          <a href={`mailto:${publicContacts.supportEmail}`}>{publicContacts.supportEmail}</a>
+          <span>{tr(publicContacts.address)}</span>
           <span>{tr("Душанбе · Пн–Сб, 08:00–18:00")}</span>
         </div>
       </div>
