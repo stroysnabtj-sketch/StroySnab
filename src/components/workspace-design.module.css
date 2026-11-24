@@ -125,6 +125,12 @@
   background: #ffffff0c;
   color: #ffffff;
 }
+:global(.workspace-nav-more) summary::-webkit-details-marker {
+  display: none;
+}
+:global(.workspace-nav-more[open]) summary svg {
+  transform: rotate(180deg);
+}
 .workspace .sidebar nav :global(.workspace-nav-more-list),
 .mobileMenu nav :global(.workspace-nav-more-list) {
   display: grid;

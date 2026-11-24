@@ -17,7 +17,7 @@ import { getCurrentUser } from "@/modules/auth/session";
 import { hasPermission, type Permission } from "@/modules/rbac/permissions";
 import { ROLE_LABELS } from "@/modules/system/admin-labels";
 import { WorkspaceFrame } from "@/components/workspace-frame";
-import { WorkspaceNavLink } from "@/components/workspace-nav-link";
+import { WorkspaceNavGroup, WorkspaceNavLink } from "@/components/workspace-nav-link";
 export async function Workspace({
   kind,
   children,
@@ -92,17 +92,20 @@ export async function Workspace({
     { href: "/admin/audit", label: "Журнал действий", permission: "audit:read", icon: History },
   ];
   const links = adminLinks.filter((l) => user && hasPermission(user.role, l.permission));
-  const primaryHrefs = new Set([
-    "/admin",
-    "/admin/orders",
-    "/admin/procurement",
-    "/admin/deliveries",
-    "/admin/catalog",
-    "/admin/categories",
-    "/admin/product-requests",
-  ]);
-  const primaryLinks = links.filter((link) => primaryHrefs.has(link.href));
-  const secondaryLinks = links.filter((link) => !primaryHrefs.has(link.href));
+  const groups = [
+    {
+      label: "Продажи",
+      hrefs: ["/admin/orders", "/admin/procurement", "/admin/product-requests", "/admin/deliveries"],
+    },
+    {
+      label: "Каталог",
+      hrefs: ["/admin/catalog", "/admin/categories", "/admin/home-collections", "/admin/suppliers", "/admin/offers", "/admin/pricing"],
+    },
+    {
+      label: "Управление",
+      hrefs: ["/admin/ai-providers", "/admin/notifications", "/admin/referrals", "/admin/users", "/admin/audit"],
+    },
+  ];
   const role = user ? ROLE_LABELS[user.role] : "Сотрудник";
   const renderLink = (link: (typeof links)[number]) => (
     <WorkspaceNavLink key={link.href} href={link.href}>
@@ -115,13 +118,21 @@ export async function Workspace({
   );
   const menu = (
     <nav aria-label={"Управление магазином"}>
-      {primaryLinks.map(renderLink)}
-      {secondaryLinks.length > 0 && (
-        <details className="workspace-nav-more">
-          <summary>Ещё разделы</summary>
-          <div className="workspace-nav-more-list">{secondaryLinks.map(renderLink)}</div>
-        </details>
-      )}
+      {links.filter((link) => link.href === "/admin").map(renderLink)}
+      {groups.map(({ label, hrefs }, index) => {
+        const groupLinks = hrefs.flatMap((href) => links.filter((link) => link.href === href));
+        if (!groupLinks.length) return null;
+        return (
+          <WorkspaceNavGroup
+            key={label}
+            label={label}
+            hrefs={groupLinks.map((link) => link.href)}
+            openOnOverview={index === 0}
+          >
+            {groupLinks.map(renderLink)}
+          </WorkspaceNavGroup>
+        );
+      })}
     </nav>
   );
   return (
