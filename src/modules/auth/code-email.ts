@@ -43,7 +43,7 @@ export function codeEmail(
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#eef3f8">
 <tr><td align="center" style="padding:24px 12px">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#fff;border-radius:16px">
-<tr><td align="center" style="padding:20px;background:#102f57;color:#fff;border-radius:16px 16px 0 0;font-size:21px;font-weight:bold">STROYSNAB.TJ</td></tr>
+<tr><td align="center" style="padding:20px;background:#102f57;color:#fff;border-radius:16px 16px 0 0;font-size:21px;font-weight:bold"><a href="https://www.stroysnab.tj/" style="color:#ffffff;text-decoration:none"><span style="color:#ffffff">STROYSNAB.TJ</span></a></td></tr>
 <tr><td style="padding:28px 24px">
 <h1 style="margin:0 0 14px;font-size:23px;line-height:1.3">${subject}</h1>
 <p style="margin:0 0 18px;font-size:15px;line-height:1.5">${messages.instruction}</p>
