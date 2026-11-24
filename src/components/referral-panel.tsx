@@ -2,21 +2,18 @@
 import { useRef, useState } from "react";
 import { Copy, Check, Share2, UsersRound, Link2, Clock3, Gift } from "lucide-react";
 import { useLocale } from "@/i18n/provider";
-import { formatTJS } from "@/modules/system/money";
 import styles from "./referral.module.css";
 type Summary = {
   code: string;
   link: string;
   stats: { invited: number; pending: number; credited: number };
   bonusPercent?: string;
-  creditedDirams?: string;
 };
 export function ReferralPanel({
   code,
   link,
   stats,
   bonusPercent = "2",
-  creditedDirams = "0",
 }: Summary) {
   const { tr, locale } = useLocale();
   const field = useRef<HTMLInputElement>(null);
@@ -58,15 +55,13 @@ export function ReferralPanel({
   return (
     <div className={styles.stack}>
       <section className={styles.invitation} aria-labelledby="referral-title">
-        <span className={styles.icon}>
-          <UsersRound size={24} aria-hidden="true" />
-        </span>
         <div>
           <h2 id="referral-title">{tr("Приглашайте друзей и коллег")}</h2>
-          <p>
-            {tr("Поделитесь личной ссылкой. Приглашение учтётся, когда друг зарегистрируется.")}
-          </p>
+          {Number(bonusPercent) > 0 && (
+            <p>{tr("Бонус от суммы материалов в первом доставленном заказе друга")}</p>
+          )}
         </div>
+        {Number(bonusPercent) > 0 && <strong className={styles.bonus}>{bonusPercent}%</strong>}
       </section>
       <section className={styles.card} aria-labelledby="referral-link-title">
         <h2 id="referral-link-title">{tr("Ваша ссылка приглашения")}</h2>
@@ -117,20 +112,6 @@ export function ReferralPanel({
           </section>
         ))}
       </div>
-      <section className={styles.note}>
-        <h2>{tr("Как это работает")}</h2>
-        <ol>
-          <li>{tr("Отправьте ссылку другу или коллеге.")}</li>
-          <li>{tr("После регистрации приглашение появится в вашей статистике.")}</li>
-          <li>
-            {tr("При первом доставленном заказе друга вам начисляется бонус")}{" "}
-            <strong>{bonusPercent}%</strong> {tr("от суммы материалов заказа.")}
-          </li>
-        </ol>
-        <p>
-          {tr("Начислено бонусов за всё время")}: <strong>{formatTJS(creditedDirams)}</strong>
-        </p>
-      </section>
     </div>
   );
 }

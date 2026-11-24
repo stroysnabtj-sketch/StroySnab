@@ -14,6 +14,12 @@ import { forgotSchema, loginSchema, profileSchema, registerSchema, resetSchema }
 
 export const TERMS_VERSION = "2026-10-30";
 
+function accountLocked(until: Date) {
+  return new ApiError(429, "account_locked", "Слишком много попыток. Повторите позже", undefined, {
+    "Retry-After": String(Math.max(1, Math.ceil((until.getTime() - Date.now()) / 1000))),
+  });
+}
+
 export async function registerCustomer(input: unknown, ip: string) {
   const data = registerSchema.parse(input);
   const phone = normalizePhone(data.phone);
@@ -130,7 +136,7 @@ export async function login(
     throw new ApiError(401, "invalid_credentials", "Неверный логин или пароль");
   }
   if (user.lockedUntil && user.lockedUntil > new Date()) {
-    throw new ApiError(429, "account_locked", "Слишком много попыток. Повторите позже");
+    throw accountLocked(user.lockedUntil);
   }
 
   const valid = await bcrypt.compare(data.password, user.passwordHash);
@@ -180,7 +186,7 @@ export async function login(
     )
       throw new ApiError(401, "invalid_credentials", "Войдите заново");
     if (current.lockedUntil && current.lockedUntil > new Date())
-      throw new ApiError(429, "account_locked", "Слишком много попыток. Повторите позже");
+      throw accountLocked(current.lockedUntil);
     await tx
       .update(users)
       .set({ failedLoginAttempts: 0, lockedUntil: null, lastLoginAt: new Date() })

@@ -2,7 +2,7 @@
 import { useLocale } from "@/i18n/provider";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Checkbox, Field, Input } from "@/components/ui";
 import { t } from "@/i18n";
 import { safeAuthDestination } from "@/modules/auth/destination";
@@ -15,11 +15,13 @@ export function AuthForm({
   next = "/account",
   refCode = "",
   token = "",
+  onChallengeChange,
 }: {
   mode: Mode;
   next?: string;
   refCode?: string;
   token?: string;
+  onChallengeChange?: (active: boolean) => void;
 }) {
   const { tr } = useLocale();
   const router = useRouter();
@@ -41,11 +43,35 @@ export function AuthForm({
   const [developmentToken, setDevelopmentToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [retryUntil, setRetryUntil] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(0);
+  useEffect(() => {
+    if (!retryUntil) return;
+    const tick = () => {
+      const seconds = Math.max(0, Math.ceil((retryUntil - Date.now()) / 1000));
+      setSecondsLeft(seconds);
+      if (!seconds) setRetryUntil(0);
+    };
+    tick();
+    const timer = window.setInterval(tick, 1000);
+    return () => window.clearInterval(timer);
+  }, [retryUntil]);
+
+  function applyRetryAfter(response: Response) {
+    const seconds = Number(response.headers.get("Retry-After"));
+    if (response.status === 429 && Number.isFinite(seconds) && seconds > 0) {
+      setRetryUntil(Date.now() + seconds * 1000);
+      setSecondsLeft(Math.ceil(seconds));
+    }
+  }
+
+  const retryLabel = `${tr("Повторить через")} ${secondsLeft} ${tr("с")}`;
   const set = (key: keyof typeof form, value: string) =>
     setForm((old) => ({ ...old, [key]: value }));
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
+    if (loading || secondsLeft > 0) return;
     setLoading(true);
     setErrors({});
     setMessage("");
@@ -62,8 +88,10 @@ export function AuthForm({
           body: JSON.stringify({ challengeId: challenge.challengeId, code: staffCode }),
         });
         const result = await response.json();
-        if (!response.ok)
+        if (!response.ok) {
+          applyRetryAfter(response);
           throw new Error(result.error?.message ?? tr("Не удалось подтвердить вход"));
+        }
         const destination = safeAuthDestination(next);
         window.location.href = destination === "/account" ? "/admin" : destination;
       } catch (error) {
@@ -107,11 +135,13 @@ export function AuthForm({
       });
       const result = await response.json();
       if (!response.ok) {
+        applyRetryAfter(response);
         setErrors(result.error?.fields ?? { root: result.error?.message ?? tr(t("common.error")) });
         return;
       }
       if (result.requiresCode && result.challenge) {
         setChallenge(result.challenge);
+        onChallengeChange?.(true);
         setStaffCode("");
         setForm((old) => ({ ...old, password: "" }));
         return;
@@ -142,8 +172,8 @@ export function AuthForm({
   if (challenge)
     return (
       <form className={`auth-form ${styles.form}`} onSubmit={submit} aria-busy={loading}>
-        <p>
-          {tr("Код отправлен на")}
+        <p className={styles.codeRecipient}>
+          {tr("Код отправлен на")}{" "}
           {challenge.maskedRecipient}
         </p>
         {errors.root && (
@@ -163,8 +193,8 @@ export function AuthForm({
             onChange={(event) => setStaffCode(event.target.value.replace(/\D/g, ""))}
           />
         </Field>
-        <Button type="submit" disabled={loading || staffCode.length !== 6}>
-          {tr("Подтвердить вход")}
+        <Button type="submit" disabled={loading || secondsLeft > 0 || staffCode.length !== 6}>
+          {secondsLeft > 0 ? retryLabel : tr("Подтвердить вход")}
         </Button>
         <button
           type="button"
@@ -172,6 +202,7 @@ export function AuthForm({
           disabled={loading}
           onClick={() => {
             setChallenge(null);
+            onChallengeChange?.(false);
             setErrors({});
           }}
         >
@@ -321,8 +352,8 @@ export function AuthForm({
           ) : null}
         </div>
       ) : null}
-      <Button type="submit" disabled={loading}>
-        {loading
+      <Button type="submit" disabled={loading || secondsLeft > 0}>
+        {secondsLeft > 0 ? retryLabel : loading
           ? tr(t("common.loading"))
           : tr(
               t(

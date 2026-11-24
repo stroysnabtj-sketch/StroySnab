@@ -9,14 +9,12 @@ import {
   Check,
   ChevronRight,
   MapPin,
-  Sparkles,
   Zap,
 } from "lucide-react";
 
 interface Props {
   selectedVehicleCode: string;
   onSelectVehicle: (vehicle: DeliveryVehicle) => void;
-  recommendedCode: string;
   totalWeightKg: number;
 }
 
@@ -25,11 +23,10 @@ type FleetTab = "all" | "taxi" | "light" | "special" | "heavy";
 export function VehicleSelector({
   selectedVehicleCode,
   onSelectVehicle,
-  recommendedCode,
   totalWeightKg,
 }: Props) {
   const [activeTab, setActiveTab] = useState<FleetTab>("all");
-  const [sortBy, setSortBy] = useState<"recommended" | "capacity" | "price">("recommended");
+  const [sortBy, setSortBy] = useState<"default" | "capacity" | "price">("default");
 
   // Фильтрация по табам
   const filteredVehicles = DELIVERY_FLEET.filter((veh) => {
@@ -45,10 +42,7 @@ export function VehicleSelector({
   const sortedVehicles = [...filteredVehicles].sort((a, b) => {
     if (sortBy === "capacity") return a.capacityKg - b.capacityKg;
     if (sortBy === "price") return a.basePriceTJS - b.basePriceTJS;
-    // По умолчанию: рекомендованная машина идет первой
-    if (a.code === recommendedCode) return -1;
-    if (b.code === recommendedCode) return 1;
-    return a.capacityKg - b.capacityKg;
+    return 0;
   });
 
   return (
@@ -119,9 +113,9 @@ export function VehicleSelector({
           <CustomSelect
             className="fleet-sort-select"
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as "recommended" | "capacity" | "price")}
+            onChange={(e) => setSortBy(e.target.value as "default" | "capacity" | "price")}
           >
-            <option value="recommended">По рекомендации ИИ</option>
+            <option value="default">По умолчанию</option>
             <option value="capacity">По грузоподъёмности</option>
             <option value="price">По стоимости тарифа</option>
           </CustomSelect>
@@ -132,7 +126,6 @@ export function VehicleSelector({
       <div className="fleet-cards-grid">
         {sortedVehicles.map((veh) => {
           const isSelected = veh.code === selectedVehicleCode;
-          const isRecommended = veh.code === recommendedCode;
           const isOverweight = totalWeightKg > veh.capacityKg;
 
           // Расчет процента полезной загрузки
@@ -145,9 +138,7 @@ export function VehicleSelector({
             <div
               key={veh.id}
               onClick={() => onSelectVehicle(veh)}
-              className={`fleet-card ${isSelected ? "is-selected" : ""} ${
-                isRecommended ? "is-recommended" : ""
-              } ${isOverweight ? "is-overweight" : ""}`}
+              className={`fleet-card ${isSelected ? "is-selected" : ""} ${isOverweight ? "is-overweight" : ""}`}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
@@ -179,14 +170,6 @@ export function VehicleSelector({
                   <Zap size={11} />
                   <span>Готовность {veh.fuelPercent}%</span>
                 </div>
-
-                {/* Бейдж рекомендации */}
-                {isRecommended && (
-                  <div className="fleet-overlay-badge badge-recommended">
-                    <Sparkles size={12} />
-                    <span>Рекомендуемый выбор</span>
-                  </div>
-                )}
 
                 {/* Бейдж перегруза */}
                 {isOverweight && (

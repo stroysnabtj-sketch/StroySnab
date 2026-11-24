@@ -5,20 +5,20 @@
 }
 .invitation {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 160px;
   gap: 18px;
-  padding: 26px;
+  padding: clamp(20px, 4vw, 40px);
   border-radius: 18px;
   background: #12335b;
   color: white;
 }
-.icon {
-  display: grid;
-  place-items: center;
-  padding: 12px;
-  background: #ffffff15;
-  border-radius: 14px;
+.bonus {
   flex-shrink: 0;
+  font-size: clamp(32px, 6vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.05em;
 }
 .invitation h2 {
   margin: 0 0 8px;
@@ -34,16 +34,14 @@
   font-size: 14px;
 }
 .card,
-.stat,
-.note {
+.stat {
   background: white;
   border: 1px solid #dce4ef;
   border-radius: 16px;
   padding: 24px;
   min-width: 0;
 }
-.card h2,
-.note h2 {
+.card h2 {
   font-size: 17px;
   line-height: 1.4;
   margin: 0 0 16px;
@@ -112,22 +110,6 @@
   font-size: 13px;
   line-height: 1.5;
 }
-.note {
-  padding: 22px 24px;
-}
-.note ol {
-  margin: 0 0 16px;
-  padding-left: 20px;
-  color: #12335b;
-  font-size: 14px;
-  line-height: 1.7;
-}
-.note p {
-  margin: 0;
-  color: #53657c;
-  font-size: 13px;
-  line-height: 1.6;
-}
 @media (max-width: 600px) {
   .stack {
     gap: 14px;
@@ -139,11 +121,7 @@
   .invitation h2 {
     font-size: 20px;
   }
-  .icon {
-    padding: 9px;
-  }
-  .card,
-  .note {
+  .card {
     padding: 20px;
   }
   .stats {

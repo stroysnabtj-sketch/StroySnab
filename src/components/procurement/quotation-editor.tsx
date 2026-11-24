@@ -127,10 +127,6 @@ export function QuotationEditor({
             {busy ? "Подбираем…" : "Подобрать из каталога"}
           </button>
         </div>
-        <p className={s.hint}>
-          Поиск по базе без внешнего ИИ. Проверьте характеристики и предложения перед сохранением
-          КП.
-        </p>
         {preparation && (
           <div className={s.stack}>
             {preparation.lines.map((row) => (

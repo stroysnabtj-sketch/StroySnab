@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { AuthForm } from "./auth-form";
+import { PasswordEntry } from "./password-entry";
 import { ContactAuthForm } from "./contact-auth-form";
 import { t } from "@/i18n";
 import { safeAuthDestination } from "@/modules/auth/destination";
@@ -44,17 +45,14 @@ export async function AuthPage({
               refCode={refCode}
               captchaSiteKey={process.env.TURNSTILE_SITE_KEY}
             />
+          ) : passwordLogin && mode === "login" ? (
+            <PasswordEntry next={next} codeLogin={codeLogin} />
           ) : (
             <AuthForm mode={mode} next={next} refCode={refCode} token={token} />
           )}
           {mode === "login" && !passwordLogin && (
             <Link className={styles.passwordLink} href={`/auth/password${destination}`}>
               {tr("Войти по паролю")}
-            </Link>
-          )}
-          {passwordLogin && (
-            <Link className={styles.passwordLink} href={codeLogin}>
-              {tr("Войти по коду")}
             </Link>
           )}
           <div className={styles.switch}>
