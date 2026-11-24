@@ -13,21 +13,22 @@ import {
 } from "@/db/schema";
 import { getStorage } from "@/server/storage";
 import { ApiError } from "@/server/api-error";
-import { configuredDocumentProvider } from "./deepseek";
+import { configuredDocumentProvider } from "./document-provider-settings";
 import type { MaterialDocumentProvider } from "./documents";
 import { prepareQuotationCandidates } from "./preparation";
 import { saveQuotation } from "./service";
 import type { SessionUser } from "@/modules/auth/session";
 
 export async function enqueueQuotationJob(tx: DbTransaction, requestId: string) {
-  if (!configuredDocumentProvider())
+  if (!(await configuredDocumentProvider(tx)))
     throw new ApiError(503, "ai_unavailable", "Автоматическая подготовка временно недоступна");
   await tx.insert(quotationJobs).values({ requestId }).onConflictDoNothing();
 }
 
 export async function processQuotationJob(
-  provider: MaterialDocumentProvider | null = configuredDocumentProvider(),
+  provider?: MaterialDocumentProvider | null,
 ) {
+  if (provider === undefined) provider = await configuredDocumentProvider();
   if (!provider) return false;
   const db = await getDb();
   const claim = await db.transaction(async (tx) => {

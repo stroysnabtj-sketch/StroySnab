@@ -69,12 +69,33 @@ function collect(node: unknown, tag: string): unknown[] {
     key === tag ? [value] : key === ":@" ? [] : collect(value, tag),
   );
 }
-export function extractDocxLines(bytes: Buffer): ExtractedMaterial[] {
-  const document = new XMLParser({
+function parseDocx(bytes: Buffer) {
+  return new XMLParser({
     preserveOrder: true,
     ignoreAttributes: true,
     processEntities: false,
   }).parse(readDocxXml(bytes));
+}
+
+export function extractDocxText(bytes: Buffer): string {
+  function blocks(node: unknown): string[] {
+    if (Array.isArray(node)) return node.flatMap(blocks);
+    if (!node || typeof node !== "object") return [];
+    return Object.entries(node as XmlNode).flatMap(([key, value]) => {
+      if (key === "w:p") return [text(value)];
+      if (key === "w:tbl") {
+        return collect(value, "w:tr").map((row) =>
+          collect(row, "w:tc").map((cell) => text(cell).trim()).join("\t"),
+        );
+      }
+      return key === ":@" ? [] : blocks(value);
+    });
+  }
+  return blocks(parseDocx(bytes)).join("\n");
+}
+
+export function extractDocxLines(bytes: Buffer): ExtractedMaterial[] {
+  const document = parseDocx(bytes);
   const rows = collect(document, "w:tr").map((row) =>
     collect(row, "w:tc").map((cell) => text(cell).trim()),
   );

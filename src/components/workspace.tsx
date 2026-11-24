@@ -71,6 +71,12 @@ export async function Workspace({
       icon: SlidersHorizontal,
     },
     {
+      href: "/admin/ai-providers",
+      label: "Провайдер AI-КП",
+      permission: "settings:manage",
+      icon: SlidersHorizontal,
+    },
+    {
       href: "/admin/referrals",
       label: "Рефералы и бонусы",
       permission: "settings:manage",

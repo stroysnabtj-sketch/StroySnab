@@ -1,4 +1,4 @@
-import { configuredDocumentProvider } from "@/modules/procurement/deepseek";
+import { configuredDocumentProvider } from "@/modules/procurement/document-provider-settings";
 import { eq } from "drizzle-orm";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -34,7 +34,7 @@ export default async function Page() {
           <h1>Новая заявка</h1>
         </header>
         <ProcurementRequestForm
-          autoPreparation={!!configuredDocumentProvider()}
+          autoPreparation={Boolean(await configuredDocumentProvider())}
           contactName={customer?.fullName ?? ""}
           contactPhone={user.phone ?? ""}
           contactEmail={user.email ?? ""}
