@@ -63,3 +63,26 @@ it("accepts Payom's JSON string message ID response", async () => {
   );
   await expect(sendContactCode(message)).resolves.toBeUndefined();
 });
+
+it("sends localized HTML and plain text through Resend with the same six-digit code", async () => {
+  vi.stubEnv("AUTH_EMAIL_PROVIDER", "resend");
+  vi.stubEnv("AUTH_EMAIL_SEND_TOKEN", "test-token");
+  vi.stubEnv("NOTIFICATIONS_EMAIL_FROM", "StroySnab <notifications@stroysnab.tj>");
+  const send = vi.fn<typeof fetch>(async () => Response.json({ id: "accepted-email" }));
+  vi.stubGlobal("fetch", send);
+
+  await sendContactCode({
+    ...message,
+    channel: "email",
+    recipient: "test@example.test",
+    purpose: "recover",
+    locale: "tg",
+  });
+
+  const payload = JSON.parse(String(send.mock.calls[0][1]?.body));
+  expect(payload.html).toContain('<html lang="tg">');
+  expect(payload.html).toContain(">012345</td>");
+  expect(payload.html).toContain("mailto:support@stroysnab.tj");
+  expect(payload.text).toContain("012345");
+  expect(payload.subject).not.toContain("012345");
+});

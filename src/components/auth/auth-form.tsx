@@ -8,6 +8,7 @@ import { t } from "@/i18n";
 import { safeAuthDestination } from "@/modules/auth/destination";
 import { Eye, EyeOff } from "lucide-react";
 import styles from "./auth-experience.module.css";
+import { VerificationCodeInput } from "./verification-code-input";
 
 type Mode = "login" | "register" | "forgot" | "reset";
 export function AuthForm({
@@ -181,18 +182,12 @@ export function AuthForm({
             {errors.root}
           </div>
         )}
-        <Field label={tr("Код подтверждения")}>
-          <Input
-            autoFocus
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            pattern="[0-9]{6}"
-            maxLength={6}
-            required
+        <VerificationCodeInput
+            label={tr("Код подтверждения")}
             value={staffCode}
-            onChange={(event) => setStaffCode(event.target.value.replace(/\D/g, ""))}
+            onChange={setStaffCode}
+            disabled={loading}
           />
-        </Field>
         <Button type="submit" disabled={loading || secondsLeft > 0 || staffCode.length !== 6}>
           {secondsLeft > 0 ? retryLabel : tr("Подтвердить вход")}
         </Button>

@@ -1,3 +1,4 @@
+import type { Locale } from "@/i18n/types";
 import { linkReferral } from "@/modules/referrals/service";
 import { randomInt } from "node:crypto";
 import bcrypt from "bcryptjs";
@@ -33,6 +34,7 @@ export async function requestContactCode(
   ip: string,
   deliver: CodeDelivery = sendContactCode,
   staffProof?: { userId: string; passwordHash: string },
+  locale: Locale = "ru",
 ) {
   const data = requestInput.parse(input),
     identifier =
@@ -127,7 +129,7 @@ export async function requestContactCode(
       })
       .returning({ id: loginCodes.id });
     if (data.purpose !== "recover" || user?.status === "ACTIVE")
-      await deliver({ channel: data.channel, recipient: identifier, code, expiresInSeconds: 300 });
+      await deliver({ channel: data.channel, recipient: identifier, code, expiresInSeconds: 300, ...(data.channel === "email" ? { purpose: data.purpose, locale } : {}) });
     const masked =
       data.channel === "sms"
         ? maskPhone(identifier)

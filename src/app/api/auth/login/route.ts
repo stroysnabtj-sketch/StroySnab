@@ -1,3 +1,4 @@
+import { getLocale } from "@/i18n/server";
 import { assertSameOrigin } from "@/server/security";
 import { parseJsonBody } from "@/server/validation";
 import { NextResponse } from "next/server";
@@ -30,6 +31,8 @@ export async function POST(request: Request) {
       ip,
       request.headers.get("user-agent") ?? "",
       false,
+      undefined,
+      await getLocale(),
     );
     if (result.challenge)
       return NextResponse.json({ requiresCode: true, challenge: result.challenge });

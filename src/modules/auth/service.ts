@@ -1,3 +1,4 @@
+import type { Locale } from "@/i18n/types";
 import { linkReferral } from "@/modules/referrals/service";
 import { requestContactCode } from "./contact-code";
 import { sendContactCode, type CodeDelivery } from "./code-delivery";
@@ -99,6 +100,7 @@ export async function login(
   userAgent: string,
   superAdminOnly = false,
   deliver: CodeDelivery = sendContactCode,
+  locale: Locale = "ru",
 ) {
   const data = loginSchema.parse(input);
   const db = await getDb();
@@ -168,6 +170,7 @@ export async function login(
       ip,
       deliver,
       { userId: user.id, passwordHash: user.passwordHash },
+      locale,
     );
     return { token: "", role: user.role, userId: user.id, challenge };
   }

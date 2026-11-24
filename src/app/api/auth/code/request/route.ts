@@ -1,3 +1,4 @@
+import { getLocale } from "@/i18n/server";
 import { cookies } from "next/headers";
 import { normalizeReferralCode, REFERRAL_COOKIE } from "@/modules/referrals/service";
 import { NextResponse } from "next/server";
@@ -40,6 +41,9 @@ export async function POST(request: Request) {
       await requestContactCode(
         { ...(input as Record<string, unknown>), refCode: referralCode ?? undefined },
         ip,
+        undefined,
+        undefined,
+        await getLocale(),
       ),
       {
         headers: { "Cache-Control": "no-store" },

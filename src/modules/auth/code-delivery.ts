@@ -1,9 +1,13 @@
+import { codeEmail } from "./code-email";
+import type { Locale } from "@/i18n/types";
 import { ApiError } from "@/server/api-error";
 export type CodeMessage = {
   channel: "sms" | "email";
   recipient: string;
   code: string;
   expiresInSeconds: number;
+  purpose?: "login" | "register" | "recover";
+  locale?: Locale;
 };
 export type CodeDelivery = (message: CodeMessage) => Promise<void>;
 /** Server-to-server adapter for a future SMS/email gateway. Never returns or logs codes. */
@@ -61,8 +65,7 @@ export const sendContactCode: CodeDelivery = async (message) => {
             ? {
                 from,
                 to: [message.recipient],
-                subject: "Код StroySnab",
-                text: `Код StroySnab: ${message.code}`,
+                ...codeEmail(message.code, message.expiresInSeconds, message.purpose, message.locale),
               }
             : {
                 template: "login_code",

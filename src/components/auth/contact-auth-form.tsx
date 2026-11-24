@@ -12,6 +12,7 @@ import {
 } from "@/modules/auth/registration-password";
 import { safeAuthDestination } from "@/modules/auth/destination";
 import styles from "./auth-experience.module.css";
+import { VerificationCodeInput } from "./verification-code-input";
 type Challenge = { challengeId: string; maskedRecipient: string; resendAfterSeconds: number };
 type Turnstile = {
   render: (
@@ -352,33 +353,16 @@ export function ContactAuthForm({
         <>
           {challenge && (
             <p className={styles.caption}>
-              {tr("Код отправлен")}
+              {tr("Код отправлен")}{" "}
               {channel === "sms" ? tr("на телефон") : tr("на почту")} {challenge.maskedRecipient}
             </p>
           )}
-          <Field label={tr("Код подтверждения")}>
-            <span className={styles.otpControl}>
-              <input
-                className={styles.otpInput}
-                autoFocus
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                pattern="[0-9]{6}"
-                required={!!challenge}
-                maxLength={6}
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                disabled={busy || !challenge}
-              />
-              <span className={styles.otpCells} aria-hidden="true">
-                {Array.from({ length: 6 }, (_, i) => (
-                  <span key={i} data-active={i === Math.min(code.length, 5)}>
-                    {code[i] || ""}
-                  </span>
-                ))}
-              </span>
-            </span>
-          </Field>
+          <VerificationCodeInput
+            label={tr("Код подтверждения")}
+            value={code}
+            onChange={setCode}
+            disabled={busy || !challenge}
+          />
         </>
       )}
       {needsCaptcha && (
